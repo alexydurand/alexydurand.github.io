@@ -1,19 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-	<title>Index</title>
-	<head>
-		<body style="background-color:lightyellow;">
-			<font size=6> <strong> TP 2 HTML</strong> </font>
-			<p> Lien vers 4 pages </p>
-
-
-			<ul>
-				<li> <a href="tp1html_DURANDAlexy.html">TP1</a></li>
-				<li> <a href="tableau.html">Liens universitaires</a></li>
-				<li> <a href="media.html">Images et video</a></li>
-				<li> <a href="formulaire.html">Formulaire</a></li>
-			</ul>		
-
-		<body>
-<html>		
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Mon Portfolio</div>
+            <ul class="nav-links">
+                <li><a href="#about">À propos</a></li>
+                <li><a href="#projects">Projets</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="hero">
+            <h1>Bienvenue sur mon portfolio</h1>
+            <p>Je suis [Votre Nom], un(e) [votre spécialité, ex. développeur web, graphiste].</p>
+            <a href="#projects" class="btn">Voir mes projets</a>
+        </section>
+        <section id="about">
+            <h2>À propos de moi</h2>
+            <p>[Ajoutez une brève description de vous-même, vos compétences et votre expérience.]</p>
+        </section>
+        <section id="projects">
+            <h2>Mes Projets</h2>
+            <div class="project-grid">
+                <div class="project-card">
+                    <h3>Projet 1</h3>
+                    <p>Description rapide du projet.</p>
+                </div>
+                <div class="project-card">
+                    <h3>Projet 2</h3>
+                    <p>Description rapide du projet.</p>
+                </div>
+                <div class="project-card">
+                    <h3>Projet 3</h3>
+                    <p>Description rapide du projet.</p>
+                </div>
+            </div>
+        </section>
+        <section id="contact">
+            <h2>Contactez-moi</h2>
+            <form>
+                <label for="name">Nom:</label>
+                <input type="text" id="name" name="name" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" required></textarea>
+                <button type="submit">Envoyer</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>© 2024 Mon Portfolio. Tous droits réservés.</p>
+    </footer>
+</body>
+</html>		
