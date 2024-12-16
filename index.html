@@ -1,60 +1,47 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Étudiant</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">Mon Portfolio</div>
-            <ul class="nav-links">
-                <li><a href="#about">À propos</a></li>
-                <li><a href="#projects">Projets</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main>
-        <section id="hero">
-            <h1 class="btn-shine">Alexy Durand</h1>
-            <p>Étudiant en BUT 1 Informatique à Blagnac</p>
-            <a href="#projects" class="btn">Voir mon parcours</a>
-        </section>
-        <section id="about">
-            <h2>À propos de moi</h2>
-            <p>Je m'appelle Alexy Durand, je suis actuellement étudiant en BUT 1 Informatique à l'IUT de Blagnac.</p>
-        </section>
-        <section id="projects">
-            <h2>Mon parcours</h2>
-            <div class="project-grid">
-                <div class="project-card">
-                    <h3>Lycée</h3>
-                    <p>Obtention Baccalauréat mention assez bien au lycée Rive Gauche à Toulouse</p>
-                </div>
-                <div class="project-card">
-                    <h3>IUT Blagnac</h3>
-                    <p>Actuellement étudiant en première année.</p>
-                </div>
-            </div>
-        </section>
-        <section id="contact">
-            <h2>Contactez-moi</h2>
-            <form>
-                <label for="name">Nom:</label>
-                <input type="text" id="name" name="name" required>
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-                <label for="message">Message:</label>
-                <textarea id="message" name="message" required></textarea>
-                <button type="submit">Envoyer</button>
-            </form>
-        </section>
-    </main>
-    <footer>
-        <p>© 2024 Mon Portfolio. Tous droits réservés.</p>
-    </footer>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="#accueil">Accueil</a></li>
+        <li><a href="#a-propos">À propos de moi</a></li>
+        <li><a href="#etudes">Mes études</a></li>
+        <li><a href="#loisirs">Mes loisirs</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="accueil">
+      <h1>Bienvenue sur mon portfolio</h1>
+      <p>Étudiant en BUT Informatique, passionné par la technologie et le développement.</p>
+    </section>
+
+    <section id="a-propos">
+      <h2>À propos de moi</h2>
+      <p>Je suis un étudiant en première année de BUT Informatique, curieux et motivé pour apprendre les nouvelles technologies et développer mes compétences.</p>
+    </section>
+
+    <section id="etudes">
+      <h2>Mes études</h2>
+      <p>Je suis actuellement en première année de BUT Informatique où j'apprends la programmation, les bases de données, et bien plus encore.</p>
+    </section>
+
+    <section id="loisirs">
+      <h2>Mes loisirs</h2>
+      <p>J'aime la programmation, les jeux vidéo, et la lecture. Je suis également passionné par le sport et la musique.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2024 Mon Portfolio - Tous droits réservés</p>
+  </footer>
 </body>
-</html>		
+</html>
