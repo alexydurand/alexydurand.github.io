@@ -1,0 +1,81 @@
+import { useCallback, useEffect, useRef, type PointerEvent } from 'react';
+import { voyages } from '../data/content';
+import useLazyScene from '../hooks/useLazyScene';
+import useScrollProgress from '../hooks/useScrollProgress';
+import useMediaQuery from '../hooks/useMediaQuery';
+import { range } from '../lib/motion';
+import type { HongKongScene } from '../three/hongKongScene';
+
+const loadScene = () => import('../three/hongKongScene').then((m) => m.default);
+
+// The section starts 140svh early, pinned under the travel collage (Voyages.tsx): its last 40svh fade
+// the Hong Kong picture, this scene's first frame, out over it. The flight starts halfway through the fade.
+const HEIGHT_SVH = 420;
+const HIDDEN_SVH = 20;
+
+export default function HongKong() {
+  const host = useRef<HTMLElement>(null);
+  const wrapper = useRef<HTMLDivElement>(null);
+  const canvas = useRef<HTMLCanvasElement>(null);
+  const end = useRef<HTMLDivElement>(null);
+  const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
+  const mobile = useMediaQuery('(max-width: 767px)');
+
+  // Render only once the section reaches the top of the screen: before that it is hidden under the collage
+  const { scene, setProgress } = useLazyScene<HongKongScene>(host, canvas, loadScene, { mobile, reducedMotion }, '0px 0px -99% 0px');
+
+  const onProgress = useCallback(
+    (raw: number) => {
+      const hidden = HIDDEN_SVH / (HEIGHT_SVH - 100);
+      const p = range(raw, hidden, 1);
+      setProgress(p);
+      if (end.current) {
+        const v = range(p, 0.88, 0.97);
+        end.current.style.opacity = String(v);
+        end.current.style.transform = `translate3d(0, ${(1 - v) * 50}px, 0) scale(${0.92 + v * 0.08})`;
+      }
+    },
+    [setProgress],
+  );
+  useScrollProgress(wrapper, onProgress, !reducedMotion);
+
+  useEffect(() => {
+    if (reducedMotion) setProgress(1);
+  }, [reducedMotion, setProgress]);
+
+  // Fetch and run the 3D code while the visitor reads the top of the page, not in the middle of a scroll
+  useEffect(() => {
+    const id = window.setTimeout(loadScene, 2000);
+    return () => window.clearTimeout(id);
+  }, []);
+
+  const onPointerMove = (e: PointerEvent<HTMLElement>) => {
+    if (e.pointerType !== 'mouse') return;
+    const r = e.currentTarget.getBoundingClientRect();
+    scene.current?.look(((e.clientX - r.left) / r.width) * 2 - 1, -(((e.clientY - r.top) / r.height) * 2 - 1));
+  };
+
+  return (
+    <section
+      ref={host}
+      aria-labelledby="hk-title"
+      onPointerMove={onPointerMove}
+      data-theme="dark"
+      className={reducedMotion ? 'relative bg-night text-white' : 'relative -mt-[140svh] bg-night text-white'}
+    >
+      <div ref={wrapper} style={reducedMotion ? undefined : { height: `${HEIGHT_SVH}svh` }}>
+        <div className="sticky top-0 h-svh overflow-hidden">
+          <canvas ref={canvas} aria-hidden className="absolute inset-0 size-full" />
+          <div ref={end} className={reducedMotion ? 'relative h-full' : 'relative h-full opacity-0 will-change-transform'}>
+            <div aria-hidden className="hk-scrim pointer-events-none absolute inset-0" />
+            <div className="frame relative flex h-full items-end pb-[12svh]">
+              <h2 id="hk-title" className="display text-[clamp(3.5rem,1.5rem+10vw,11rem)] leading-[0.85]">
+                {voyages.final}
+              </h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

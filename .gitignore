@@ -1,0 +1,17 @@
+node_modules
+dist
+.env
+.env.*
+!.env.example
+.DS_Store
+graphify-out
+.claude/settings.local.json
+
+# Fichiers de travail locaux, hors dépôt public
+.taste-skill/
+CLAUDE.md
+.claude/
+.mcp.json
+docs/
+design-system/
+.playwright-mcp/

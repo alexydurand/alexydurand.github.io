@@ -1,0 +1,183 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/hanken-grotesk';
+
+@theme {
+  --color-bg: #f7f9fa;
+  --color-surface: #ecf0f2;
+  --color-surface-2: #dfe6e9;
+  --color-ink: #1f3038;
+  --color-muted: #5d6b72;
+  --color-accent: #245240;
+  --color-accent-deep: #193d2f;
+  --color-accent-ink: #ffffff;
+  --color-orange: #e77d2f;
+  --color-stage: #0c0b0a;
+  --color-night: #060a14;
+  --color-night-2: #121826;
+  --color-paper: #ffffff;
+  --color-code: #141b22;
+  --color-code-bar: #0e1419;
+  --color-code-ink: #d6e2e8;
+  --color-code-key: #7fdbca;
+  --color-dot-red: #ff5f57;
+  --color-dot-amber: #febc2e;
+  --color-dot-green: #28c840;
+
+  --font-sans: 'Hanken Grotesk Variable', 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+
+  --text-small: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
+  --text-small--line-height: 1.45;
+  --text-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  --text-body--line-height: 1.5;
+  --text-lead: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
+  --text-lead--line-height: 1.3;
+  --text-head: clamp(2rem, 1.3rem + 3.2vw, 4rem);
+  --text-head--line-height: 0.98;
+
+  --spacing-gutter: clamp(1.25rem, 0.9rem + 1vw, 1.75rem);
+  --spacing-section: clamp(6rem, 3rem + 10vw, 13rem);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  body {
+    @apply bg-bg text-body text-ink font-sans antialiased;
+    font-feature-settings: 'kern' 1;
+    letter-spacing: -0.005em;
+  }
+
+  ::selection {
+    background: var(--color-ink);
+    color: var(--color-bg);
+  }
+
+  :focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+
+  img {
+    max-width: 100%;
+  }
+}
+
+@utility display {
+  font-weight: 500;
+  letter-spacing: -0.05em;
+  line-height: 0.88;
+  font-kerning: normal;
+}
+
+@utility title-xl {
+  font-size: clamp(3.5rem, 1.5rem + 10vw, 11rem);
+}
+
+@utility frame {
+  padding-inline: var(--spacing-gutter);
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Elements that animate in with JS start visible; JS adds .will-reveal only when motion is allowed. */
+.will-reveal [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@keyframes menu-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 40%, 0);
+  }
+}
+
+.menu-item {
+  animation: menu-rise 0.7s var(--ease-out-expo) both;
+}
+
+/* Project previews tilt toward the pointer */
+.tilt {
+  --rx: 0deg;
+  --ry: 0deg;
+  transform: perspective(1000px) rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform 0.6s var(--ease-out-expo);
+  transform-style: preserve-3d;
+}
+
+.tilt:hover {
+  transition-duration: 0.15s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tilt {
+    transform: none;
+  }
+}
+
+
+/* Scrim under the Hong Kong captions (the one gradient the house rules allow: text on a picture) */
+.hk-scrim {
+  background: linear-gradient(to top, rgb(6 10 20 / 0.85) 0%, rgb(6 10 20 / 0.35) 38%, rgb(6 10 20 / 0) 62%); /* taste-skill-ignore: scrim under text on a picture */
+}
+
+
+/* Hero: the photo dissolves into the page ground (scrim on a picture) */
+.hero-fade {
+  background: linear-gradient(to bottom, rgb(247 249 250 / 0), rgb(247 249 250 / 0.6) 55%, var(--color-bg)); /* taste-skill-ignore: scrim on a picture */
+}
+
+
+/* Timeline: "today" breathes on the current step */
+@keyframes today-pulse {
+  0% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.8);
+  }
+}
+
+.today-pulse {
+  animation: today-pulse 1.8s ease-out infinite;
+}
+
+.today-dot {
+  box-shadow: 0 0 0 0 var(--color-accent); /* taste-skill-ignore: pulse ring */
+  animation: today-ring 1.8s ease-out infinite;
+}
+
+@keyframes today-ring {
+  to {
+    box-shadow: 0 0 0 10px transparent; /* taste-skill-ignore: pulse ring */
+  }
+}
+

@@ -1,0 +1,122 @@
+import { useCallback, useRef } from 'react';
+import useScrollProgress from '../hooks/useScrollProgress';
+import useMediaQuery from '../hooks/useMediaQuery';
+import { easeInOut, range } from '../lib/motion';
+import hongKong from '../assets/cities/hong-kong.jpg';
+import lisbonne from '../assets/cities/lisbonne.jpg';
+import montreal from '../assets/cities/montreal.jpg';
+import toronto from '../assets/cities/toronto.jpg';
+import torontoNuit from '../assets/cities/toronto-nuit.jpg';
+import shenzhen from '../assets/cities/shenzhen.jpg';
+
+// [width in vw, height in svh, centre x in vw, centre y in svh], from the screen centre
+type Box = [number, number, number, number];
+
+type Slot = {
+  id: string;
+  src: string;
+  alt: string;
+  city?: string;
+  // Which part of the photo to keep when the frame crops it
+  focus?: string;
+  desktop: Box;
+  mobile: Box;
+  // How fast it flies away while the camera zooms into Hong Kong
+  depth: number;
+};
+
+const SLOTS: Slot[] = [
+  { id: 'hk', src: hongKong, alt: 'Une rue de Hong Kong la nuit, modélisée en 3D', desktop: [26, 24, 0, 1], mobile: [58, 26, 16, -1], depth: 0 },
+  { id: 'lisbonne', src: lisbonne, alt: 'Le château Saint-Georges au-dessus des toits de Lisbonne', city: 'Lisbonne', desktop: [30, 20, 0, -29], mobile: [58, 17, -16, -29.5], depth: 0.4 },
+  { id: 'toronto', src: toronto, alt: 'La CN Tower au-dessus du port de Toronto', city: 'Toronto', focus: '66% 50%', desktop: [17, 44, -28, -4], mobile: [28, 26, -31, -1], depth: 0.5 },
+  { id: 'montreal', src: montreal, alt: 'Les tours du centre-ville de Montréal vues du mont Royal', city: 'Montréal', desktop: [24, 22, 29, -21], mobile: [30, 17, 30, -29.5], depth: 0.45 },
+  { id: 'toronto-nuit', src: torontoNuit, alt: 'Toronto la nuit, reflétée dans le lac Ontario', city: 'Toronto', focus: '40% 50%', desktop: [26, 18, 30, 9], mobile: [44, 18, 23, 28], depth: 0.55 },
+  { id: 'shenzhen', src: shenzhen, alt: 'Le centre de Shenzhen illuminé à la tombée de la nuit', city: 'Shenzhen', desktop: [24, 20, -2, 28], mobile: [44, 18, -23, 28], depth: 0.6 },
+];
+
+const HK = 0;
+// Scroll length of the pinned collage, and how it is spent: a short look at the collage, the zoom into
+// Hong Kong, then the picture fades over the 3D scene, whose first frame it is. The fade lasts
+// (300 - 100) × 0.2 = 40svh: HongKong.tsx overlaps this section by 100 + 40svh to sit under it.
+const VOYAGES_SVH = 300;
+const ZOOM: [number, number] = [0.15, 0.8];
+
+export default function Voyages() {
+  const wrapper = useRef<HTMLDivElement>(null);
+  const stage = useRef<HTMLDivElement>(null);
+  const collage = useRef<HTMLDivElement>(null);
+  const slots = useRef<(HTMLDivElement | null)[]>([]);
+  const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
+  const mobile = useMediaQuery('(max-width: 767px)');
+
+  const onProgress = useCallback((p: number) => {
+    const st = stage.current;
+    const col = collage.current;
+    const target = slots.current[HK];
+    if (!st || !col || !target) return;
+    const e = easeInOut(range(p, ZOOM[0], ZOOM[1]));
+    const fade = range(p, ZOOM[1], 1);
+    st.style.opacity = String(1 - fade);
+    const W = st.clientWidth;
+    const H = st.clientHeight;
+    const centre = (el: HTMLDivElement) => [el.offsetLeft + el.offsetWidth / 2 - W / 2, el.offsetTop + el.offsetHeight / 2 - H / 2];
+    const [cx, cy] = centre(target);
+    // Zoom so Hong Kong covers the screen, its centre moving to the screen centre; keep pushing in a
+    // little while it fades, as the 3D camera starts to move
+    const s = Math.max(W / target.offsetWidth, H / target.offsetHeight) * 1.002;
+    const S = Math.pow(s, e) * (1 + fade * 0.05);
+    col.style.transform = `translate3d(${cx * (1 - e) - cx * S}px, ${cy * (1 - e) - cy * S}px, 0) scale(${S})`;
+    // The other pictures fly away from it, each at its own speed
+    slots.current.forEach((el, i) => {
+      if (!el || i === HK) return;
+      const [x, y] = centre(el);
+      const k = SLOTS[i].depth * e;
+      el.style.transform = `translate3d(${(x - cx) * k}px, ${(y - cy) * k}px, 0)`;
+    });
+    // Tell the header once the dark picture is behind it
+    const theme = e > 0.5 ? 'dark' : 'light';
+    if (st.dataset.theme !== theme) {
+      st.dataset.theme = theme;
+      window.dispatchEvent(new Event('header-theme'));
+    }
+  }, []);
+  useScrollProgress(wrapper, onProgress, !reducedMotion);
+
+  return (
+    // Its title and sentence are the last row of Loisirs, just above
+    <section aria-label="Photos de voyage" className="relative z-10">
+
+      <div ref={wrapper} style={reducedMotion ? undefined : { height: `${VOYAGES_SVH}svh` }}>
+        <div ref={stage} data-theme="light" className="sticky top-0 h-svh overflow-hidden bg-bg">
+          <div ref={collage} className="absolute inset-0 origin-center">
+            {SLOTS.map((s, i) => {
+              const [w, h, x, y] = mobile ? s.mobile : s.desktop;
+              return (
+                <div
+                  key={s.id}
+                  ref={(el) => {
+                    slots.current[i] = el;
+                  }}
+                  className="absolute"
+                  style={{ width: `${w}vw`, height: `${h}svh`, left: `${50 + x - w / 2}vw`, top: `calc(50% + ${y - h / 2}svh)` }}
+                >
+                  <img
+                    src={s.src}
+                    alt={s.alt}
+                    width={1200}
+                    height={800}
+                    loading="lazy"
+                    decoding="async"
+                    className="size-full bg-surface-2 object-cover"
+                    style={s.focus ? { objectPosition: s.focus } : undefined}
+                  />
+                  {s.city && <p className="absolute top-full left-0 mt-1.5 text-small md:text-body">{s.city}</p>}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
