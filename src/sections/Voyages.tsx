@@ -228,7 +228,7 @@ export default function Voyages() {
                     height={800}
                     loading="lazy"
                     decoding="async"
-                    className="bg-surface-2 size-full object-cover"
+                    className="bg-surface-2 size-full rounded-md object-cover"
                     style={s.focus ? { objectPosition: s.focus } : undefined}
                   />
                   {s.city && (

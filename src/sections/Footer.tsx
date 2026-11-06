@@ -41,34 +41,6 @@ const HILLS = [
   { fill: 'fill-hill-6', d: ridge([[0, 482], [360, 456], [720, 476], [1080, 452], [W, 470]]) },
 ];
 
-// The winding road on the near hills: a centreline from the far valley to the bottom edge
-const ROAD: Point[] = [[700, 335], [745, 368], [675, 405], [770, 450], [720, H + 40]];
-const bez = (t: number) => {
-  // Catmull-Rom through ROAD, sampled
-  const n = ROAD.length - 1;
-  const k = Math.min(n - 1, Math.floor(t * n));
-  const u = t * n - k;
-  const [p0, p1, p2, p3] = [ROAD[k - 1] ?? ROAD[k], ROAD[k], ROAD[k + 1], ROAD[k + 2] ?? ROAD[k + 1]];
-  const f = (a: number, b: number, c: number, d: number) =>
-    0.5 * (2 * b + (c - a) * u + (2 * a - 5 * b + 4 * c - d) * u * u + (3 * b - a - 3 * c + d) * u * u * u);
-  return [f(p0[0], p1[0], p2[0], p3[0]), f(p0[1], p1[1], p2[1], p3[1])] as Point;
-};
-const SAMPLES = Array.from({ length: 41 }, (_, i) => i / 40);
-const CENTRE = SAMPLES.map(bez);
-// A ribbon that widens towards the viewer
-const ROAD_D = (() => {
-  const side = (sign: number) =>
-    CENTRE.map(([x, y], i) => {
-      const [nx, ny] = CENTRE[Math.min(i + 1, CENTRE.length - 1)];
-      const [px, py] = CENTRE[Math.max(i - 1, 0)];
-      const len = Math.hypot(nx - px, ny - py) || 1;
-      const w = (2 + SAMPLES[i] ** 1.6 * 55) * sign;
-      return `${(x - ((ny - py) / len) * w).toFixed(1)},${(y + ((nx - px) / len) * w).toFixed(1)}`;
-    });
-  return `M${side(1).join(' L')} L${side(-1).reverse().join(' L')} Z`;
-})();
-const CENTRE_D = `M${CENTRE.map((p) => p.map((v) => v.toFixed(1)).join(',')).join(' L')}`;
-
 // Wildflowers on the near slopes
 const FLOWERS: Point[] = [[120, 470], [210, 492], [330, 478], [460, 500], [980, 488], [1090, 470], [1210, 496], [1330, 480], [60, 505], [1390, 505], [520, 462], [900, 468]];
 
@@ -123,11 +95,9 @@ export default function Footer() {
         {HILLS.slice(0, -1).map((h) => (
           <path key={h.fill} data-hill d={h.d} className={h.fill} />
         ))}
-        {/* Near hill with its road and flowers, rising together */}
+        {/* Near hill with its flowers, rising together */}
         <g data-hill>
           <path d={HILLS[HILLS.length - 1].d} className="fill-hill-6" />
-          <path d={ROAD_D} className="fill-road" />
-          <path d={CENTRE_D} fill="none" strokeWidth="2" strokeDasharray="10 14" className="stroke-paper/70" />
           {FLOWERS.map(([x, y], i) => (
             <circle key={i} cx={x} cy={y} r={i % 3 ? 4 : 6} className={i % 2 ? 'fill-flower' : 'fill-paper'} />
           ))}

@@ -205,7 +205,8 @@ export type Mission = { title: string; detail: string; tools: string[]; url?: st
 
 export const stage = {
   heading: ['Mon stage', 'chez', 'Orange'],
-  role: 'Développeur Full-Stack & Power Platform',
+  // Non-breaking hyphen: the line never breaks inside "Full-Stack"
+  role: 'Développeur Full‑Stack & Power Platform',
   place: 'Orange, Balma',
   year: '2026',
   intro:

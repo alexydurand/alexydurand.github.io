@@ -5,6 +5,7 @@ import { prefersReducedMotion } from '../lib/motion';
 import { scrollToHash } from '../lib/scroll';
 import useReveal from '../hooks/useReveal';
 import clsx from '../lib/clsx';
+import LogoStack from '../components/LogoStack';
 import type { Skill } from '../data/content';
 
 // European language levels, in order
@@ -12,31 +13,6 @@ const CEFR = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 
 const LOGOS = import.meta.glob<string>('../assets/logos/*.svg', { eager: true, import: 'default' });
 const logo = (name: string) => LOGOS[`../assets/logos/${name}.svg`];
-
-/**
- * The tools of a card as a deck of tiles, the first one in front; the deck deals itself into a row when
- * the card is hovered (large screens). Smaller screens show the row directly. Names are listed below.
- */
-function LogoStack({ items, ring }: { items: Skill[]; ring: string }) {
-  return (
-    <div aria-hidden className="mt-6 flex flex-wrap gap-2 lg:mt-8 lg:flex-nowrap lg:gap-0">
-      {items.map((s, i) => (
-        <span
-          key={s.name}
-          style={{ '--i': i, zIndex: items.length - i, transitionDelay: `${i * 30}ms` } as React.CSSProperties}
-          className={clsx(
-            'grid size-12 shrink-0 place-items-center bg-paper p-2.5 ring-4 lg:size-13 lg:p-3 lg:not-first:-ml-[2.625rem]',
-            'origin-left transition-[translate,scale] duration-500 ease-out-expo motion-reduce:transition-none',
-            'lg:scale-[calc(1-var(--i)*0.06)] lg:group-hover:translate-x-[calc(var(--i)*3rem)] lg:group-hover:scale-100',
-            ring,
-          )}
-        >
-          <img src={logo(s.logo)} alt="" width={32} height={32} className="size-full object-contain" />
-        </span>
-      ))}
-    </div>
-  );
-}
 
 function Strip({ items, className, stripRef }: { items: string[]; className: string; stripRef: React.Ref<HTMLDivElement> }) {
   return (
@@ -123,7 +99,7 @@ export default function Skills() {
               className={clsx('group p-6 md:p-8', g.lead ? 'bg-accent text-accent-ink' : 'bg-surface', i === 2 ? 'lg:col-span-4' : 'lg:col-span-6')}
             >
               <h3 className="text-lead font-medium">{g.title}</h3>
-              <LogoStack items={g.items} ring={g.lead ? 'ring-accent' : 'ring-surface'} />
+              <LogoStack items={g.items} className="mt-6 lg:mt-8" />
               <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-1 text-lead">
                 {g.items.map((s: Skill) => (
                   <li key={s.name}>
