@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { gsap } from '../lib/gsap';
 import { person } from '../data/content';
 import { prefersReducedMotion } from '../lib/motion';
-import sky from '../assets/hero/sky.jpg';
+import sky from '../assets/hero/sky.webp';
 import mountain from '../assets/hero/mountain.webp';
 import foreground from '../assets/hero/foreground.webp';
 

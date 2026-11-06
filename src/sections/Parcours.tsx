@@ -134,13 +134,15 @@ export default function Parcours() {
           />
           {milestones.map((m, i) => (
             <li key={m.title} data-reveal={i} className="relative">
-              <span
-                aria-hidden
-                className={clsx(
-                  `absolute top-2 -left-8 size-3.5 rounded-full ${DOT_RING}`,
-                  m.current ? 'today-dot bg-accent' : 'bg-ink',
-                )}
-              />
+              <span aria-hidden className="absolute top-2 -left-8 grid size-3.5 place-items-center">
+                {m.current && <span className="today-pulse bg-accent absolute inset-0 rounded-full" />}
+                <span
+                  className={clsx(
+                    `relative size-3.5 rounded-full ${DOT_RING}`,
+                    m.current ? 'bg-accent' : 'bg-ink',
+                  )}
+                />
+              </span>
               <p className="text-lead tabular text-accent font-medium">
                 {m.years}
                 {m.current && <span className="text-small text-muted ml-2">en cours</span>}

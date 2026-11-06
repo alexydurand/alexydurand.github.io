@@ -14,6 +14,7 @@ export default function Vinyl({ cover, playing, delay = 0 }: { cover: string; pl
         )}
       >
         <svg
+          aria-hidden
           viewBox="0 0 200 200"
           className="size-full animate-[spin_3.2s_linear_infinite] motion-reduce:animate-none"
           style={{ animationPlayState: playing ? 'running' : 'paused' }}
@@ -30,7 +31,7 @@ export default function Vinyl({ cover, playing, delay = 0 }: { cover: string; pl
           <circle cx="100" cy="100" r="4" className="fill-bg" />
         </svg>
         {/* Light on the grooves stays still while the record turns */}
-        <svg viewBox="0 0 200 200" className="absolute inset-0 size-full">
+        <svg aria-hidden viewBox="0 0 200 200" className="absolute inset-0 size-full">
           <path d="M40 52 A78 78 0 0 1 82 26" fill="none" strokeWidth="5" strokeLinecap="round" className="stroke-white/15" />
           <path d="M160 148 A78 78 0 0 1 118 174" fill="none" strokeWidth="5" strokeLinecap="round" className="stroke-white/10" />
         </svg>

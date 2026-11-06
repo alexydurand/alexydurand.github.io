@@ -43,10 +43,13 @@ export default function HongKong() {
     if (reducedMotion) setProgress(1);
   }, [reducedMotion, setProgress]);
 
-  // Fetch and run the 3D code while the visitor reads the top of the page, not in the middle of a scroll
+  // Fetch and run the 3D code in an idle moment once the visitor starts scrolling, far above it:
+  // visitors who leave from the top never download it (Safari has no requestIdleCallback)
   useEffect(() => {
-    const id = window.setTimeout(loadScene, 2000);
-    return () => window.clearTimeout(id);
+    const idle = window.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 300));
+    const start = () => idle(() => void loadScene());
+    window.addEventListener('scroll', start, { once: true, passive: true });
+    return () => window.removeEventListener('scroll', start);
   }, []);
 
   const onPointerMove = (e: PointerEvent<HTMLElement>) => {

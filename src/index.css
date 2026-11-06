@@ -179,16 +179,6 @@
   animation: today-pulse 1.8s ease-out infinite;
 }
 
-.today-dot {
-  box-shadow: 0 0 0 0 var(--color-accent); /* taste-skill-ignore: pulse ring */
-  animation: today-ring 1.8s ease-out infinite;
-}
-
-@keyframes today-ring {
-  to {
-    box-shadow: 0 0 0 10px transparent; /* taste-skill-ignore: pulse ring */
-  }
-}
 
 
 /* Language level bar redrawn on hover (Skills) */

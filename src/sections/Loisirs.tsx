@@ -70,6 +70,7 @@ export default function Loisirs() {
                           )}
                         >
                           <svg
+                            aria-hidden
                             viewBox="0 0 24 24"
                             className="size-6"
                             fill="none"
