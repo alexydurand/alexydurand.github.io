@@ -8,10 +8,10 @@ import type { HongKongScene } from '../three/hongKongScene';
 
 const loadScene = () => import('../three/hongKongScene').then((m) => m.default);
 
-// The section starts 140svh early, pinned under the travel collage (Voyages.tsx): its last 40svh fade
+// The section starts 132svh early, pinned under the travel collage (Voyages.tsx): its last 32svh fade
 // the Hong Kong picture, this scene's first frame, out over it. The flight starts halfway through the fade.
-const HEIGHT_SVH = 420;
-const HIDDEN_SVH = 20;
+const HEIGHT_SVH = 280;
+const HIDDEN_SVH = 16;
 
 export default function HongKong() {
   const host = useRef<HTMLElement>(null);
@@ -61,7 +61,7 @@ export default function HongKong() {
       aria-labelledby="hk-title"
       onPointerMove={onPointerMove}
       data-theme="dark"
-      className={reducedMotion ? 'relative bg-night text-white' : 'relative -mt-[140svh] bg-night text-white'}
+      className={reducedMotion ? 'relative bg-night text-white' : 'relative -mt-[132svh] bg-night text-white'}
     >
       <div ref={wrapper} style={reducedMotion ? undefined : { height: `${HEIGHT_SVH}svh` }}>
         <div className="sticky top-0 h-svh overflow-hidden">

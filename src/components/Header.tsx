@@ -66,6 +66,8 @@ export default function Header() {
   const go = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     setOpen(false);
+    // Restart scrolling first: while the menu is open it is stopped and would ignore the jump
+    lockScroll(false);
     scrollToHash(href);
   };
 
@@ -112,7 +114,7 @@ export default function Header() {
               <a
                 href={person.cv}
                 download
-                className="ml-3 block rounded-full bg-accent px-5 py-3 text-body text-accent-ink transition-colors hover:bg-accent-deep focus-visible:bg-accent-deep"
+                className="ml-3 block rounded-lg bg-accent px-5 py-3 text-body text-accent-ink transition-colors hover:bg-accent-deep focus-visible:bg-accent-deep"
               >
                 CV
               </a>
@@ -152,7 +154,7 @@ export default function Header() {
               </li>
             ))}
           </ul>
-          <a href={person.cv} download className="block rounded-full bg-accent px-5 py-4 text-center text-lead text-accent-ink">
+          <a href={person.cv} download className="block rounded-lg bg-accent px-5 py-4 text-center text-lead text-accent-ink">
             Télécharger mon CV
           </a>
         </nav>

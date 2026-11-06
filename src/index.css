@@ -15,6 +15,16 @@
   --color-night: #060a14;
   --color-night-2: #121826;
   --color-paper: #ffffff;
+  /* Footer landscape: hazy far ridges to the deep green ground */
+  --color-sky: #eef2ec;
+  --color-hill-1: #dbe5d8;
+  --color-hill-2: #c2d2c0;
+  --color-hill-3: #9fb7a0;
+  --color-hill-4: #739379;
+  --color-hill-5: #46695a;
+  --color-hill-6: #1d4232;
+  --color-road: #e6dcc3;
+  --color-flower: #f2d06b;
   --color-code: #141b22;
   --color-code-bar: #0e1419;
   --color-code-ink: #d6e2e8;
@@ -181,3 +191,17 @@
   }
 }
 
+
+/* Language level bar redrawn on hover (Skills) */
+@keyframes sweep {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+/* Dotted flight route marching along (Voyages) */
+@keyframes march {
+  to {
+    stroke-dashoffset: -24;
+  }
+}

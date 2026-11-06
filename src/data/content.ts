@@ -88,11 +88,14 @@ export const skills = {
   vibe: {
     title: 'Vibe coding',
     tool: { name: 'Claude Code', logo: 'claude' },
-    note: 'Je sais développer avec un agent IA : je décris précisément mes besoins, je lui donne les bons outils, je relis et je fais corriger jusqu’au résultat voulu. C’est comme ça que j’ai construit ce portfolio.',
+    // Each point: the practice, then what it means
     items: [
-      'Des prompts précis, avec le contexte et des références visuelles',
-      'Des skills et des plugins pour cadrer le design et le code',
-      'Une relecture à chaque version, puis des corrections ciblées',
+      ['Prompting', 'décrire précisément le besoin, avec le contexte et des références visuelles'],
+      [
+        'Skills et plugins',
+        'outiller l’agent pour le design, l’accessibilité et la qualité du code',
+      ],
+      ['Review et correction', 'relire chaque version et faire corriger jusqu’au résultat voulu'],
     ],
   },
   soft: ['Apprentissage rapide', 'Travail en équipe', 'Curiosité pour les nouvelles technologies'],
@@ -142,7 +145,7 @@ export const projects: Project[] = [
     context: 'Projet personnel · 2026',
     stack: ['Claude Code', 'React', 'TypeScript', 'Tailwind CSS', 'Three.js', 'GSAP'],
     summary:
-      'Le site que vous parcourez : je l’ai construit avec Claude Code. Mon travail a été de bien décrire ce que je voulais, de bien outiller l’agent et de juger chaque version.',
+      'Le site que vous parcourez : je l’ai construit avec Claude Code.',
     did: [
       'Des prompts détaillés : contenu, ordre des sections, effets voulus, références de design à suivre.',
       'Des skills et des plugins Claude pour élever le niveau : taste-skill, impeccable, ui-ux-pro-max, ponytail, les skills d’Emil Kowalski.',
@@ -237,7 +240,18 @@ export const stage = {
 
 /* ---------- Loisirs ---------- */
 
-export type Hobby = { id: 'jeux' | 'musique' | 'echecs' | 'voyages'; title: string; text: string };
+// games: logos in src/assets/logos (Wikimedia Commons, see legal.logos)
+export type Hobby = {
+  id: 'jeux' | 'musique' | 'f1' | 'echecs' | 'voyages';
+  title: string;
+  // Neither text nor records: the row does not open (Voyages, whose pictures follow right below)
+  text?: string;
+  games?: { name: string; logo: string }[];
+  // cover = file name in src/assets/music; album left empty when unknown
+  records?: { album: string; artist: string; cover: string }[];
+  // Logo shown with the text (src/assets/logos)
+  logo?: { name: string; file: string };
+};
 
 export const loisirs = {
   heading: 'Loisirs',
@@ -246,14 +260,33 @@ export const loisirs = {
       id: 'jeux',
       title: 'Jeux vidéo',
       text: 'Depuis tout petit, les jeux vidéo ont pris une grande part dans ma vie : jeux de stratégie, jeux d’équipe.',
+      games: [
+        { name: 'Counter-Strike 2', logo: 'cs2' },
+        { name: 'Rocket League', logo: 'rocketleague' },
+        { name: 'League of Legends', logo: 'lol' },
+      ],
     },
     {
       id: 'musique',
       title: 'Musique',
-      text: 'J’en écoute tous les jours : elle m’aide à me concentrer quand je code et à décrocher après une journée chargée.',
+      records: [
+        { album: 'Currents', artist: 'Tame Impala', cover: 'currents' },
+        { album: 'Social Cues', artist: 'Cage the Elephant', cover: 'social-cues' },
+        { album: '444 Nuits', artist: 'Népal', cover: 'nepal' },
+      ],
     },
-    { id: 'echecs', title: 'Échecs', text: 'Anticiper, calculer, choisir le bon coup.' },
-    { id: 'voyages', title: 'Voyages', text: 'Découvrir de nouveaux endroits, d’autres cultures et d’autres façons de vivre.' },
+    {
+      id: 'f1',
+      title: 'Formule 1',
+      logo: { name: 'Formula 1', file: 'f1' },
+      text: 'Je suis chaque Grand Prix : les stratégies d’arrêt aux stands, les données de télémétrie, les duels jusqu’au dernier tour. Ici, le circuit de Monza.',
+    },
+    {
+      id: 'echecs',
+      title: 'Échecs',
+      text: 'Anticiper, calculer, choisir le bon coup. Ici, la « partie de l’Opéra » de Paul Morphy (1858).',
+    },
+    { id: 'voyages', title: 'Voyages' },
   ] satisfies Hobby[],
 };
 
@@ -261,6 +294,10 @@ export const loisirs = {
 
 export const voyages = {
   final: 'Hong Kong',
+};
+
+export const footer = {
+  line: 'Je cherche mon stage de 3e année, orienté analyse de données. Parlons-en.',
 };
 
 export const contact = { greeting: 'Écrivez-moi', place: 'Toulouse · Blagnac' };
@@ -289,8 +326,15 @@ export const legal = {
   cities:
     'Photos de Lisbonne, Montréal, Toronto et Shenzhen : photos d’illustration, droits réservés à leurs auteurs. Si vous êtes l’auteur de l’une d’elles et souhaitez être crédité ou la voir retirée, écrivez-moi.',
   hongKong: 'Hong Kong : image de synthèse, capture de la scène 3D du site.',
+  extra: [
+    'Pochettes des albums Currents (Tame Impala), Social Cues (Cage the Elephant) et 444 Nuits (Népal) : droits réservés à leurs auteurs.',
+    'Logo Formula 1 via Wikimedia Commons (domaine public), marque de Formula One Licensing B.V.',
+    'Logo Orange via Wikimedia Commons (domaine public), marque d’Orange SA.',
+    'Tracé du circuit de Monza d’après la carte de Will Pittenger, Wikimedia Commons (CC BY-SA 3.0), redessiné.',
+    'Pièces d’échecs par Cburnett, Wikimedia Commons (CC BY-SA 3.0).',
+  ],
   logos:
-    'Logos : Devicon (licence MIT) ; Power BI, Power Apps, Power Automate et SharePoint via Wikimedia Commons (domaine public). Ce sont des marques de leurs propriétaires, utilisées seulement pour désigner les outils.',
+    'Logos : Devicon (licence MIT) ; Power BI, Power Apps, Power Automate, SharePoint, Counter-Strike 2 et League of Legends via Wikimedia Commons (domaine public) ; Rocket League par Psyonix via Wikimedia Commons (CC BY-SA 4.0). Ce sont des marques de leurs propriétaires, utilisées seulement pour désigner les outils et les jeux.',
   font: 'Police : Hanken Grotesk (SIL Open Font License), hébergée avec le site.',
   privacy:
     'Ce site ne dépose aucun cookie, n’utilise aucun outil de mesure d’audience et ne contient aucun formulaire : je ne collecte aucune donnée personnelle. Comme tout hébergeur, GitHub peut enregistrer des données techniques de connexion, dont l’adresse IP, pour la sécurité du service.',

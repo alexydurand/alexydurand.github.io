@@ -7,6 +7,9 @@ import useReveal from '../hooks/useReveal';
 import clsx from '../lib/clsx';
 import type { Skill } from '../data/content';
 
+// European language levels, in order
+const CEFR = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+
 const LOGOS = import.meta.glob<string>('../assets/logos/*.svg', { eager: true, import: 'default' });
 const logo = (name: string) => LOGOS[`../assets/logos/${name}.svg`];
 
@@ -150,35 +153,64 @@ export default function Skills() {
                 <p className="text-body opacity-80">avec {skills.vibe.tool.name}</p>
               </div>
             </div>
-            <div>
-              <p className="text-body text-pretty">{skills.vibe.note}</p>
-              <ul className="mt-5 space-y-2 text-body">
-                {skills.vibe.items.map((item) => (
-                  <li key={item} className="flex gap-3">
-                    <span aria-hidden className="mt-[0.6em] size-1.5 shrink-0 bg-bg" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <ul className="space-y-5 self-center text-body">
+              {skills.vibe.items.map(([term, detail]) => (
+                <li key={term} className="flex gap-3">
+                  <span aria-hidden className="mt-[0.6em] size-1.5 shrink-0 bg-bg" />
+                  <span>
+                    <span className="block text-lead font-medium">{term}</span>
+                    <span className="opacity-80">{detail}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
           </article>
 
-          <div data-reveal="0" className="bg-surface p-6 md:p-8 lg:col-span-8">
+          <div data-reveal="0" className="bg-accent p-6 text-accent-ink md:p-8 lg:col-span-8">
             <h3 className="text-lead font-medium">Savoir-être</h3>
-            <ul className="mt-5 flex flex-wrap gap-x-10 gap-y-2 text-lead">
+            <ul className="mt-6 space-y-1">
               {skills.soft.map((s) => (
-                <li key={s}>{s}</li>
+                <li
+                  key={s}
+                  className="group/soft relative py-1 text-[clamp(1.375rem,1.1rem+1vw,2rem)] font-medium tracking-tight transition-transform duration-500 ease-out-expo hover:translate-x-3 motion-reduce:hover:translate-x-0"
+                >
+                  <span aria-hidden className="absolute top-1/2 -left-4 size-2 -translate-y-1/2 scale-50 rounded-full bg-accent-ink opacity-0 transition-[scale,opacity] duration-300 group-hover/soft:scale-100 group-hover/soft:opacity-100" />
+                  {s}
+                </li>
               ))}
             </ul>
           </div>
-          <div data-reveal="1" className="bg-surface p-6 md:p-8 lg:col-span-4">
+          {/* Level on the European scale; hovering the card redraws the bar */}
+          <div data-reveal="1" className="group bg-surface p-6 md:p-8 lg:col-span-4">
             <h3 className="text-lead font-medium">Langues</h3>
-            <ul className="mt-5 text-lead">
-              {skills.languages.map((l) => (
-                <li key={l.name}>
-                  {l.name} <span className="text-muted">{l.level}</span>
-                </li>
-              ))}
+            <ul className="mt-6 space-y-6">
+              {skills.languages.map((l) => {
+                const reached = CEFR.indexOf(l.level);
+                return (
+                  <li key={l.name}>
+                    <p className="flex items-baseline justify-between text-lead">
+                      {l.name} <span className="font-medium text-accent">{l.level}</span>
+                    </p>
+                    <div aria-hidden className="mt-4 grid grid-cols-6 gap-1">
+                      {CEFR.map((lv, k) => (
+                        <span key={lv} className="h-2.5 overflow-hidden bg-surface-2">
+                          {k <= reached && (
+                            <span
+                              style={{ animationDelay: `${k * 70}ms` }}
+                              className="block size-full origin-left bg-accent group-hover:animate-[sweep_0.6s_var(--ease-out-expo)_both] motion-reduce:group-hover:animate-none"
+                            />
+                          )}
+                        </span>
+                      ))}
+                    </div>
+                    <div aria-hidden className="mt-2 grid grid-cols-6 gap-1 text-small text-muted tabular">
+                      {CEFR.map((lv) => (
+                        <span key={lv}>{lv}</span>
+                      ))}
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>
