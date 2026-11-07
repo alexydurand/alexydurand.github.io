@@ -540,6 +540,9 @@ export const createHongKongScene: SceneFactory<HongKongScene> = (canvas, { mobil
   let target = 0;
   let progress = 0;
   let active = false;
+  // Shaders compile in the background; until then frames update the camera but draw nothing
+  let compiled = false;
+  let disposed = false;
   let raf = 0;
   const pointer = new THREE.Vector2();
   const pointerNow = new THREE.Vector2();
@@ -603,6 +606,7 @@ export const createHongKongScene: SceneFactory<HongKongScene> = (canvas, { mobil
       s.scale.x = (s.userData.w as number) * (1 + Math.sin(t * 1.5 + i) * 0.25);
     });
 
+    if (!compiled) return;
     if (composer) composer.render();
     else renderer.render(scene, camera);
   }
@@ -613,7 +617,13 @@ export const createHongKongScene: SceneFactory<HongKongScene> = (canvas, { mobil
   }
 
   layout();
-  frame();
+  // Compiling every shader on the first frame froze the scroll for about 100 ms: compile them in
+  // parallel (KHR_parallel_shader_compile where available), then draw
+  renderer.compileAsync(scene, camera).then(() => {
+    if (disposed) return;
+    compiled = true;
+    frame();
+  });
 
   return {
     setProgress(p) {
@@ -637,6 +647,7 @@ export const createHongKongScene: SceneFactory<HongKongScene> = (canvas, { mobil
       pointer.set(x, y);
     },
     dispose() {
+      disposed = true;
       cancelAnimationFrame(raf);
       disposables.forEach((d) => d.dispose());
       composer?.dispose();

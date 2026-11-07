@@ -27,32 +27,54 @@ function textUnder(header: HTMLElement) {
   return false;
 }
 
+/**
+ * Colour of the full-width band under the bar (a section, a Loisirs row), not of a card inside it,
+ * and whether it is dark enough to need light text.
+ */
+function bandUnder(header: HTMLElement) {
+  const y = (header.firstElementChild?.getBoundingClientRect().height ?? 64) / 2;
+  let el: Element | null = document.elementsFromPoint(window.innerWidth / 2, y).find((e) => !header.contains(e)) ?? null;
+  for (; el; el = el.parentElement) {
+    const bg = getComputedStyle(el).backgroundColor;
+    const [r, g, b, a = 1] = bg.match(/[\d.]+/g)?.map(Number) ?? [];
+    if (a > 0 && r !== undefined && el.getBoundingClientRect().width >= window.innerWidth - 1) {
+      return { bg, light: 0.2126 * r + 0.7152 * g + 0.0722 * b < 110 };
+    }
+  }
+  return null;
+}
+
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [dark, setDark] = useState(false);
-  const [solid, setSolid] = useState(false);
+  // Background taken from the band under the bar, while page text sits under its words
+  const [band, setBand] = useState<{ bg: string; light: boolean } | null>(null);
   const bar = useRef<HTMLDivElement>(null);
   const toggle = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLDivElement>(null);
 
   // Hide while scrolling down, show again when scrolling up.
-  // The bar is transparent, its text light over sections marked data-theme="dark"; it turns white
-  // only while page text sits under its own words, so neither becomes unreadable.
+  // The bar is transparent, its text light over sections marked data-theme="dark". While page text
+  // sits under its own words it takes the colour of the band below (white, grey or black), so both
+  // stay readable and the bar still blends in.
   useEffect(() => {
     let last = window.scrollY;
+    let down = false;
     let pending = 0;
     const check = () => {
       pending = 0;
       const header = bar.current?.parentElement;
-      if (header) setSolid(textUnder(header));
+      // Hidden while scrolling down: nothing to read, skip the hit-testing
+      if (header && !down) setBand(textUnder(header) ? bandUnder(header) : null);
     };
     const onScroll = () => {
+      const y = window.scrollY;
+      down = y > last && y > 240;
+      setHidden(down);
+      last = y;
       // At most every 80 ms: the test hit-tests a few dozen points
       if (!pending) pending = window.setTimeout(check, 80);
-      const y = window.scrollY;
-      setHidden(y > last && y > 240);
-      last = y;
       const below = document
         .elementsFromPoint(window.innerWidth / 2, (bar.current?.offsetHeight ?? 64) / 2)
         .find((el) => !bar.current?.parentElement?.contains(el));
@@ -111,14 +133,14 @@ export default function Header() {
       className={clsx(
         'fixed inset-x-0 top-0 z-50 transition-[translate,background-color] duration-500 ease-out-expo motion-reduce:transition-none',
         hidden && !open && '-translate-y-full',
-        solid && !open && 'bg-bg',
       )}
+      style={band && !open ? { backgroundColor: band.bg } : undefined}
     >
       <div
         ref={bar}
         className={clsx(
           'frame relative z-10 flex h-16 items-center justify-between transition-colors duration-300 md:h-20',
-          open || (dark && !solid) ? 'text-bg' : 'text-ink',
+          open || (band ? band.light : dark) ? 'text-bg' : 'text-ink',
         )}
       >
         <a

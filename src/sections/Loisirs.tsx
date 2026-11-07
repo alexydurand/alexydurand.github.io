@@ -3,9 +3,8 @@ import { loisirs } from '../data/content';
 import useReveal from '../hooks/useReveal';
 import Vinyl from '../components/Vinyl';
 import ChessBoard from '../components/ChessBoard';
+import ChessPieces from '../components/ChessPieces';
 import Circuit from '../components/Circuit';
-import TrackPlayer from '../components/TrackPlayer';
-import CrowdVideo from '../components/CrowdVideo';
 import useMediaQuery from '../hooks/useMediaQuery';
 import clsx from '../lib/clsx';
 
@@ -18,8 +17,6 @@ const COVERS = import.meta.glob<string>('../assets/music/*.jpg', {
 export default function Loisirs() {
   const root = useRef<HTMLElement>(null);
   const [open, setOpen] = useState<Record<string, boolean>>({});
-  // The esport video playing, by game name (one at a time)
-  const [video, setVideo] = useState<string | null>(null);
   const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   useReveal(root);
 
@@ -29,7 +26,7 @@ export default function Loisirs() {
       ref={root}
       tabIndex={-1}
       aria-labelledby="loisirs-title"
-      className="bg-bg pt-section outline-none"
+      className="bg-bg pt-[calc(var(--spacing-section)*0.5)] outline-none"
     >
       <div className="frame">
         <h2 id="loisirs-title" data-reveal="0" className="display title-xl">
@@ -99,7 +96,7 @@ export default function Loisirs() {
                       <div className="overflow-hidden">
                         <div className="grid items-center gap-8 pt-2 pb-10 md:grid-cols-12 md:gap-6 md:pb-14">
                           {h.text && (
-                            <div className={h.games ? 'md:col-span-12' : 'md:col-span-5'}>
+                            <div className="md:col-span-5">
                               {h.logo && (
                                 <img
                                   src={LOGOS[`../assets/logos/${h.logo.file}.svg`]}
@@ -115,24 +112,26 @@ export default function Loisirs() {
                           )}
 
                           {h.games && (
-                            <ul className="grid gap-4 sm:grid-cols-2 md:col-span-12 lg:grid-cols-4">
+                            // Hovering a logo lifts it and dims the others
+                            <ul className="group/games grid grid-cols-2 items-center gap-6 sm:grid-cols-4 md:col-span-7 md:col-start-6 md:gap-10">
                               {h.games.map((g, k) => (
                                 <li
                                   key={g.name}
                                   style={{ transitionDelay: isOpen ? `${150 + k * 70}ms` : '0ms' }}
                                   className={clsx(
-                                    'ease-out-expo transition-[opacity,translate] duration-500 motion-reduce:transition-none',
+                                    'group/game ease-out-expo grid h-16 place-items-center transition-[opacity,translate] duration-500 motion-reduce:transition-none sm:h-20 lg:h-24',
                                     isOpen
                                       ? 'translate-y-0 opacity-100'
                                       : 'translate-y-4 opacity-0',
                                   )}
                                 >
-                                  <CrowdVideo
-                                    name={g.name}
-                                    logo={LOGOS[`../assets/logos/${g.logo}.svg`]}
-                                    video={g.video}
-                                    active={isOpen && video === g.name}
-                                    onPlay={() => setVideo(g.name)}
+                                  <img
+                                    src={LOGOS[`../assets/logos/${g.logo}.svg`]}
+                                    alt={g.name}
+                                    width={160}
+                                    height={60}
+                                    loading="lazy"
+                                    className="ease-out-expo max-h-full w-full object-contain transition-[opacity,scale,translate,filter] duration-500 group-hover/game:-translate-y-1.5 group-hover/game:scale-110 group-hover/game:opacity-100! group-hover/games:opacity-35 motion-reduce:group-hover/game:translate-y-0 motion-reduce:group-hover/game:scale-100"
                                   />
                                 </li>
                               ))}
@@ -145,14 +144,13 @@ export default function Loisirs() {
                                 <li key={r.cover} className="max-w-xs sm:max-w-none">
                                   <Vinyl
                                     cover={COVERS[`../assets/music/${r.cover}.jpg`]}
-                                    playing={isOpen}
+                                    out={isOpen}
                                     delay={k * 120}
                                   />
                                   <p className="text-lead mt-4 font-medium">
                                     {r.album || r.artist}
                                   </p>
                                   {r.album && <p className="text-body text-muted">{r.artist}</p>}
-                                  <TrackPlayer {...r.track} open={isOpen} />
                                 </li>
                               ))}
                             </ul>
@@ -165,8 +163,12 @@ export default function Loisirs() {
                           )}
 
                           {h.id === 'echecs' && (
-                            <div className="md:col-span-7 md:flex md:justify-end">
-                              <ChessBoard playing={isOpen} still={reducedMotion} />
+                            <div className="md:col-span-7 md:flex md:items-center md:gap-6">
+                              {/* The pieces of Morphy's mate fill the space between the text and the board */}
+                              {isOpen && <ChessPieces className="hidden h-96 flex-1 lg:block" />}
+                              <div className="w-full max-w-80 shrink-0 md:max-w-96">
+                                <ChessBoard playing={isOpen} still={reducedMotion} />
+                              </div>
                             </div>
                           )}
                         </div>

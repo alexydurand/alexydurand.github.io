@@ -43,16 +43,24 @@ export default function useLazyScene<T extends SceneHandle>(
         if (!entry.isIntersecting) return;
         near.disconnect();
         load().then((factory) => {
-          if (cancelled) return;
-          const instance = factory(canvasEl, { mobile, reducedMotion });
-          instance.setProgress(progress.current);
-          instance.setActive(visible.current);
-          scene.current = instance;
-          resizeObserver = new ResizeObserver(() => instance.resize());
-          resizeObserver.observe(canvasEl);
+          // Building a scene is one long task: run it when the browser is idle (the visitor
+          // reading, not scrolling), well before the section shows up
+          const idle = window.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 200));
+          idle(
+            () => {
+              if (cancelled) return;
+              const instance = factory(canvasEl, { mobile, reducedMotion });
+              instance.setProgress(progress.current);
+              instance.setActive(visible.current);
+              scene.current = instance;
+              resizeObserver = new ResizeObserver(() => instance.resize());
+              resizeObserver.observe(canvasEl);
+            },
+            { timeout: 1500 },
+          );
         });
       },
-      { rootMargin: '150% 0px' },
+      { rootMargin: '300% 0px' },
     );
     const onScreen = new IntersectionObserver(
       ([entry]) => {

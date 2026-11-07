@@ -50,19 +50,19 @@ function BandManager() {
             API et base en ligne
           </span>
         </div>
-        <div className="m-4 bg-code-bar p-4">
+        <div className="m-3 bg-code-bar p-3 sm:m-4 sm:p-4">
           <p className="text-[11.5px] opacity-60">Prochain concert</p>
           <p className="mt-1 text-[17px] font-medium">Samedi · 21&nbsp;h</p>
           <p className="opacity-75">Fête de village · Agen</p>
         </div>
-        <div className="grid grid-cols-2 gap-2 px-4">
+        <div className="grid min-h-0 flex-1 grid-cols-2 content-start gap-2 overflow-hidden px-3 sm:px-4">
           {['Agenda', 'Setlists', 'Contrats', 'Matériel'].map((t) => (
             <p key={t} className="bg-code-bar px-3 py-2.5">
               {t}
             </p>
           ))}
         </div>
-        <div className="mt-auto grid grid-cols-4 bg-code-bar text-center text-[11.5px]">
+        <div className="mt-3 grid shrink-0 grid-cols-4 bg-code-bar text-center text-[11.5px]">
           {['Accueil', 'Agenda', 'Setlists', 'Groupe'].map((t, i) => (
             <span key={t} className={`py-2.5 ${i === 0 ? 'text-code-key' : 'opacity-60'}`}>
               {t}

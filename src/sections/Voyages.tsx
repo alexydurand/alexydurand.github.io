@@ -3,11 +3,11 @@ import useScrollProgress from '../hooks/useScrollProgress';
 import useMediaQuery from '../hooks/useMediaQuery';
 import { easeInOut, range } from '../lib/motion';
 import hongKong from '../assets/cities/hong-kong.jpg';
-import lisbonne from '../assets/cities/lisbonne.jpg';
-import montreal from '../assets/cities/montreal.jpg';
-import toronto from '../assets/cities/toronto.jpg';
-import torontoNuit from '../assets/cities/toronto-nuit.jpg';
-import shenzhen from '../assets/cities/shenzhen.jpg';
+import lisbonne from '../assets/cities/lisbonne.webp';
+import montreal from '../assets/cities/montreal.webp';
+import paris from '../assets/cities/paris.webp';
+import torontoNuit from '../assets/cities/toronto-nuit.webp';
+import shenzhen from '../assets/cities/shenzhen.webp';
 
 // [width in vw, height in svh, centre x in vw, centre y in svh], from the screen centre
 type Box = [number, number, number, number];
@@ -45,11 +45,11 @@ const SLOTS: Slot[] = [
     depth: 0.4,
   },
   {
-    id: 'toronto',
-    src: toronto,
-    alt: 'La CN Tower au-dessus du port de Toronto',
-    city: 'Toronto',
-    focus: '66% 50%',
+    id: 'paris',
+    src: paris,
+    alt: 'La tour Eiffel illuminée au-dessus de la Seine, à l’heure bleue',
+    city: 'Paris',
+    focus: '50% 40%',
     desktop: [17, 44, -28, -4],
     mobile: [28, 26, -31, -1],
     depth: 0.5,

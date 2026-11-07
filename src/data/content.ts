@@ -155,7 +155,7 @@ export const projects: Project[] = [
       'Le site que vous parcourez : je l’ai construit avec Claude Code.',
     did: [
       'Des prompts détaillés : contenu, ordre des sections, effets voulus, références de design à suivre.',
-      'Des skills et des plugins Claude : taste-skill (éviter le site « générique »), impeccable (typographie, couleurs, mise en page), ui-ux-pro-max (ergonomie et accessibilité), ponytail (garder le code simple), les skills d’Emil Kowalski (animations soignées).',
+      'Des skills et des plugins Claude : taste-skill, impeccable, ui-ux-pro-max, ponytail et les skills d’Emil Kowalski.',
       'Review et corrections de code : à chaque version, je relis tout et je liste précisément les améliorations à faire, jusqu’à ce résultat.',
     ],
   },
@@ -191,7 +191,7 @@ export const parcours = {
       years: '2021–2023',
       title: 'Lycée Rive Gauche',
       place: 'Toulouse',
-      text: 'Spécialités mathématiques et HGGSP. Bac obtenu avec mention assez bien.',
+      text: 'Spécialités mathématiques et histoire-géographie, géopolitique et sciences politiques.',
     },
     {
       from: 2024,
@@ -225,7 +225,7 @@ export const stage = {
     },
     {
       title: 'Un rapport Power BI',
-      detail: 'Un rapport complet pour analyser et visualiser l’inventaire du parc serveurs.',
+      detail: 'Un rapport complet pour analyser et visualiser l’inventaire du parc de serveurs.',
       tools: ['Power BI'],
     },
     {
@@ -253,10 +253,9 @@ export type Hobby = {
   title: string;
   // Neither text nor records: the row does not open (Voyages, whose pictures follow right below)
   text?: string;
-  // video: a short YouTube excerpt of the crowd at a big event (seconds), loaded on click
-  games?: { name: string; logo: string; video: { id: string; start: number; end: number } }[];
-  // cover = file name in src/assets/music; track = Spotify track id, played with Spotify's own player
-  records?: { album: string; artist: string; cover: string; track: { title: string; spotify: string } }[];
+  games?: { name: string; logo: string }[];
+  // cover = file name in src/assets/music
+  records?: { album: string; artist: string; cover: string }[];
   // Logo shown with the text (src/assets/logos)
   logo?: { name: string; file: string };
 };
@@ -269,38 +268,19 @@ export const loisirs = {
       title: 'Esports',
       text: 'Je regarde surtout les grands événements de quatre jeux : League of Legends, Counter-Strike 2, Valorant et Rocket League. Ce que j’aime : le niveau des meilleures équipes et l’ambiance des salles pleines.',
       games: [
-        // Riot's own channels do not allow embedding: France 3 report on the 2018 Worlds final in Paris
-        { name: 'League of Legends', logo: 'lol', video: { id: '-Y5a9jNtYds', start: 2, end: 32 } },
-        // IEM Cologne 2025 crowd moments (BANDIT2K)
-        { name: 'Counter-Strike 2', logo: 'cs2', video: { id: 'yEeBLhRIdw0', start: 0, end: 30 } },
-        // Champions 2023, filmed from the crowd (TheGamingBros)
-        { name: 'Valorant', logo: 'valorant', video: { id: 'Yjbqf40QaBs', start: 95, end: 125 } },
-        // "The Evolution of Crowds in the RLCS" (Rocket League Esports)
-        { name: 'Rocket League', logo: 'rocketleague', video: { id: '_ROqpuirzdY', start: 476, end: 500 } },
+        { name: 'League of Legends', logo: 'lol' },
+        { name: 'Counter-Strike 2', logo: 'cs2' },
+        { name: 'Valorant', logo: 'valorant' },
+        { name: 'Rocket League', logo: 'rocketleague' },
       ],
     },
     {
       id: 'musique',
       title: 'Musique',
       records: [
-        {
-          album: 'Currents',
-          artist: 'Tame Impala',
-          cover: 'currents',
-          track: { title: 'The Less I Know The Better', spotify: '6K4t31amVTZDgR3sKmwUJJ' },
-        },
-        {
-          album: 'Social Cues',
-          artist: 'Cage the Elephant',
-          cover: 'social-cues',
-          track: { title: 'Social Cues', spotify: '1KuVdyg8d6NlRhbpHxg5UF' },
-        },
-        {
-          album: '444 Nuits',
-          artist: 'Népal',
-          cover: 'nepal',
-          track: { title: 'Malik al mawt', spotify: '0pXk0VGzks1UapabcUFDRV' },
-        },
+        { album: 'Currents', artist: 'Tame Impala', cover: 'currents' },
+        { album: 'Social Cues', artist: 'Cage the Elephant', cover: 'social-cues' },
+        { album: '444 Nuits', artist: 'Népal', cover: 'nepal' },
       ],
     },
     {
@@ -337,6 +317,12 @@ export const credits = [
     licence: 'CC BY 4.0',
     url: 'https://commons.wikimedia.org/wiki/File:Pic_du_Midi_d%27Ossau_(7).jpg',
   },
+  {
+    what: 'La tour Eiffel à l’heure bleue (photo de Paris, Voyages)',
+    who: 'Nick-D',
+    licence: 'CC BY-SA 4.0',
+    url: 'https://commons.wikimedia.org/wiki/File:Eiffel_Tower_during_the_evening_blue_hour_April_2019.jpg',
+  },
 ];
 
 /* ---------- Mentions légales (page mentions-legales.html) ---------- */
@@ -356,8 +342,6 @@ export const legal = {
   hongKong: 'Hong Kong : image de synthèse, capture de la scène 3D du site.',
   extra: [
     'Pochettes des albums Currents (Tame Impala), Social Cues (Cage the Elephant) et 444 Nuits (Népal) : droits réservés à leurs auteurs.',
-    'Extraits musicaux : lus avec le lecteur officiel de Spotify, qui gère les droits de diffusion.',
-    'Vidéos esport : intégrées depuis YouTube avec le lecteur officiel, droits réservés à leurs auteurs (France 3 Paris Île-de-France, BANDIT2K, TheGamingBros, Rocket League Esports).',
     'Logo Formula 1 via Wikimedia Commons (domaine public), marque de Formula One Licensing B.V.',
     'Logo Orange via Wikimedia Commons (domaine public), marque d’Orange SA.',
     'Tracé du circuit de Monza d’après la carte de Will Pittenger, Wikimedia Commons (CC BY-SA 3.0), redessiné.',
@@ -367,15 +351,13 @@ export const legal = {
     'Logos : Devicon (licence MIT) ; Power BI, Power Apps, Power Automate, SharePoint, Counter-Strike 2, League of Legends et Valorant via Wikimedia Commons (domaine public) ; Rocket League par Psyonix via Wikimedia Commons (CC BY-SA 4.0). Ce sont des marques de leurs propriétaires, utilisées seulement pour désigner les outils et les jeux.',
   font: 'Police : Hanken Grotesk (SIL Open Font License), hébergée avec le site.',
   privacy:
-    'Ce site ne dépose lui-même aucun cookie, n’utilise aucun outil de mesure d’audience et ne contient aucun formulaire. Deux contenus viennent de services externes et ne se chargent que si vous cliquez dessus : les extraits musicaux (lecteur Spotify) et les vidéos esport (YouTube, en mode confidentialité renforcée). Une fois lancés, ces services peuvent déposer des cookies et recevoir des données de connexion, dont votre adresse IP, selon leur propre politique de confidentialité. Comme tout hébergeur, GitHub peut aussi enregistrer des données techniques de connexion pour la sécurité du service.',
+    'Ce site ne dépose aucun cookie, n’utilise aucun outil de mesure d’audience et ne contient aucun formulaire : je ne collecte aucune donnée personnelle. Comme tout hébergeur, GitHub peut enregistrer des données techniques de connexion, dont l’adresse IP, pour la sécurité du service.',
   privacyLinks: [
     {
       label: 'Déclaration de confidentialité de GitHub',
       url: 'https://docs.github.com/fr/site-policy/privacy-policies/github-general-privacy-statement',
     },
-    { label: 'Politique de confidentialité de Spotify', url: 'https://www.spotify.com/fr/legal/privacy-policy/' },
-    { label: 'Règles de confidentialité de Google (YouTube)', url: 'https://policies.google.com/privacy?hl=fr' },
   ],
   links:
-    'Les liens vers d’autres sites (GitHub, LinkedIn, Spotify, YouTube, OpenStreetMap, Wikimedia Commons) sont donnés pour information : leur contenu ne dépend pas de moi.',
+    'Les liens vers d’autres sites (GitHub, LinkedIn, OpenStreetMap, Wikimedia Commons) sont donnés pour information : leur contenu ne dépend pas de moi.',
 };
