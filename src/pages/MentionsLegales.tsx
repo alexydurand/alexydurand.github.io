@@ -87,11 +87,15 @@ export default function MentionsLegales() {
 
           <Block title="Données personnelles">
             <p>{legal.privacy}</p>
-            <p>
-              <a href={legal.privacyUrl} target="_blank" rel="noreferrer" className={LINK}>
-                Déclaration de confidentialité de GitHub
-              </a>
-            </p>
+            <ul className="space-y-1">
+              {legal.privacyLinks.map((l) => (
+                <li key={l.url}>
+                  <a href={l.url} target="_blank" rel="noreferrer" className={LINK}>
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </Block>
 
           <Block title="Liens externes">

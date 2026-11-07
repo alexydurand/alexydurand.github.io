@@ -3,19 +3,53 @@ import clsx from '../lib/clsx';
 import { nav, person } from '../data/content';
 import { lockScroll, scrollToHash } from '../lib/scroll';
 
+/** True when a line of page text lies under one of the bar's own words (name, links, "Menu"). */
+function textUnder(header: HTMLElement) {
+  for (const word of header.querySelectorAll<HTMLElement>('[data-word]')) {
+    const box = word.getBoundingClientRect();
+    if (!box.width) continue;
+    for (let x = box.left + 4; x < box.right; x += 20) {
+      for (const y of [box.top + box.height * 0.3, box.top + box.height * 0.7]) {
+        const el = document.elementsFromPoint(x, y).find((e) => !header.contains(e));
+        if (!el) continue;
+        // Hit-testing gives the element; its own text lines decide, not its whole box
+        for (const node of el.childNodes) {
+          if (node.nodeType !== Node.TEXT_NODE || !node.textContent?.trim()) continue;
+          const range = document.createRange();
+          range.selectNodeContents(node);
+          for (const r of range.getClientRects()) {
+            if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) return true;
+          }
+        }
+      }
+    }
+  }
+  return false;
+}
+
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [dark, setDark] = useState(false);
+  const [solid, setSolid] = useState(false);
   const bar = useRef<HTMLDivElement>(null);
   const toggle = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLDivElement>(null);
 
   // Hide while scrolling down, show again when scrolling up.
-  // The bar stays transparent; its text turns light over sections marked data-theme="dark".
+  // The bar is transparent, its text light over sections marked data-theme="dark"; it turns white
+  // only while page text sits under its own words, so neither becomes unreadable.
   useEffect(() => {
     let last = window.scrollY;
+    let pending = 0;
+    const check = () => {
+      pending = 0;
+      const header = bar.current?.parentElement;
+      if (header) setSolid(textUnder(header));
+    };
     const onScroll = () => {
+      // At most every 80 ms: the test hit-tests a few dozen points
+      if (!pending) pending = window.setTimeout(check, 80);
       const y = window.scrollY;
       setHidden(y > last && y > 240);
       last = y;
@@ -28,6 +62,7 @@ export default function Header() {
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('header-theme', onScroll);
     return () => {
+      window.clearTimeout(pending);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('header-theme', onScroll);
     };
@@ -74,15 +109,16 @@ export default function Header() {
   return (
     <header
       className={clsx(
-        'fixed inset-x-0 top-0 z-50 transition-transform duration-500 ease-out-expo motion-reduce:transition-none',
+        'fixed inset-x-0 top-0 z-50 transition-[translate,background-color] duration-500 ease-out-expo motion-reduce:transition-none',
         hidden && !open && '-translate-y-full',
+        solid && !open && 'bg-bg',
       )}
     >
       <div
         ref={bar}
         className={clsx(
           'frame relative z-10 flex h-16 items-center justify-between transition-colors duration-300 md:h-20',
-          open || dark ? 'text-bg' : 'text-ink',
+          open || (dark && !solid) ? 'text-bg' : 'text-ink',
         )}
       >
         <a
@@ -90,7 +126,9 @@ export default function Header() {
           onClick={(e) => go(e, '#top')}
           className="-mx-2 px-2 py-3 text-body font-medium tracking-tight"
         >
-          {person.firstName} {person.lastName}
+          <span data-word>
+            {person.firstName} {person.lastName}
+          </span>
         </a>
 
         <nav aria-label="Navigation principale" className="hidden md:block">
@@ -102,7 +140,7 @@ export default function Header() {
                   onClick={(e) => go(e, item.href)}
                   className="group relative block px-3 py-3 text-body"
                 >
-                  {item.label}
+                  <span data-word>{item.label}</span>
                   <span
                     aria-hidden
                     className="absolute inset-x-3 bottom-2 h-0.5 origin-right scale-x-0 bg-current transition-transform duration-300 ease-out-expo group-hover:origin-left group-hover:scale-x-100"
@@ -130,7 +168,7 @@ export default function Header() {
           aria-controls="menu-mobile"
           onClick={() => setOpen((v) => !v)}
         >
-          {open ? 'Fermer' : 'Menu'}
+          <span data-word>{open ? 'Fermer' : 'Menu'}</span>
         </button>
       </div>
 

@@ -2,12 +2,12 @@ import type { Project } from '../data/content';
 
 /**
  * Each project drawn as a cropped piece of its own interface (HTML/CSS, no screenshots).
- * Team names, rows and stories are sample content.
+ * Concert, rows and stories are sample content.
  */
 export default function ProjectFragment({ id }: { id: Project['id'] }) {
   switch (id) {
-    case 'tournoi':
-      return <Tournament />;
+    case 'killkeny':
+      return <BandManager />;
     case 'bdd':
       return <Database />;
     case 'portfolio':
@@ -34,58 +34,40 @@ function Window({ title, children, dark }: { title: string; children: React.Reac
   );
 }
 
-// Lines below live inside data-ui fragments (a bracket and a real table), where borders are allowed.
-const DIVIDER = 'border-b border-ink/10'; // taste-skill-ignore
+// Lines below live inside a data-ui fragment (a real table), where borders are allowed.
 const TABLE_RULE = 'border-t border-white/10'; // taste-skill-ignore
 const ROW_RULE = 'border-t border-white/5'; // taste-skill-ignore
 
-const TEAMS = ['Nova', 'Kraken', 'Orion', 'Vortex', 'Atlas', 'Phénix', 'Titan', 'Zéphyr'];
-
-function Match({ a, b, win }: { a: string; b: string; win: 0 | 1 }) {
+// The home screen of the band's app, as built so far: next concert, shortcuts, tab bar (phone layout)
+function BandManager() {
   return (
-    <div className="w-full border border-ink/15 bg-paper">
-      {[a, b].map((t, i) => (
-        <div
-          key={t}
-          className={`flex justify-between px-2 py-1 ${i === win ? 'bg-accent text-accent-ink' : ''} ${i === 0 ? DIVIDER : ''}`}
-        >
-          <span className="truncate">{t}</span>
-          <span className="tabular">{i === win ? 2 : (TEAMS.indexOf(t) % 2)}</span>
+    <Window title="Band Manager · Accueil" dark>
+      <div className="flex h-full flex-col">
+        <div className="flex items-center justify-between gap-3 px-4 pt-4">
+          <p className="text-[15px] font-medium">Kill Keny</p>
+          <span className="flex items-center gap-1.5 text-[11.5px] opacity-75">
+            <span className="size-1.5 rounded-full bg-dot-green" />
+            API et base en ligne
+          </span>
         </div>
-      ))}
-    </div>
-  );
-}
-
-function Tournament() {
-  return (
-    <Window title="Tournoi e-sport · Gestion des matchs">
-      <div className="flex h-full">
-        <aside className="hidden w-32 shrink-0 bg-surface p-3 sm:block">
-          <p className="font-medium">Équipes</p>
-          <ul className="mt-2 space-y-1">
-            {TEAMS.map((t, i) => (
-              <li key={t} className={`px-2 py-0.5 ${i === 0 ? 'bg-ink text-bg' : ''}`}>
-                {t}
-              </li>
-            ))}
-          </ul>
-        </aside>
-        <div className="grid flex-1 grid-cols-3 items-center gap-3 p-3">
-          <div className="space-y-3">
-            <Match a="Nova" b="Kraken" win={0} />
-            <Match a="Orion" b="Vortex" win={1} />
-            <Match a="Atlas" b="Phénix" win={0} />
-            <Match a="Titan" b="Zéphyr" win={1} />
-          </div>
-          <div className="space-y-12">
-            <Match a="Nova" b="Vortex" win={0} />
-            <Match a="Atlas" b="Zéphyr" win={1} />
-          </div>
-          <div>
-            <Match a="Nova" b="Zéphyr" win={0} />
-            <p className="mt-2 text-center font-medium text-accent">Vainqueur&nbsp;: Nova</p>
-          </div>
+        <div className="m-4 bg-code-bar p-4">
+          <p className="text-[11.5px] opacity-60">Prochain concert</p>
+          <p className="mt-1 text-[17px] font-medium">Samedi · 21&nbsp;h</p>
+          <p className="opacity-75">Fête de village · Agen</p>
+        </div>
+        <div className="grid grid-cols-2 gap-2 px-4">
+          {['Agenda', 'Setlists', 'Contrats', 'Matériel'].map((t) => (
+            <p key={t} className="bg-code-bar px-3 py-2.5">
+              {t}
+            </p>
+          ))}
+        </div>
+        <div className="mt-auto grid grid-cols-4 bg-code-bar text-center text-[11.5px]">
+          {['Accueil', 'Agenda', 'Setlists', 'Groupe'].map((t, i) => (
+            <span key={t} className={`py-2.5 ${i === 0 ? 'text-code-key' : 'opacity-60'}`}>
+              {t}
+            </span>
+          ))}
         </div>
       </div>
     </Window>

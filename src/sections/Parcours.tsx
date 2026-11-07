@@ -56,7 +56,7 @@ export default function Parcours() {
         {/* Desktop: horizontal timeline, one column per year */}
         <div className="relative mt-20 hidden md:block">
           <ol
-            className="relative grid items-end"
+            className="relative grid"
             style={{ gridTemplateColumns: `repeat(${span}, minmax(0, 1fr))` }}
           >
             <span
@@ -74,7 +74,7 @@ export default function Parcours() {
               <li
                 key={m.title}
                 data-reveal={i}
-                className="group relative flex flex-col justify-end"
+                className="group relative flex flex-col"
                 style={{ gridColumn: `${m.from - start + 1} / ${m.to - start + 1}`, gridRow: 1 }}
               >
                 <div className="ease-out-expo pr-6 pb-8 transition-transform duration-500 group-hover:-translate-y-2 motion-reduce:group-hover:translate-y-0">
@@ -83,10 +83,10 @@ export default function Parcours() {
                     {m.title}
                   </h3>
                   <p className="text-body text-muted mt-2">{m.place}</p>
-                  <p className="text-body mt-3 max-w-[34ch] text-pretty">{m.text}</p>
+                  {m.text && <p className="text-body mt-3 max-w-[34ch] text-pretty">{m.text}</p>}
                 </div>
                 {/* Hovering a step thickens its part of the bar, in space kept for it so the page never moves */}
-                <span aria-hidden className="relative block h-2">
+                <span aria-hidden className="relative mt-auto block h-2">
                   <span
                     className="bg-accent absolute bottom-0 left-0 h-1 opacity-0 transition-[height,opacity] duration-300 group-hover:h-2 group-hover:opacity-100"
                     style={{ width: m.current ? `${((year - m.from) / (m.to - m.from)) * 100}%` : '100%' }}
@@ -149,7 +149,7 @@ export default function Parcours() {
               </p>
               <h3 className="text-head mt-1 leading-none font-medium tracking-tight">{m.title}</h3>
               <p className="text-body text-muted mt-1">{m.place}</p>
-              <p className="text-body mt-2 text-pretty">{m.text}</p>
+              {m.text && <p className="text-body mt-2 text-pretty">{m.text}</p>}
             </li>
           ))}
         </ol>

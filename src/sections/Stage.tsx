@@ -82,11 +82,10 @@ export default function Stage() {
           {/* Year and role at the top, aligned with the logo; the story at the bottom */}
           <div className="flex flex-col gap-12 md:col-span-6 md:col-start-7 md:self-stretch">
             <div>
-              <p data-reveal="0" className="display tabular text-[clamp(4rem,10vw,9.5rem)]">
-                {stage.year.slice(0, 2)}
-                <span className="text-orange">{stage.year.slice(2)}</span>
+              <p data-reveal="0" className="display tabular text-orange text-[clamp(4rem,10vw,9.5rem)]">
+                {stage.year}
               </p>
-              <p data-reveal="1" className="text-lead text-orange mt-3 font-medium text-balance">
+              <p data-reveal="1" className="text-lead mt-3 font-medium text-balance">
                 {stage.role}
               </p>
             </div>

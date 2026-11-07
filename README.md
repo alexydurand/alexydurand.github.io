@@ -2,7 +2,7 @@
 
 Portfolio d'Alexy Durand, étudiant en 3e année de BUT Informatique à l'IUT de Blagnac.
 
-👉 [Voir le site](https://alexydurand.github.io/portfolio.alexydurand/)
+👉 [Voir le site](https://alexydurand.github.io/)
 
 ## Technologies
 

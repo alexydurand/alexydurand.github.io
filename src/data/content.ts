@@ -14,7 +14,7 @@ export const person = {
 
 export const hero = {
   sentence:
-    'Étudiant en 3e année de BUT Informatique à l’IUT de Blagnac. Je cherche mon stage de 3e année, orienté analyse de données.',
+    'Ce qui me plaît dans l’informatique, c’est d’apprendre en continu : chaque projet me fait découvrir un nouvel outil ou une nouvelle façon de faire.',
   action: 'Télécharger mon CV',
   secondary: 'Me contacter',
 };
@@ -35,14 +35,17 @@ export type Skill = { name: string; logo: string; learning?: boolean };
 export const skills = {
   heading: 'Ce que je sais faire',
   // The moving strips: data first, then the rest
-  stripData: ['SQL', 'Oracle', 'Power BI', 'Power Apps', 'Power Automate', 'SharePoint', 'Neo4j'],
+  stripData: ['SQL', 'Oracle', 'Power BI', 'SharePoint', 'Neo4j'],
   stripDev: [
     'Java',
     'Python',
-    'C',
+    'Power Apps',
+    'Power Automate',
+    'Git',
     'PHP',
     'JavaScript',
     'React',
+    'Vue',
     'Node.js',
     'Express',
     'HTML',
@@ -55,12 +58,10 @@ export const skills = {
       items: [
         { name: 'Oracle SQL', logo: 'sqldeveloper' },
         { name: 'Power BI', logo: 'powerbi' },
-        { name: 'Power Apps', logo: 'powerapps' },
-        { name: 'Power Automate', logo: 'powerautomate' },
         { name: 'SharePoint', logo: 'sharepoint' },
         { name: 'Neo4j', logo: 'neo4j', learning: true },
       ],
-      note: 'Conception de bases relationnelles, rapports et tableaux de bord, applications métier connectées.',
+      note: 'Conception de bases relationnelles, rapports et tableaux de bord.',
     },
     {
       title: 'Web',
@@ -70,6 +71,7 @@ export const skills = {
         { name: 'JavaScript', logo: 'javascript' },
         { name: 'PHP', logo: 'php' },
         { name: 'React', logo: 'react' },
+        { name: 'Vue', logo: 'vue' },
         { name: 'Node.js', logo: 'nodejs' },
         { name: 'Express', logo: 'express' },
       ],
@@ -80,9 +82,11 @@ export const skills = {
       items: [
         { name: 'Java', logo: 'java' },
         { name: 'Python', logo: 'python' },
-        { name: 'C', logo: 'c' },
+        { name: 'Power Apps', logo: 'powerapps' },
+        { name: 'Power Automate', logo: 'powerautomate' },
+        { name: 'Git', logo: 'git' },
       ],
-      note: 'Programmation objet, applications avec interface graphique.',
+      note: 'Programmation objet, applications métier low-code, versionnage avec Git.',
     },
   ] satisfies { title: string; lead?: boolean; items: Skill[]; note: string }[],
   vibe: {
@@ -105,9 +109,11 @@ export const skills = {
 /* ---------- Projets ---------- */
 
 export type Project = {
-  id: 'tournoi' | 'bdd' | 'portfolio';
+  id: 'killkeny' | 'bdd' | 'portfolio';
   title: string;
   context: string;
+  // Shown as a badge next to the context
+  status?: string;
   stack: string[];
   summary: string;
   did: string[];
@@ -115,16 +121,17 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    id: 'tournoi',
-    title: 'Gestion de tournois e-sport',
-    context: 'Projet universitaire · IUT de Blagnac',
-    stack: ['Java'],
+    id: 'killkeny',
+    title: 'Kill Keny : site et application',
+    context: 'SAE de 3e année · IUT de Blagnac · équipe de 5',
+    status: 'En cours',
+    stack: ['Vue', 'Pinia', 'Node.js', 'Express', 'MariaDB', 'WordPress', 'Git'],
     summary:
-      'Une application de bureau pour organiser des tournois e-sport : équipes, matchs et résultats.',
+      'Pour Kill Keny, un vrai groupe de reprises, nous réalisons un site vitrine WordPress et une application web installable (PWA) qui centralisera agenda, setlists, contrats et matériel. Je travaille surtout sur l’application : front en Vue, back en Express.',
     did: [
-      'Analyse des besoins avant de coder.',
-      'Conception de l’application et de son modèle.',
-      'Développement en Java d’une interface graphique fonctionnelle.',
+      'Fait : cadrage avec la cliente, cahier des charges et maquettes, en méthode Scrum.',
+      'Fait : inscription et connexion sécurisées (bcrypt, JWT en cookie httpOnly), navigation responsive, mode sombre.',
+      'En cours : les groupes, où chaque membre n’accède qu’aux données de son groupe. À venir : agenda, setlists, contrats PDF.',
     ],
   },
   {
@@ -148,8 +155,8 @@ export const projects: Project[] = [
       'Le site que vous parcourez : je l’ai construit avec Claude Code.',
     did: [
       'Des prompts détaillés : contenu, ordre des sections, effets voulus, références de design à suivre.',
-      'Des skills et des plugins Claude pour élever le niveau : taste-skill, impeccable, ui-ux-pro-max, ponytail, les skills d’Emil Kowalski.',
-      'Trois séries de corrections : à chaque version, je relis tout et je liste précisément ce qui ne va pas, jusqu’à ce résultat.',
+      'Des skills et des plugins Claude : taste-skill (éviter le site « générique »), impeccable (typographie, couleurs, mise en page), ui-ux-pro-max (ergonomie et accessibilité), ponytail (garder le code simple), les skills d’Emil Kowalski (animations soignées).',
+      'Review et corrections de code : à chaque version, je relis tout et je liste précisément les améliorations à faire, jusqu’à ce résultat.',
     ],
   },
 ];
@@ -162,7 +169,7 @@ export type Milestone = {
   years: string;
   title: string;
   place: string;
-  text: string;
+  text?: string;
   current?: boolean;
 };
 
@@ -177,7 +184,6 @@ export const parcours = {
       years: '2018–2021',
       title: 'Collège Léonard de Vinci',
       place: 'Tournefeuille',
-      text: 'Le collège, à Tournefeuille.',
     },
     {
       from: 2021,
@@ -247,9 +253,10 @@ export type Hobby = {
   title: string;
   // Neither text nor records: the row does not open (Voyages, whose pictures follow right below)
   text?: string;
-  games?: { name: string; logo: string }[];
-  // cover = file name in src/assets/music; album left empty when unknown
-  records?: { album: string; artist: string; cover: string }[];
+  // video: a short YouTube excerpt of the crowd at a big event (seconds), loaded on click
+  games?: { name: string; logo: string; video: { id: string; start: number; end: number } }[];
+  // cover = file name in src/assets/music; track = Spotify track id, played with Spotify's own player
+  records?: { album: string; artist: string; cover: string; track: { title: string; spotify: string } }[];
   // Logo shown with the text (src/assets/logos)
   logo?: { name: string; file: string };
 };
@@ -259,28 +266,48 @@ export const loisirs = {
   hobbies: [
     {
       id: 'jeux',
-      title: 'Jeux vidéo',
-      text: 'Depuis tout petit, les jeux vidéo ont pris une grande part dans ma vie : jeux de stratégie, jeux d’équipe.',
+      title: 'Esports',
+      text: 'Je regarde surtout les grands événements de quatre jeux : League of Legends, Counter-Strike 2, Valorant et Rocket League. Ce que j’aime : le niveau des meilleures équipes et l’ambiance des salles pleines.',
       games: [
-        { name: 'Counter-Strike 2', logo: 'cs2' },
-        { name: 'Rocket League', logo: 'rocketleague' },
-        { name: 'League of Legends', logo: 'lol' },
+        // Riot's own channels do not allow embedding: France 3 report on the 2018 Worlds final in Paris
+        { name: 'League of Legends', logo: 'lol', video: { id: '-Y5a9jNtYds', start: 2, end: 32 } },
+        // IEM Cologne 2025 crowd moments (BANDIT2K)
+        { name: 'Counter-Strike 2', logo: 'cs2', video: { id: 'yEeBLhRIdw0', start: 0, end: 30 } },
+        // Champions 2023, filmed from the crowd (TheGamingBros)
+        { name: 'Valorant', logo: 'valorant', video: { id: 'Yjbqf40QaBs', start: 95, end: 125 } },
+        // "The Evolution of Crowds in the RLCS" (Rocket League Esports)
+        { name: 'Rocket League', logo: 'rocketleague', video: { id: '_ROqpuirzdY', start: 476, end: 500 } },
       ],
     },
     {
       id: 'musique',
       title: 'Musique',
       records: [
-        { album: 'Currents', artist: 'Tame Impala', cover: 'currents' },
-        { album: 'Social Cues', artist: 'Cage the Elephant', cover: 'social-cues' },
-        { album: '444 Nuits', artist: 'Népal', cover: 'nepal' },
+        {
+          album: 'Currents',
+          artist: 'Tame Impala',
+          cover: 'currents',
+          track: { title: 'The Less I Know The Better', spotify: '6K4t31amVTZDgR3sKmwUJJ' },
+        },
+        {
+          album: 'Social Cues',
+          artist: 'Cage the Elephant',
+          cover: 'social-cues',
+          track: { title: 'Social Cues', spotify: '1KuVdyg8d6NlRhbpHxg5UF' },
+        },
+        {
+          album: '444 Nuits',
+          artist: 'Népal',
+          cover: 'nepal',
+          track: { title: 'Malik al mawt', spotify: '0pXk0VGzks1UapabcUFDRV' },
+        },
       ],
     },
     {
       id: 'f1',
       title: 'Formule 1',
       logo: { name: 'Formula 1', file: 'f1' },
-      text: 'Je suis chaque Grand Prix : les stratégies d’arrêt aux stands, les données de télémétrie, les duels jusqu’au dernier tour. Ici, le circuit de Monza.',
+      text: 'Je suis chaque Grand Prix, des qualifications à l’arrivée : le départ, les stratégies d’arrêt aux stands, les données de télémétrie, les duels jusqu’au dernier tour. Ici, le circuit de Monza.',
     },
     {
       id: 'echecs',
@@ -329,18 +356,26 @@ export const legal = {
   hongKong: 'Hong Kong : image de synthèse, capture de la scène 3D du site.',
   extra: [
     'Pochettes des albums Currents (Tame Impala), Social Cues (Cage the Elephant) et 444 Nuits (Népal) : droits réservés à leurs auteurs.',
+    'Extraits musicaux : lus avec le lecteur officiel de Spotify, qui gère les droits de diffusion.',
+    'Vidéos esport : intégrées depuis YouTube avec le lecteur officiel, droits réservés à leurs auteurs (France 3 Paris Île-de-France, BANDIT2K, TheGamingBros, Rocket League Esports).',
     'Logo Formula 1 via Wikimedia Commons (domaine public), marque de Formula One Licensing B.V.',
     'Logo Orange via Wikimedia Commons (domaine public), marque d’Orange SA.',
     'Tracé du circuit de Monza d’après la carte de Will Pittenger, Wikimedia Commons (CC BY-SA 3.0), redessiné.',
     'Pièces d’échecs par Cburnett, Wikimedia Commons (CC BY-SA 3.0).',
   ],
   logos:
-    'Logos : Devicon (licence MIT) ; Power BI, Power Apps, Power Automate, SharePoint, Counter-Strike 2 et League of Legends via Wikimedia Commons (domaine public) ; Rocket League par Psyonix via Wikimedia Commons (CC BY-SA 4.0). Ce sont des marques de leurs propriétaires, utilisées seulement pour désigner les outils et les jeux.',
+    'Logos : Devicon (licence MIT) ; Power BI, Power Apps, Power Automate, SharePoint, Counter-Strike 2, League of Legends et Valorant via Wikimedia Commons (domaine public) ; Rocket League par Psyonix via Wikimedia Commons (CC BY-SA 4.0). Ce sont des marques de leurs propriétaires, utilisées seulement pour désigner les outils et les jeux.',
   font: 'Police : Hanken Grotesk (SIL Open Font License), hébergée avec le site.',
   privacy:
-    'Ce site ne dépose aucun cookie, n’utilise aucun outil de mesure d’audience et ne contient aucun formulaire : je ne collecte aucune donnée personnelle. Comme tout hébergeur, GitHub peut enregistrer des données techniques de connexion, dont l’adresse IP, pour la sécurité du service.',
-  privacyUrl:
-    'https://docs.github.com/fr/site-policy/privacy-policies/github-general-privacy-statement',
+    'Ce site ne dépose lui-même aucun cookie, n’utilise aucun outil de mesure d’audience et ne contient aucun formulaire. Deux contenus viennent de services externes et ne se chargent que si vous cliquez dessus : les extraits musicaux (lecteur Spotify) et les vidéos esport (YouTube, en mode confidentialité renforcée). Une fois lancés, ces services peuvent déposer des cookies et recevoir des données de connexion, dont votre adresse IP, selon leur propre politique de confidentialité. Comme tout hébergeur, GitHub peut aussi enregistrer des données techniques de connexion pour la sécurité du service.',
+  privacyLinks: [
+    {
+      label: 'Déclaration de confidentialité de GitHub',
+      url: 'https://docs.github.com/fr/site-policy/privacy-policies/github-general-privacy-statement',
+    },
+    { label: 'Politique de confidentialité de Spotify', url: 'https://www.spotify.com/fr/legal/privacy-policy/' },
+    { label: 'Règles de confidentialité de Google (YouTube)', url: 'https://policies.google.com/privacy?hl=fr' },
+  ],
   links:
-    'Les liens vers d’autres sites (GitHub, LinkedIn, OpenStreetMap, Wikimedia Commons) sont donnés pour information : leur contenu ne dépend pas de moi.',
+    'Les liens vers d’autres sites (GitHub, LinkedIn, Spotify, YouTube, OpenStreetMap, Wikimedia Commons) sont donnés pour information : leur contenu ne dépend pas de moi.',
 };

@@ -45,8 +45,11 @@ export default function Projects() {
             return (
               <li key={p.id} className="grid items-center gap-8 md:grid-cols-12 md:gap-6">
                 <div className={clsx('md:col-span-5', flip && 'md:order-2 md:col-start-8')}>
-                  <p data-reveal="0" className="text-small text-muted">
+                  <p data-reveal="0" className="flex flex-wrap items-center gap-x-3 gap-y-1 text-small text-muted">
                     {p.context}
+                    {p.status && (
+                      <span className="rounded-full bg-accent px-2.5 py-0.5 font-medium text-accent-ink">{p.status}</span>
+                    )}
                   </p>
                   <h3 data-reveal="0" className="mt-2 text-head font-medium tracking-tight text-balance">
                     {p.title}

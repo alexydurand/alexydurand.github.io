@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 
-// Relative base: works on localhost and on GitHub Pages (/portfolio.alexydurand/).
+// Relative base: works on localhost and on GitHub Pages, at the root or in a sub-folder.
 export default defineConfig({
   base: './',
   plugins: [react(), tailwindcss()],
