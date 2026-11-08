@@ -2,28 +2,29 @@
 @import '@fontsource-variable/hanken-grotesk';
 
 @theme {
-  --color-bg: #f7f9fa;
-  --color-surface: #ecf0f2;
-  --color-surface-2: #dfe6e9;
-  --color-ink: #1f3038;
-  --color-muted: #5d6b72;
-  --color-accent: #245240;
-  --color-accent-deep: #193d2f;
+  /* Sober palette after PaperDrops: beige paper, near-black ink, white. Orange and stage black only in Stage */
+  --color-bg: #f8f6f1;
+  --color-surface: #efebe3;
+  --color-surface-2: #e3ded3;
+  --color-ink: #12110f;
+  --color-muted: #6c675e;
+  --color-accent: #12110f;
+  --color-accent-deep: #34312c;
   --color-accent-ink: #ffffff;
   --color-orange: #e77d2f;
   --color-stage: #0c0b0a;
   --color-night: #060a14;
   --color-night-2: #121826;
   --color-paper: #ffffff;
-  /* Footer landscape: hazy far ridges to the deep green ground */
-  --color-sky: #eef2ec;
-  --color-hill-1: #dbe5d8;
-  --color-hill-2: #c2d2c0;
-  --color-hill-3: #9fb7a0;
-  --color-hill-4: #739379;
-  --color-hill-5: #46695a;
-  --color-hill-6: #1d4232;
-  --color-flower: #f2d06b;
+  /* Footer landscape: pale far ridges down to the black ground */
+  --color-sky: #f1eee6;
+  --color-hill-1: #e9e5dc;
+  --color-hill-2: #d9d3c7;
+  --color-hill-3: #bdb5a6;
+  --color-hill-4: #948b7c;
+  --color-hill-5: #5a544b;
+  --color-hill-6: #1e1c19;
+  --color-flower: #c9c1b1;
   --color-code: #141b22;
   --color-code-bar: #0e1419;
   --color-code-ink: #d6e2e8;
@@ -159,7 +160,7 @@
 
 /* Hero: the photo dissolves into the page ground (scrim on a picture) */
 .hero-fade {
-  background: linear-gradient(to bottom, rgb(247 249 250 / 0), rgb(247 249 250 / 0.6) 55%, var(--color-bg)); /* taste-skill-ignore: scrim on a picture */
+  background: linear-gradient(to bottom, rgb(248 246 241 / 0), rgb(248 246 241 / 0.6) 55%, var(--color-bg)); /* taste-skill-ignore: scrim on a picture */
 }
 
 

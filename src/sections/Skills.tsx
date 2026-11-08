@@ -1,7 +1,5 @@
-import { useEffect, useRef, type MouseEvent } from 'react';
-import { gsap } from '../lib/gsap';
-import { hero, person, skills } from '../data/content';
-import { prefersReducedMotion } from '../lib/motion';
+import { useRef, type MouseEvent } from 'react';
+import { skills } from '../data/content';
 import { scrollToHash } from '../lib/scroll';
 import useReveal from '../hooks/useReveal';
 import clsx from '../lib/clsx';
@@ -14,42 +12,10 @@ const CEFR = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 const LOGOS = import.meta.glob<string>('../assets/logos/*.svg', { eager: true, import: 'default' });
 const logo = (name: string) => LOGOS[`../assets/logos/${name}.svg`];
 
-function Strip({ items, className, stripRef }: { items: string[]; className: string; stripRef: React.Ref<HTMLDivElement> }) {
-  return (
-    <div aria-hidden className="overflow-hidden whitespace-nowrap">
-      <div ref={stripRef} className={clsx('display inline-block text-[clamp(2.25rem,5.2vw,5rem)] leading-[1.05]', className)}>
-        {[...items, ...items, ...items].map((s, i) => (
-          <span key={i} className="mr-[0.6em]">
-            {s}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 export default function Skills() {
   const root = useRef<HTMLElement>(null);
-  const dataStrip = useRef<HTMLDivElement>(null);
-  const devStrip = useRef<HTMLDivElement>(null);
   useReveal(root);
 
-  // Two strips of languages slide in opposite directions with the scroll
-  useEffect(() => {
-    const el = root.current;
-    if (!el || prefersReducedMotion()) return;
-    const ctx = gsap.context(() => {
-      const st = { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true };
-      gsap.fromTo(dataStrip.current, { xPercent: -2 }, { xPercent: -30, ease: 'none', scrollTrigger: st });
-      gsap.fromTo(devStrip.current, { xPercent: -30 }, { xPercent: -2, ease: 'none', scrollTrigger: st });
-    }, el);
-    return () => ctx.revert();
-  }, []);
-
-  const toContact = (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    scrollToHash('#contact');
-  };
   const toProjects = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     scrollToHash('#projets');
@@ -57,36 +23,7 @@ export default function Skills() {
 
   return (
     <section id="competences" ref={root} tabIndex={-1} aria-labelledby="skills-title" className="bg-bg pb-24 outline-none md:pb-36">
-      {/* Who I am, in one sentence */}
-      <div className="frame grid gap-8 pt-6 md:grid-cols-12 md:pt-10">
-        <p data-reveal="0" className="text-[clamp(1.25rem,1rem+1vw,2rem)] leading-snug text-pretty md:col-span-8">
-          {hero.sentence}
-        </p>
-        <div data-reveal="1" className="flex flex-wrap items-center gap-x-6 gap-y-3 md:col-span-4 md:justify-end md:self-end">
-          <a
-            href={person.cv}
-            download
-            className="inline-flex min-h-12 items-center bg-accent px-6 text-body font-medium whitespace-nowrap text-accent-ink transition-colors duration-200 hover:bg-accent-deep active:translate-y-px"
-          >
-            {hero.action}
-          </a>
-          <a
-            href="#contact"
-            onClick={toContact}
-            className="py-3 text-body underline decoration-1 underline-offset-4 hover:decoration-2"
-          >
-            {hero.secondary}
-          </a>
-        </div>
-      </div>
-
-      {/* Languages and tools, data first */}
-      <div className="mt-20 space-y-1 md:mt-28">
-        <Strip items={skills.stripData} className="text-accent" stripRef={dataStrip} />
-        <Strip items={skills.stripDev} className="text-ink" stripRef={devStrip} />
-      </div>
-
-      <div className="frame mt-20 md:mt-28">
+      <div className="frame pt-20 md:pt-28">
         <h2 id="skills-title" className="sr-only">
           {skills.heading}
         </h2>

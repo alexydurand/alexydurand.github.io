@@ -37,7 +37,9 @@ export default function Hero() {
           <img data-layer="mountain" src={mountain} alt="" width={2000} height={1250} className={layerImg} />
           <div data-layer="title" className="absolute inset-0 flex items-center justify-center pb-[12svh]">
             <div data-hero-title className="frame text-center text-ink">
-              <h1 id="hero-title" className="display text-[clamp(3.25rem,11vw,11rem)] font-bold whitespace-nowrap">
+              <h1 id="hero-title" className="display text-[clamp(2.75rem,10vw,10rem)] font-bold whitespace-nowrap">
+                {/* The square that grows into the next band (Intro.tsx); drawn here only without motion */}
+                <span aria-hidden data-square className="motion-reduce:bg-ink mr-[0.1em] inline-block size-[0.72em]" />
                 {person.firstName} {person.lastName}
               </h1>
               <p className="mt-3 text-lead font-medium md:mt-5">{person.role}</p>

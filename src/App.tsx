@@ -1,6 +1,7 @@
 import useSmoothScroll from './hooks/useSmoothScroll';
 import Header from './components/Header';
 import Hero from './sections/Hero';
+import Intro from './sections/Intro';
 import Projects from './sections/Projects';
 import Stage from './sections/Stage';
 import Loisirs from './sections/Loisirs';
@@ -25,6 +26,7 @@ export default function App() {
       <Header />
       <main id="contenu" tabIndex={-1} className="outline-none">
         <Hero />
+        <Intro />
         <Skills />
         <Projects />
         <Parcours />

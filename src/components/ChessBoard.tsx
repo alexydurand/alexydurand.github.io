@@ -61,8 +61,8 @@ export default function ChessBoard({ playing, still }: { playing: boolean; still
           <span
             key={i}
             className={clsx(
-              (Math.floor(i / 8) + i) % 2 ? 'bg-accent' : 'bg-sky',
-              last && (i === last[0] || i === last[1]) && 'ring-4 ring-flower ring-inset',
+              (Math.floor(i / 8) + i) % 2 ? 'bg-hill-3' : 'bg-sky',
+              last && (i === last[0] || i === last[1]) && 'ring-4 ring-ink ring-inset',
             )}
           />
         ))}
