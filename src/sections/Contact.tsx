@@ -46,7 +46,7 @@ export default function Contact() {
             >
               {/* The reveal animates the wrapper; the hover shift moves the text inside it */}
               <span data-reveal={i} className="block min-w-0">
-                <span className="display block text-[9.6vw] leading-none break-words transition-transform duration-500 ease-out-expo group-hover:translate-x-[2vw] motion-reduce:group-hover:translate-x-0 md:text-[clamp(2.75rem,6vw,5.5rem)]">
+                <span className="display block text-[7vw] leading-none whitespace-nowrap transition-transform duration-500 ease-out-expo group-hover:translate-x-[2vw] motion-reduce:group-hover:translate-x-0 md:text-[clamp(2.75rem,6vw,5.5rem)]">
                   {row.label}
                 </span>
               </span>
@@ -64,7 +64,7 @@ export default function Contact() {
             rel="noreferrer"
             className="group frame flex min-h-[96px] items-end justify-between gap-6 pt-8 pb-5 md:min-h-[150px]"
           >
-            <span className="display text-[9.6vw] leading-none transition-transform duration-500 ease-out-expo group-hover:translate-x-[2vw] motion-reduce:group-hover:translate-x-0 md:text-[clamp(2.75rem,6vw,5.5rem)]">
+            <span className="display text-[7vw] leading-none transition-transform duration-500 ease-out-expo group-hover:translate-x-[2vw] motion-reduce:group-hover:translate-x-0 md:text-[clamp(2.75rem,6vw,5.5rem)]">
               {contact.place}
             </span>
             <span className="mb-2 flex shrink-0 items-center gap-3 text-small">

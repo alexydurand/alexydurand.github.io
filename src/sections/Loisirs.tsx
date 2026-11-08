@@ -131,7 +131,7 @@ export default function Loisirs() {
                                     width={160}
                                     height={60}
                                     loading="lazy"
-                                    className="ease-out-expo max-h-full w-full object-contain transition-[opacity,scale,translate,filter] duration-500 group-hover/game:-translate-y-1.5 group-hover/game:scale-110 group-hover/game:opacity-100! group-hover/games:opacity-35 motion-reduce:group-hover/game:translate-y-0 motion-reduce:group-hover/game:scale-100"
+                                    className="ease-out-expo max-h-full w-[85%] object-contain transition-[opacity,scale,translate,filter] duration-500 group-hover/game:-translate-y-1.5 group-hover/game:scale-105 group-hover/game:opacity-100! group-hover/games:opacity-35 motion-reduce:group-hover/game:translate-y-0 motion-reduce:group-hover/game:scale-100"
                                   />
                                 </li>
                               ))}
@@ -158,7 +158,12 @@ export default function Loisirs() {
 
                           {h.id === 'f1' && (
                             <div className="md:col-span-7 md:flex md:justify-end">
-                              <Circuit playing={isOpen} still={reducedMotion} />
+                              <figure className="w-full max-w-xl">
+                                <Circuit playing={isOpen} still={reducedMotion} />
+                                <figcaption className="text-body text-muted mt-3 text-center">
+                                  {h.caption}
+                                </figcaption>
+                              </figure>
                             </div>
                           )}
 

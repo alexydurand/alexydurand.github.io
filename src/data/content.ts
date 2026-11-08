@@ -258,6 +258,8 @@ export type Hobby = {
   records?: { album: string; artist: string; cover: string }[];
   // Logo shown with the text (src/assets/logos)
   logo?: { name: string; file: string };
+  // Shown under the picture on the right (F1 circuit)
+  caption?: string;
 };
 
 export const loisirs = {
@@ -287,7 +289,8 @@ export const loisirs = {
       id: 'f1',
       title: 'Formule 1',
       logo: { name: 'Formula 1', file: 'f1' },
-      text: 'Je suis chaque Grand Prix, des qualifications à l’arrivée : le départ, les stratégies d’arrêt aux stands, les données de télémétrie, les duels jusqu’au dernier tour. Ici, le circuit de Monza.',
+      text: 'Je suis chaque Grand Prix, des qualifications à l’arrivée : le départ, les stratégies d’arrêt aux stands, les données de télémétrie, les duels jusqu’au dernier tour.',
+      caption: 'Circuit de Monza, Italie',
     },
     {
       id: 'echecs',
@@ -304,24 +307,26 @@ export const voyages = {
   final: 'Hong Kong',
 };
 
-export const footer = {
-  line: 'Je cherche mon stage de 3e année, orienté analyse de données. Parlons-en.',
-};
-
 export const contact = { greeting: 'Écrivez-moi', place: 'Toulouse · Blagnac' };
 
 export const credits = [
-  {
-    what: 'Pic du Midi d’Ossau (photo de l’accueil, découpée en calques)',
-    who: 'Tournasol7',
-    licence: 'CC BY 4.0',
-    url: 'https://commons.wikimedia.org/wiki/File:Pic_du_Midi_d%27Ossau_(7).jpg',
-  },
   {
     what: 'La tour Eiffel à l’heure bleue (photo de Paris, Voyages)',
     who: 'Nick-D',
     licence: 'CC BY-SA 4.0',
     url: 'https://commons.wikimedia.org/wiki/File:Eiffel_Tower_during_the_evening_blue_hour_April_2019.jpg',
+  },
+  {
+    what: 'Les tours de Hong Kong de nuit (vidéo de la section Voyages, découpée en images)',
+    who: 'Henry sur Pexels',
+    licence: 'licence Pexels',
+    url: 'https://www.pexels.com/video/aerial-footage-of-buildings-at-night-5396825/',
+  },
+  {
+    what: 'La baie de Hong Kong de nuit (vidéo de la section Voyages, découpée en images)',
+    who: 'Henry sur Pexels',
+    licence: 'licence Pexels',
+    url: 'https://www.pexels.com/video/drone-footage-of-a-city-at-night-5396818/',
   },
 ];
 
@@ -339,7 +344,6 @@ export const legal = {
   ip: 'Les textes, la mise en page et le code de ce site appartiennent à Alexy Durand, sauf les éléments crédités ci-dessous. Ils ne peuvent pas être reproduits sans son accord.',
   cities:
     'Photos de Lisbonne, Montréal, Toronto et Shenzhen : photos d’illustration, droits réservés à leurs auteurs. Si vous êtes l’auteur de l’une d’elles et souhaitez être crédité ou la voir retirée, écrivez-moi.',
-  hongKong: 'Hong Kong : image de synthèse, capture de la scène 3D du site.',
   extra: [
     'Pochettes des albums Currents (Tame Impala), Social Cues (Cage the Elephant) et 444 Nuits (Népal) : droits réservés à leurs auteurs.',
     'Logo Formula 1 via Wikimedia Commons (domaine public), marque de Formula One Licensing B.V.',

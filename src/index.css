@@ -16,6 +16,8 @@
   --color-night: #060a14;
   --color-night-2: #121826;
   --color-paper: #ffffff;
+  /* The beige of the home page sky */
+  --color-sand: #e5b987;
   /* Footer landscape: pale far ridges down to the black ground */
   --color-sky: #f1eee6;
   --color-hill-1: #e9e5dc;
@@ -158,9 +160,9 @@
 }
 
 
-/* Hero: the photo dissolves into the page ground (scrim on a picture) */
+/* Hero: the dark ground of the hills dissolves into the page (scrim on a picture) */
 .hero-fade {
-  background: linear-gradient(to bottom, rgb(248 246 241 / 0), rgb(248 246 241 / 0.6) 55%, var(--color-bg)); /* taste-skill-ignore: scrim on a picture */
+  background: linear-gradient(to bottom, var(--color-ink), rgb(18 17 15 / 0)); /* taste-skill-ignore: scrim on a picture */
 }
 
 

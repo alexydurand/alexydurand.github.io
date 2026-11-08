@@ -4,12 +4,12 @@ import useLazyScene from '../hooks/useLazyScene';
 import useScrollProgress from '../hooks/useScrollProgress';
 import useMediaQuery from '../hooks/useMediaQuery';
 import { range } from '../lib/motion';
-import type { HongKongScene } from '../three/hongKongScene';
+import createHongKongFlight, { type HongKongFlight } from '../lib/hongKongFlight';
 
-const loadScene = () => import('../three/hongKongScene').then((m) => m.default);
+const loadFlight = () => Promise.resolve(createHongKongFlight);
 
 // The section starts 132svh early, pinned under the travel collage (Voyages.tsx): its last 32svh fade
-// the Hong Kong picture, this scene's first frame, out over it. The flight starts halfway through the fade.
+// the Hong Kong picture, this flight's first image, out over it. The flight starts halfway through the fade.
 const HEIGHT_SVH = 280;
 const HIDDEN_SVH = 16;
 
@@ -22,7 +22,13 @@ export default function HongKong() {
   const mobile = useMediaQuery('(max-width: 767px)');
 
   // Render only once the section reaches the top of the screen: before that it is hidden under the collage
-  const { scene, setProgress } = useLazyScene<HongKongScene>(host, canvas, loadScene, { mobile, reducedMotion }, '0px 0px -99% 0px');
+  const { scene, setProgress } = useLazyScene<HongKongFlight>(
+    host,
+    canvas,
+    loadFlight,
+    { mobile, reducedMotion },
+    '0px 0px -99% 0px',
+  );
 
   const onProgress = useCallback(
     (raw: number) => {
@@ -43,19 +49,13 @@ export default function HongKong() {
     if (reducedMotion) setProgress(1);
   }, [reducedMotion, setProgress]);
 
-  // Fetch and run the 3D code in an idle moment once the visitor starts scrolling, far above it:
-  // visitors who leave from the top never download it (Safari has no requestIdleCallback)
-  useEffect(() => {
-    const idle = window.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 300));
-    const start = () => idle(() => void loadScene());
-    window.addEventListener('scroll', start, { once: true, passive: true });
-    return () => window.removeEventListener('scroll', start);
-  }, []);
-
   const onPointerMove = (e: PointerEvent<HTMLElement>) => {
     if (e.pointerType !== 'mouse') return;
     const r = e.currentTarget.getBoundingClientRect();
-    scene.current?.look(((e.clientX - r.left) / r.width) * 2 - 1, -(((e.clientY - r.top) / r.height) * 2 - 1));
+    scene.current?.look(
+      ((e.clientX - r.left) / r.width) * 2 - 1,
+      -(((e.clientY - r.top) / r.height) * 2 - 1),
+    );
   };
 
   return (
@@ -64,15 +64,25 @@ export default function HongKong() {
       aria-labelledby="hk-title"
       onPointerMove={onPointerMove}
       data-theme="dark"
-      className={reducedMotion ? 'relative bg-night text-white' : 'relative -mt-[132svh] bg-night text-white'}
+      className={
+        reducedMotion ? 'bg-night relative text-white' : 'bg-night relative -mt-[132svh] text-white'
+      }
     >
       <div ref={wrapper} style={reducedMotion ? undefined : { height: `${HEIGHT_SVH}svh` }}>
         <div className="sticky top-0 h-svh overflow-hidden">
           <canvas ref={canvas} aria-hidden className="absolute inset-0 size-full" />
-          <div ref={end} className={reducedMotion ? 'relative h-full' : 'relative h-full opacity-0 will-change-transform'}>
+          <div
+            ref={end}
+            className={
+              reducedMotion ? 'relative h-full' : 'relative h-full opacity-0 will-change-transform'
+            }
+          >
             <div aria-hidden className="hk-scrim pointer-events-none absolute inset-0" />
             <div className="frame relative flex h-full items-end pb-[12svh]">
-              <h2 id="hk-title" className="display text-[clamp(3.5rem,1.5rem+10vw,11rem)] leading-[0.85]">
+              <h2
+                id="hk-title"
+                className="display text-[clamp(3.5rem,1.5rem+10vw,11rem)] leading-[0.85]"
+              >
                 {voyages.final}
               </h2>
             </div>

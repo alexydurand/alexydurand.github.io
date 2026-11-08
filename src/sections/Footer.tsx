@@ -1,6 +1,6 @@
 import { useEffect, useRef, type MouseEvent } from 'react';
 import { gsap } from '../lib/gsap';
-import { footer, nav, person } from '../data/content';
+import { nav, person } from '../data/content';
 import { prefersReducedMotion } from '../lib/motion';
 import { scrollToHash } from '../lib/scroll';
 
@@ -25,7 +25,7 @@ function ridge(pts: Point[], jagged = false) {
   return `${d} L${W} ${H} Z`;
 }
 
-// Far to near. The second one is the Pic du Midi d'Ossau, the mountain of the home page.
+// Far to near. The second one is the Pic du Midi d'Ossau.
 const HILLS = [
   { fill: 'fill-hill-1', d: ridge([[0, 250], [200, 212], [420, 236], [640, 196], [900, 226], [1150, 184], [W, 214]]) },
   {
@@ -111,7 +111,6 @@ export default function Footer() {
               <p className="display text-[clamp(2.5rem,1rem+4vw,4.5rem)] leading-[0.95]">
                 {person.firstName} {person.lastName}
               </p>
-              <p className="mt-4 max-w-[36ch] text-body text-pretty">{footer.line}</p>
               <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
                 <a
                   href={person.cv}

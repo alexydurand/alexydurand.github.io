@@ -152,7 +152,7 @@ export default function Intro() {
 
           {/* Languages and tools, data first */}
           <div className="space-y-1">
-            <Strip items={skills.stripData} className="text-hill-3" stripRef={dataStrip} />
+            <Strip items={skills.stripData} className="text-sand" stripRef={dataStrip} />
             <Strip items={skills.stripDev} className="text-bg" stripRef={devStrip} />
           </div>
         </div>

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import useScrollProgress from '../hooks/useScrollProgress';
 import useMediaQuery from '../hooks/useMediaQuery';
 import { easeInOut, range } from '../lib/motion';
-import hongKong from '../assets/cities/hong-kong.jpg';
+import hongKong from '../assets/cities/hong-kong.webp';
 import lisbonne from '../assets/cities/lisbonne.webp';
 import montreal from '../assets/cities/montreal.webp';
 import paris from '../assets/cities/paris.webp';
@@ -29,7 +29,7 @@ const SLOTS: Slot[] = [
   {
     id: 'hk',
     src: hongKong,
-    alt: 'Une rue de Hong Kong la nuit, modélisée en 3D',
+    alt: 'Les tours du centre de Hong Kong la nuit, vues du ciel',
     city: 'Hong Kong',
     desktop: [26, 24, 0, 1],
     mobile: [58, 26, 16, -1],
@@ -119,7 +119,7 @@ function routePath(W: number, H: number) {
   return d;
 }
 // Scroll length of the pinned collage, and how it is spent: a short look at the collage, the zoom into
-// Hong Kong, then the picture fades over the 3D scene, whose first frame it is. The fade lasts
+// Hong Kong, then the picture fades over the flight, whose first image it is. The fade lasts
 // (260 - 100) × 0.2 = 32svh: HongKong.tsx overlaps this section by 100 + 32svh to sit under it.
 const VOYAGES_SVH = 260;
 const ZOOM: [number, number] = [0.15, 0.8];
@@ -152,7 +152,8 @@ export default function Voyages() {
     const e = easeInOut(range(p, ZOOM[0], ZOOM[1]));
     const fade = range(p, ZOOM[1], 1);
     st.style.opacity = String(1 - fade);
-    for (const el of [route.current, plane.current]) if (el) el.style.opacity = String(1 - range(e, 0, 0.35));
+    for (const el of [route.current, plane.current])
+      if (el) el.style.opacity = String(1 - range(e, 0, 0.35));
     const W = st.clientWidth;
     const H = st.clientHeight;
     const centre = (el: HTMLDivElement) => [
@@ -161,7 +162,7 @@ export default function Voyages() {
     ];
     const [cx, cy] = centre(target);
     // Zoom so Hong Kong covers the screen, its centre moving to the screen centre; keep pushing in a
-    // little while it fades, as the 3D camera starts to move
+    // little while it fades, as the flight starts to move
     const s = Math.max(W / target.offsetWidth, H / target.offsetHeight) * 1.002;
     const S = Math.pow(s, e) * (1 + fade * 0.05);
     col.style.transform = `translate3d(${cx * (1 - e) - cx * S}px, ${cy * (1 - e) - cy * S}px, 0) scale(${S})`;

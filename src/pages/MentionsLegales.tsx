@@ -77,7 +77,6 @@ export default function MentionsLegales() {
             <p>
               {legal.cities} {mail}
             </p>
-            <p>{legal.hongKong}</p>
             {legal.extra.map((line) => (
               <p key={line}>{line}</p>
             ))}
