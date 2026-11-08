@@ -142,11 +142,11 @@ export const projects: Project[] = [
     context: 'TP de 3e année · IUT de Blagnac · équipe de 4',
     stack: ['Godot', 'GDScript', 'Git'],
     summary:
-      'En cinq séances, nous avons refait le principe de Bomberman en 3D : des bombes qui explosent en croix, des murs destructibles, des ennemis autonomes et des bonus. Chacun avait son domaine, réparti en user stories. Le mien : la boucle de jeu, des vies du joueur jusqu’à la fin de partie.',
+      'En cinq séances, nous avons refait le principe de Bomberman en 3D : bombes qui explosent en croix, murs destructibles, ennemis autonomes et bonus. Chacun avait son domaine, réparti en user stories. Le mien : la boucle de jeu, des vies du joueur à la fin de partie.',
     did: [
-      'Les vies : une explosion ou un ennemi retire une vie au joueur, qui réapparaît à son point de départ.',
-      'La fin de partie : un GameManager global compte les vies et les ennemis, puis déclare la défaite à zéro vie ou la victoire quand tous les ennemis sont éliminés.',
-      'L’interface : trois cœurs à l’écran, mis à jour par signal, et un écran de victoire ou de défaite qui met le jeu en pause et permet de relancer la partie.',
+      'Les vies : une explosion ou un ennemi retire une vie, et le joueur réapparaît à son point de départ.',
+      'La fin de partie : un GameManager global compte les vies et les ennemis, puis déclare la défaite ou la victoire.',
+      'L’interface : trois cœurs mis à jour par signal, et un écran de fin qui met le jeu en pause et permet de relancer.',
       'Le décor du niveau : l’herbe et les fleurs.',
     ],
   },

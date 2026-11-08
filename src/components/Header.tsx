@@ -3,23 +3,45 @@ import clsx from '../lib/clsx';
 import { nav, person } from '../data/content';
 import { lockScroll, scrollToHash } from '../lib/scroll';
 
-/** True when a line of page text lies under one of the bar's own words (name, links, "Menu"). */
-function textUnder(header: HTMLElement) {
+/** True when a line of this element's own text passes through the point. */
+function textAt(el: Element, x: number, y: number) {
+  for (const node of el.childNodes) {
+    if (node.nodeType !== Node.TEXT_NODE || !node.textContent?.trim()) continue;
+    const range = document.createRange();
+    range.selectNodeContents(node);
+    for (const r of range.getClientRects()) {
+      if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * True when one of the bar's own words (name, links, "Menu") can't be read where it is: page text
+ * lies under it, or a picture, or a card too close to the colour of the words (black card, dark text).
+ */
+function unreadable(header: HTMLElement, lightText: boolean) {
+  // Still sliding back in after hiding: test the words where they are about to rest
+  const slide = header.getBoundingClientRect().top;
   for (const word of header.querySelectorAll<HTMLElement>('[data-word]')) {
     const box = word.getBoundingClientRect();
     if (!box.width) continue;
     for (let x = box.left + 4; x < box.right; x += 20) {
-      for (const y of [box.top + box.height * 0.3, box.top + box.height * 0.7]) {
-        const el = document.elementsFromPoint(x, y).find((e) => !header.contains(e));
-        if (!el) continue;
-        // Hit-testing gives the element; its own text lines decide, not its whole box
-        for (const node of el.childNodes) {
-          if (node.nodeType !== Node.TEXT_NODE || !node.textContent?.trim()) continue;
-          const range = document.createRange();
-          range.selectNodeContents(node);
-          for (const r of range.getClientRects()) {
-            if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) return true;
+      for (const y of [box.top - slide + box.height * 0.3, box.top - slide + box.height * 0.7]) {
+        // From the top down, as far as the first thing that hides the rest
+        for (const el of document.elementsFromPoint(x, y)) {
+          if (header.contains(el)) continue;
+          if (textAt(el, x, y)) return true;
+          const wide = el.getBoundingClientRect().width >= window.innerWidth - 1;
+          if (el.matches('img, canvas, video')) {
+            if (wide) break;
+            return true;
           }
+          const [r, g, b, a = 1] = getComputedStyle(el).backgroundColor.match(/[\d.]+/g)?.map(Number) ?? [];
+          if (r === undefined || a < 0.5) continue;
+          // A full-width band is what the colour of the words already follows
+          if (!wide && 0.2126 * r + 0.7152 * g + 0.0722 * b < 110 !== lightText) return true;
+          break;
         }
       }
     }
@@ -48,25 +70,25 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [dark, setDark] = useState(false);
-  // Background taken from the band under the bar, while page text sits under its words
+  // Background taken from the band under the bar, while its words can't be read
   const [band, setBand] = useState<{ bg: string; light: boolean } | null>(null);
   const bar = useRef<HTMLDivElement>(null);
   const toggle = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLDivElement>(null);
 
   // Hide while scrolling down, show again when scrolling up.
-  // The bar is transparent, its text light over sections marked data-theme="dark". While page text
-  // sits under its own words it takes the colour of the band below (white, grey or black), so both
-  // stay readable and the bar still blends in.
+  // The bar is transparent, its text light over sections marked data-theme="dark". While its words
+  // can't be read (see unreadable) it takes the colour of the band below, so it still blends in.
   useEffect(() => {
     let last = window.scrollY;
     let down = false;
+    let lightText = false;
     let pending = 0;
     const check = () => {
       pending = 0;
       const header = bar.current?.parentElement;
       // Hidden while scrolling down: nothing to read, skip the hit-testing
-      if (header && !down) setBand(textUnder(header) ? bandUnder(header) : null);
+      if (header && !down) setBand(unreadable(header, lightText) ? bandUnder(header) : null);
     };
     const onScroll = () => {
       const y = window.scrollY;
@@ -78,7 +100,8 @@ export default function Header() {
       const below = document
         .elementsFromPoint(window.innerWidth / 2, (bar.current?.offsetHeight ?? 64) / 2)
         .find((el) => !bar.current?.parentElement?.contains(el));
-      setDark(below?.closest('[data-theme]')?.getAttribute('data-theme') === 'dark');
+      lightText = below?.closest('[data-theme]')?.getAttribute('data-theme') === 'dark';
+      setDark(lightText);
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });

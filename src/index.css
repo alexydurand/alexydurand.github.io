@@ -18,6 +18,8 @@
   --color-paper: #ffffff;
   /* The beige of the home page sky */
   --color-sand: #e5b987;
+  /* The same beige on its way to black: the last tone dark text still reads on */
+  --color-sand-deep: #957959;
   /* Footer landscape: pale far ridges down to the black ground */
   --color-sky: #f1eee6;
   --color-hill-1: #e9e5dc;
@@ -183,6 +185,21 @@
 /* Hero: the dark ground of the hills dissolves into the page (scrim on a picture) */
 .hero-fade {
   background: linear-gradient(to bottom, var(--color-ink), rgb(18 17 15 / 0)); /* taste-skill-ignore: scrim on a picture */
+}
+
+
+/* Skills: one gradient through three cards (asked by Alexy), black, beige, black. Each starts where the last ended.
+   The background-color under each one stays: the header reads it to know what lies under its words */
+.fade-to-sand {
+  background-image: linear-gradient(to bottom, var(--color-ink) calc(100% - 13rem), var(--color-sand)); /* taste-skill-ignore: asked by Alexy */
+}
+
+.fade-sand-deep {
+  background-image: linear-gradient(to bottom, var(--color-sand), var(--color-sand-deep)); /* taste-skill-ignore: asked by Alexy */
+}
+
+.fade-to-ink {
+  background-image: linear-gradient(to bottom, var(--color-sand-deep), var(--color-ink) 65%); /* taste-skill-ignore: asked by Alexy */
 }
 
 
