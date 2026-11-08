@@ -33,7 +33,7 @@ export default function Skills() {
             <article
               key={g.title}
               data-reveal={i}
-              className={clsx('group p-6 md:p-8', g.lead ? 'bg-accent text-accent-ink' : 'bg-surface', i === 2 ? 'lg:col-span-4' : 'lg:col-span-6')}
+              className={clsx('group p-6 md:p-8', g.lead ? 'bg-accent text-accent-ink' : 'bg-surface', i === 2 ? 'lg:col-span-5' : 'lg:col-span-6')}
             >
               <h3 className="text-lead font-medium">{g.title}</h3>
               <LogoStack items={g.items} className="mt-6 lg:mt-8" />
@@ -50,9 +50,9 @@ export default function Skills() {
           ))}
 
           {/* AI-assisted development gets its own box, in the beige of the home page */}
-          <article data-reveal="1" className="group grid gap-6 bg-sand p-6 text-ink md:col-span-2 md:p-8 lg:col-span-8 lg:grid-cols-[auto_1fr] lg:gap-10">
+          <article data-reveal="1" className="group grid gap-6 bg-sand p-6 text-ink md:col-span-2 md:p-8 lg:col-span-7 lg:grid-cols-[auto_1fr] lg:gap-10">
             <div className="flex items-center gap-5 lg:flex-col lg:items-start">
-              <span className="grid size-16 shrink-0 place-items-center bg-paper p-3 lg:size-24 lg:p-5">
+              <span className="grid size-16 shrink-0 place-items-center bg-paper p-3 lg:size-20 lg:p-4">
                 <img
                   src={logo(skills.vibe.tool.logo)}
                   alt=""
@@ -66,10 +66,10 @@ export default function Skills() {
                 <p className="text-body opacity-80">avec {skills.vibe.tool.name}</p>
               </div>
             </div>
-            <ul className="space-y-5 self-center text-body">
+            <ul className="space-y-4 self-center text-small">
               {skills.vibe.items.map(([term, detail]) => (
                 <li key={term} className="flex gap-3">
-                  <span aria-hidden className="mt-[0.6em] size-1.5 shrink-0 bg-ink" />
+                  <span aria-hidden className="mt-[0.75em] size-1.5 shrink-0 bg-ink" />
                   <span>
                     <span className="block text-lead font-medium">{term}</span>
                     <span className="opacity-80">{detail}</span>

@@ -91,7 +91,8 @@ export default function Footer() {
 
   return (
     <footer ref={root} data-theme="light" className="overflow-hidden bg-sky text-ink">
-      <svg aria-hidden viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="mt-24 block h-[clamp(260px,38vw,560px)] w-full md:mt-32">
+      {/* The viewBox starts just above the highest peak (y 104): no empty sky to scroll through */}
+      <svg aria-hidden viewBox={`0 80 ${W} ${H - 80}`} preserveAspectRatio="none" className="mt-8 block h-[clamp(200px,28vw,400px)] w-full md:mt-12">
         {HILLS.slice(0, -1).map((h) => (
           <path key={h.fill} data-hill d={h.d} className={h.fill} />
         ))}

@@ -3,6 +3,7 @@ import { gsap } from '../lib/gsap';
 import { hero, person, skills } from '../data/content';
 import { easeInOut, range } from '../lib/motion';
 import { scrollToHash } from '../lib/scroll';
+import Ghost from '../components/Ghost';
 import useScrollProgress from '../hooks/useScrollProgress';
 import useMediaQuery from '../hooks/useMediaQuery';
 import clsx from '../lib/clsx';
@@ -43,6 +44,7 @@ function Strip({
 export default function Intro() {
   const wrapper = useRef<HTMLDivElement>(null);
   const band = useRef<HTMLDivElement>(null);
+  const ghost = useRef<HTMLDivElement>(null);
   const content = useRef<HTMLDivElement>(null);
   const dataStrip = useRef<HTMLDivElement>(null);
   const devStrip = useRef<HTMLDivElement>(null);
@@ -60,10 +62,11 @@ export default function Intro() {
   useEffect(() => {
     const el = band.current;
     const box = content.current;
+    const resident = ghost.current;
     const slot = document.querySelector<HTMLElement>('[data-square]');
     const title = slot?.parentElement;
     const block = document.querySelector<HTMLElement>('[data-hero-title]');
-    if (!el || !box || !slot || !title || !block || reducedMotion) return;
+    if (!el || !box || !resident || !slot || !title || !block || reducedMotion) return;
     let done = false;
     const tick = () => {
       const p = progress.current;
@@ -80,6 +83,8 @@ export default function Intro() {
       const bottom = top + s.height + (b.height - s.height) * grow;
       const px = (v: number) => `${Math.max(0, v)}px`;
       el.style.clipPath = `inset(${px(top - b.top)} ${px(b.right - right)} ${px(b.bottom - bottom)} ${px(left - b.left)})`;
+      // The ghost's 100px box is laid over the square, whatever size the title gives it
+      resident.style.transform = `translate3d(${left - b.left}px, ${top - b.top}px, 0) scale(${(right - left) / 100}, ${(bottom - top) / 100})`;
       // Fades in with the title on load
       el.style.opacity = p > 0 ? '1' : getComputedStyle(title).opacity;
       const c = range(p, 0.7, 1);
@@ -124,6 +129,15 @@ export default function Intro() {
           style={reducedMotion ? undefined : { clipPath: 'inset(50%)' }}
           className="bg-ink text-bg sticky top-0 flex min-h-svh flex-col justify-center gap-16 overflow-hidden py-24 md:gap-24"
         >
+          {!reducedMotion && (
+            <div
+              ref={ghost}
+              aria-hidden
+              className="pointer-events-none absolute top-0 left-0 size-[100px] origin-top-left"
+            >
+              <Ghost progress={progress} />
+            </div>
+          )}
           <div
             ref={content}
             style={reducedMotion ? undefined : { opacity: 0 }}

@@ -215,8 +215,8 @@ export const parcours = {
     },
     {
       from: 2021,
-      to: 2023,
-      years: '2021–2023',
+      to: 2024,
+      years: '2021–2024',
       title: 'Lycée Rive Gauche',
       place: 'Toulouse',
       text: 'Spécialités mathématiques et histoire-géographie, géopolitique et sciences politiques.',
@@ -338,6 +338,18 @@ export const voyages = {
 export const contact = { greeting: 'Écrivez-moi', place: 'Toulouse · Blagnac' };
 
 export const credits = [
+  {
+    what: 'Le petit fantôme du carré de l’accueil (d’après « Shader Svg »)',
+    who: 'reuno-ui',
+    licence: 'Licence non précisée',
+    url: 'https://21st.dev/@reuno-ui/components/shader-svg',
+  },
+  {
+    what: 'Le dégradé animé du fantôme (d’après MeshGradient, recodé en WebGL)',
+    who: 'Paper Design',
+    licence: 'Apache 2.0',
+    url: 'https://github.com/paper-design/shaders',
+  },
   {
     what: 'La tour Eiffel à l’heure bleue (photo de Paris, Voyages)',
     who: 'Nick-D',
