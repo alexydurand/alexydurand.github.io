@@ -74,9 +74,6 @@ export default function MentionsLegales() {
                 par {c.who}, {c.licence}.
               </p>
             ))}
-            <p>
-              {legal.cities} {mail}
-            </p>
             {legal.extra.map((line) => (
               <p key={line}>{line}</p>
             ))}

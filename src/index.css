@@ -134,22 +134,42 @@
   animation: menu-rise 0.7s var(--ease-out-expo) both;
 }
 
-/* Project previews tilt toward the pointer */
-.tilt {
-  --rx: 0deg;
-  --ry: 0deg;
-  transform: perspective(1000px) rotateX(var(--rx)) rotateY(var(--ry));
-  transition: transform 0.6s var(--ease-out-expo);
-  transform-style: preserve-3d;
+/* Projects: a fan of cards. Each one is placed from --off, its distance to the centre (ProjectStack) */
+.stack {
+  --card-w: min(78vw, 30rem);
+  --card-h: min(118vw, 31rem, 68svh);
+  perspective: 1100px;
+  touch-action: pan-y;
 }
 
-.tilt:hover {
-  transition-duration: 0.15s;
+@media (min-width: 64rem) {
+  .stack {
+    --card-w: min(46vw, 56rem);
+    --card-h: calc(var(--card-w) * 0.66);
+  }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .tilt {
-    transform: none;
+.stack-card {
+  --p: calc(var(--off) + var(--drag, 0));
+  --dist: max(var(--p), calc(var(--p) * -1));
+  --near: min(var(--dist), 1);
+  transform: translate3d(
+      calc(var(--p) * var(--card-w) * 0.5),
+      calc(var(--dist) * 0.75rem + var(--lift, 0rem)),
+      calc(var(--dist) * -8rem)
+    )
+    rotateZ(calc(var(--p) * 11deg)) rotateX(calc(var(--near) * 10deg))
+    scale(calc(1 - var(--near) * 0.06));
+  transition: transform 0.65s var(--ease-out-expo);
+}
+
+.stack[data-dragging] .stack-card {
+  transition: none;
+}
+
+@media (hover: hover) {
+  .stack-card:hover {
+    --lift: -0.4rem;
   }
 }
 

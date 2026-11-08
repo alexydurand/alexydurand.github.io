@@ -39,6 +39,7 @@ export const skills = {
   stripDev: [
     'Java',
     'Python',
+    'Godot',
     'Power Apps',
     'Power Automate',
     'Git',
@@ -82,11 +83,12 @@ export const skills = {
       items: [
         { name: 'Java', logo: 'java' },
         { name: 'Python', logo: 'python' },
+        { name: 'Godot', logo: 'godot' },
         { name: 'Power Apps', logo: 'powerapps' },
         { name: 'Power Automate', logo: 'powerautomate' },
         { name: 'Git', logo: 'git' },
       ],
-      note: 'Programmation objet, applications métier low-code, versionnage avec Git.',
+      note: 'Programmation objet, jeu 3D sous Godot, applications métier low-code, versionnage avec Git.',
     },
   ] satisfies { title: string; lead?: boolean; items: Skill[]; note: string }[],
   vibe: {
@@ -109,7 +111,7 @@ export const skills = {
 /* ---------- Projets ---------- */
 
 export type Project = {
-  id: 'killkeny' | 'bdd' | 'portfolio';
+  id: 'killkeny' | 'bomberman' | 'tournoi' | 'bdd' | 'portfolio';
   title: string;
   context: string;
   // Shown as a badge next to the context
@@ -132,6 +134,32 @@ export const projects: Project[] = [
       'Fait : cadrage avec la cliente, cahier des charges et maquettes, en méthode Scrum.',
       'Fait : inscription et connexion sécurisées (bcrypt, JWT en cookie httpOnly), navigation responsive, mode sombre.',
       'En cours : les groupes, où chaque membre n’accède qu’aux données de son groupe. À venir : agenda, setlists, contrats PDF.',
+    ],
+  },
+  {
+    id: 'bomberman',
+    title: 'Bomberman 3D sous Godot',
+    context: 'TP de 3e année · IUT de Blagnac · équipe de 4',
+    stack: ['Godot', 'GDScript', 'Git'],
+    summary:
+      'En cinq séances, nous avons refait le principe de Bomberman en 3D : des bombes qui explosent en croix, des murs destructibles, des ennemis autonomes et des bonus. Chacun avait son domaine, réparti en user stories. Le mien : la boucle de jeu, des vies du joueur jusqu’à la fin de partie.',
+    did: [
+      'Les vies : une explosion ou un ennemi retire une vie au joueur, qui réapparaît à son point de départ.',
+      'La fin de partie : un GameManager global compte les vies et les ennemis, puis déclare la défaite à zéro vie ou la victoire quand tous les ennemis sont éliminés.',
+      'L’interface : trois cœurs à l’écran, mis à jour par signal, et un écran de victoire ou de défaite qui met le jeu en pause et permet de relancer la partie.',
+      'Le décor du niveau : l’herbe et les fleurs.',
+    ],
+  },
+  {
+    id: 'tournoi',
+    title: 'Gestion de tournois e-sport',
+    context: 'Projet universitaire · IUT de Blagnac',
+    stack: ['Java'],
+    summary: 'Une application en Java pour gérer des tournois e-sport, avec une interface graphique.',
+    did: [
+      'Analyse des besoins avant de coder.',
+      'Conception de l’application.',
+      'Développement en Java d’une interface graphique fonctionnelle.',
     ],
   },
   {
@@ -317,6 +345,30 @@ export const credits = [
     url: 'https://commons.wikimedia.org/wiki/File:Eiffel_Tower_during_the_evening_blue_hour_April_2019.jpg',
   },
   {
+    what: 'Le château Saint-Georges et les toits de Lisbonne (photo recadrée, Voyages)',
+    who: 'Dale Cruse',
+    licence: 'CC BY 4.0',
+    url: 'https://commons.wikimedia.org/wiki/File:Castelo_de_S%C3%A3o_Jorge_and_25_de_Abril_Bridge_Over_Lisbon_Rooftops_(54739478432).jpg',
+  },
+  {
+    what: 'Le centre de Montréal vu du mont Royal (photo de Voyages)',
+    who: 'Andre Carrotflower',
+    licence: 'CC BY-SA 4.0',
+    url: 'https://commons.wikimedia.org/wiki/File:20160903_-_02_-_Montreal_(Mount_Royal_Park).jpg',
+  },
+  {
+    what: 'Toronto la nuit (photo recadrée, Voyages)',
+    who: 'Andrew Gosine',
+    licence: 'CC0',
+    url: 'https://commons.wikimedia.org/wiki/File:Night_skyline_of_Toronto,_Canada_374759.jpg',
+  },
+  {
+    what: 'Le centre de Shenzhen la nuit (photo de Voyages)',
+    who: 'Sparktour',
+    licence: 'CC BY-SA 4.0',
+    url: 'https://commons.wikimedia.org/wiki/File:Civic_Center,_Shenzhen_Lianhuashan_Park_(2018.9)_Night_(cropped).jpg',
+  },
+  {
     what: 'Les tours de Hong Kong de nuit (vidéo de la section Voyages, découpée en images)',
     who: 'Henry sur Pexels',
     licence: 'licence Pexels',
@@ -342,8 +394,6 @@ export const legal = {
     urlLabel: 'support.github.com/contact',
   },
   ip: 'Les textes, la mise en page et le code de ce site appartiennent à Alexy Durand, sauf les éléments crédités ci-dessous. Ils ne peuvent pas être reproduits sans son accord.',
-  cities:
-    'Photos de Lisbonne, Montréal, Toronto et Shenzhen : photos d’illustration, droits réservés à leurs auteurs. Si vous êtes l’auteur de l’une d’elles et souhaitez être crédité ou la voir retirée, écrivez-moi.',
   extra: [
     'Pochettes des albums Currents (Tame Impala), Social Cues (Cage the Elephant) et 444 Nuits (Népal) : droits réservés à leurs auteurs.',
     'Logo Formula 1 via Wikimedia Commons (domaine public), marque de Formula One Licensing B.V.',

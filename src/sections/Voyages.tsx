@@ -68,7 +68,7 @@ const SLOTS: Slot[] = [
     src: torontoNuit,
     alt: 'Toronto la nuit, reflétée dans le lac Ontario',
     city: 'Toronto',
-    focus: '40% 50%',
+    focus: '50% 50%',
     desktop: [26, 18, 30, 9],
     mobile: [44, 18, 23, 28],
     depth: 0.55,
@@ -76,7 +76,7 @@ const SLOTS: Slot[] = [
   {
     id: 'shenzhen',
     src: shenzhen,
-    alt: 'Le centre de Shenzhen illuminé à la tombée de la nuit',
+    alt: 'Le centre de Shenzhen illuminé, la nuit',
     city: 'Shenzhen',
     desktop: [24, 20, -2, 29.5],
     mobile: [44, 18, -23, 28],

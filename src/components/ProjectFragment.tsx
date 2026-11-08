@@ -2,12 +2,16 @@ import type { Project } from '../data/content';
 
 /**
  * Each project drawn as a cropped piece of its own interface (HTML/CSS, no screenshots).
- * Concert, rows and stories are sample content.
+ * Concert, level, teams, rows and stories are sample content.
  */
 export default function ProjectFragment({ id }: { id: Project['id'] }) {
   switch (id) {
     case 'killkeny':
       return <BandManager />;
+    case 'bomberman':
+      return <GodotLevel />;
+    case 'tournoi':
+      return <Tournament />;
     case 'bdd':
       return <Database />;
     case 'portfolio':
@@ -34,7 +38,8 @@ function Window({ title, children, dark }: { title: string; children: React.Reac
   );
 }
 
-// Lines below live inside a data-ui fragment (a real table), where borders are allowed.
+// Lines below live inside data-ui fragments (a bracket and a real table), where borders are allowed.
+const DIVIDER = 'border-b border-ink/10'; // taste-skill-ignore
 const TABLE_RULE = 'border-t border-white/10'; // taste-skill-ignore
 const ROW_RULE = 'border-t border-white/5'; // taste-skill-ignore
 
@@ -68,6 +73,108 @@ function BandManager() {
               {t}
             </span>
           ))}
+        </div>
+      </div>
+    </Window>
+  );
+}
+
+// The level from above: # wall, B brick, x blast around its bomb X, P player, E enemy, * bonus
+const LEVEL = [
+  '#############',
+  '#P..BB...B.E#',
+  '#.#.#B#x#B#.#',
+  '#..B.xxXxx.B#',
+  '#.#B#.#x#.#B#',
+  '#B..E...*.B.#',
+  '#############',
+];
+const TILE: Record<string, string> = {
+  '#': 'fill-white/25',
+  B: 'fill-hill-4',
+  x: 'fill-dot-amber',
+  X: 'fill-dot-red',
+};
+const PIECE: Record<string, string> = { P: 'fill-code-key', E: 'fill-dot-red', '*': 'fill-dot-green' };
+const HEART = 'M12 21s-7.5-4.6-10-9.3C.4 8.4 2.1 4.5 6 4.5c2.4 0 4.2 1.4 6 3.6 1.8-2.2 3.6-3.6 6-3.6 3.9 0 5.6 3.9 4 7.2-2.5 4.7-10 9.3-10 9.3z';
+
+// The part of the game Alexy built sits on top: hearts and the enemies left
+function GodotLevel() {
+  return (
+    <Window title="Godot · main.tscn" dark>
+      <div className="flex h-full flex-col gap-3 p-3 sm:p-4">
+        <div className="flex items-center justify-between gap-3">
+          <span className="flex gap-1">
+            {[true, true, false].map((full, i) => (
+              <svg key={i} viewBox="0 0 24 24" className={`size-5 ${full ? 'fill-dot-red' : 'fill-white/15'}`}>
+                <path d={HEART} />
+              </svg>
+            ))}
+          </span>
+          <span className="opacity-75">Ennemis restants : 2</span>
+        </div>
+        <svg viewBox="0 0 13 7" className="min-h-0 w-full flex-1">
+          {LEVEL.flatMap((row, y) =>
+            [...row].map((c, x) => (
+              <g key={`${x}-${y}`}>
+                <rect x={x + 0.03} y={y + 0.03} width={0.94} height={0.94} className={TILE[c] ?? 'fill-code-bar'} />
+                {PIECE[c] && <circle cx={x + 0.5} cy={y + 0.5} r={0.3} className={PIECE[c]} />}
+              </g>
+            )),
+          )}
+        </svg>
+      </div>
+    </Window>
+  );
+}
+
+const TEAMS = ['Nova', 'Kraken', 'Orion', 'Vortex', 'Atlas', 'Phénix', 'Titan', 'Zéphyr'];
+
+function Match({ a, b, win }: { a: string; b: string; win: 0 | 1 }) {
+  return (
+    <div className="w-full border border-ink/15 bg-paper">
+      {[a, b].map((t, i) => (
+        <div
+          key={t}
+          className={`flex justify-between px-2 py-1 ${i === win ? 'bg-accent text-accent-ink' : ''} ${i === 0 ? DIVIDER : ''}`}
+        >
+          <span className="truncate">{t}</span>
+          <span className="tabular">{i === win ? 2 : TEAMS.indexOf(t) % 2}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Tournament() {
+  return (
+    <Window title="Tournoi e-sport · Gestion des matchs">
+      <div className="flex h-full">
+        <aside className="hidden w-32 shrink-0 bg-surface p-3 sm:block">
+          <p className="font-medium">Équipes</p>
+          <ul className="mt-2 space-y-1">
+            {TEAMS.map((t, i) => (
+              <li key={t} className={`px-2 py-0.5 ${i === 0 ? 'bg-ink text-bg' : ''}`}>
+                {t}
+              </li>
+            ))}
+          </ul>
+        </aside>
+        <div className="grid flex-1 grid-cols-3 items-center gap-3 p-3">
+          <div className="space-y-3">
+            <Match a="Nova" b="Kraken" win={0} />
+            <Match a="Orion" b="Vortex" win={1} />
+            <Match a="Atlas" b="Phénix" win={0} />
+            <Match a="Titan" b="Zéphyr" win={1} />
+          </div>
+          <div className="space-y-12">
+            <Match a="Nova" b="Vortex" win={0} />
+            <Match a="Atlas" b="Zéphyr" win={1} />
+          </div>
+          <div>
+            <Match a="Nova" b="Zéphyr" win={0} />
+            <p className="mt-2 text-center font-medium text-accent">Vainqueur&nbsp;: Nova</p>
+          </div>
         </div>
       </div>
     </Window>
