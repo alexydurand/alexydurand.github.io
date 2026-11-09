@@ -173,18 +173,65 @@
   }
 }
 
-
 /* Scrim under the Hong Kong captions (the one gradient the house rules allow: text on a picture) */
 .hk-scrim {
-  background: linear-gradient(to top, rgb(6 10 20 / 0.85) 0%, rgb(6 10 20 / 0.35) 38%, rgb(6 10 20 / 0) 62%); /* taste-skill-ignore: scrim under text on a picture */
+  background: linear-gradient(
+    to top,
+    rgb(6 10 20 / 0.85) 0%,
+    rgb(6 10 20 / 0.35) 38%,
+    rgb(6 10 20 / 0) 62%
+  ); /* taste-skill-ignore: scrim under text on a picture */
 }
 
+/* Hero: the portrait stands behind the hills. It is placed in the coordinates of their picture
+   (object-cover, 2400 × 1361, see Hero.tsx), so the crest cuts it at the same place at every size. */
+.hero-portrait {
+  --cover-w: max(100cqw, 207.2cqh);
+  --cover-h: calc(var(--cover-w) * 0.5671);
+  /* Fractions of the picture: left and top edges of the portrait, and its width */
+  --x: 0.45;
+  --y: 0.502;
+  --w: 0.16;
+  position: absolute;
+  left: calc(50cqw + var(--cover-w) * (var(--x) - 0.5));
+  top: calc(41.25cqh + var(--cover-h) * (var(--y) - 0.5));
+  width: calc(var(--cover-w) * var(--w));
+  max-width: none;
+}
+
+/* The wider the screen, the more of the picture's right side shows, up to the top of the hill */
+@media (min-aspect-ratio: 5/4) {
+  .hero-portrait {
+    --x: 0.585;
+    --y: 0.42;
+    --w: 0.21;
+  }
+}
+
+@media (min-aspect-ratio: 8/5) {
+  .hero-portrait {
+    --x: 0.66;
+    --y: 0.39;
+    --w: 0.21;
+  }
+}
+
+@media (min-aspect-ratio: 19/10) {
+  .hero-portrait {
+    --x: 0.72;
+    --y: 0.38;
+    --w: 0.21;
+  }
+}
 
 /* Hero: the dark ground of the hills dissolves into the page (scrim on a picture) */
 .hero-fade {
-  background: linear-gradient(to bottom, var(--color-ink), rgb(18 17 15 / 0)); /* taste-skill-ignore: scrim on a picture */
+  background: linear-gradient(
+    to bottom,
+    var(--color-ink),
+    rgb(18 17 15 / 0)
+  ); /* taste-skill-ignore: scrim on a picture */
 }
-
 
 /* Timeline: "today" breathes on the current step */
 @keyframes today-pulse {
@@ -201,8 +248,6 @@
 .today-pulse {
   animation: today-pulse 1.8s ease-out infinite;
 }
-
-
 
 /* Language level bar redrawn on hover (Skills) */
 @keyframes sweep {

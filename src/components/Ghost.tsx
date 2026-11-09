@@ -10,8 +10,9 @@ const TRAVEL = 22;
 const REACH = 320;
 
 /**
- * The ghost of the home page square, after Shader Svg by reuno-ui (21st.dev): a moving gradient cut
- * to its shape (`.ghost-shape`), whose eyes watch the cursor. It fades out as the scroll starts.
+ * The ghost beside the name on the home page, after Shader Svg by reuno-ui (21st.dev): a moving
+ * gradient cut to its shape (`.ghost-shape`), whose eyes watch the cursor. It fades out as the scroll
+ * starts, leaving the dark shape that grows out of it (Intro.tsx).
  */
 export default function Ghost({ progress }: { progress: RefObject<number> }) {
   const root = useRef<HTMLDivElement>(null);
@@ -59,29 +60,27 @@ export default function Ghost({ progress }: { progress: RefObject<number> }) {
   }, [progress]);
 
   return (
-    <div ref={root} className="grid size-full place-items-center">
-      <div className="relative aspect-[231/289] h-[74%] animate-[ghost-float_2.8s_ease-in-out_infinite]">
-        <canvas
-          ref={canvas}
-          width={58}
-          height={72}
-          className="ghost-shape absolute inset-0 size-full"
-        />
-        <svg viewBox="0 0 231 289" className="absolute inset-0 size-full">
-          <g ref={eyes} className="fill-ink">
-            {[80, 150].map((cx) => (
-              <ellipse
-                key={cx}
-                cx={cx}
-                cy={120}
-                rx={20}
-                ry={30}
-                className="origin-center animate-[eye-blink_3s_ease-in-out_infinite] [transform-box:fill-box]"
-              />
-            ))}
-          </g>
-        </svg>
-      </div>
+    <div ref={root} className="relative size-full animate-[ghost-float_2.8s_ease-in-out_infinite]">
+      <canvas
+        ref={canvas}
+        width={58}
+        height={72}
+        className="ghost-shape absolute inset-0 size-full"
+      />
+      <svg viewBox="0 0 231 289" className="absolute inset-0 size-full">
+        <g ref={eyes} className="fill-ink">
+          {[80, 150].map((cx) => (
+            <ellipse
+              key={cx}
+              cx={cx}
+              cy={120}
+              rx={20}
+              ry={30}
+              className="origin-center animate-[eye-blink_3s_ease-in-out_infinite] [transform-box:fill-box]"
+            />
+          ))}
+        </g>
+      </svg>
     </div>
   );
 }

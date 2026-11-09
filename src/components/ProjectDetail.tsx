@@ -1,5 +1,6 @@
-import { useEffect, useRef, type SyntheticEvent } from 'react';
-import type { Project } from '../data/content';
+import { useEffect, useRef, useState, type SyntheticEvent } from 'react';
+import { flushSync } from 'react-dom';
+import { butLinks, type Project } from '../data/content';
 import { prefersReducedMotion } from '../lib/motion';
 import { lockScroll } from '../lib/scroll';
 import ProjectFragment from './ProjectFragment';
@@ -9,20 +10,34 @@ const EASE = 'cubic-bezier(0.16, 1, 0.3, 1)';
 const WITH_PICTURE = 14;
 const WITHOUT_PICTURE = 13;
 
-/** Everything fits on screen, no scrolling: the text shrinks a step at a time, and on small phones the picture goes. */
+/** The text shrinks a step at a time until the box needs no scrolling. */
+function shrink(box: HTMLElement, text: HTMLElement, smallest: number) {
+  let size = parseFloat(getComputedStyle(document.body).fontSize);
+  for (; size >= smallest; size -= 0.5) {
+    text.style.fontSize = `${size}px`;
+    if (box.scrollHeight <= box.clientHeight) return true;
+  }
+  return false;
+}
+
+/** Everything fits on screen, no scrolling: the text shrinks, and on small phones the picture goes. */
 function fit(box: HTMLElement, text: HTMLElement, picture: HTMLElement) {
-  const shrink = (smallest: number) => {
-    let size = parseFloat(getComputedStyle(document.body).fontSize);
-    for (; size >= smallest; size -= 0.5) {
-      text.style.fontSize = `${size}px`;
-      if (box.scrollHeight <= box.clientHeight) return true;
-    }
-    return false;
-  };
   picture.hidden = false;
-  if (shrink(WITH_PICTURE)) return;
+  if (shrink(box, text, WITH_PICTURE)) return;
   picture.hidden = true;
-  shrink(WITHOUT_PICTURE);
+  shrink(box, text, WITHOUT_PICTURE);
+}
+
+/** The skills card slides up over the project, or back down. Resolves when done. */
+function slide(card: HTMLElement, closing: boolean) {
+  if (prefersReducedMotion()) return Promise.resolve();
+  const below = 'translateY(105%)';
+  return card
+    .animate(
+      { transform: closing ? ['none', below] : [below, 'none'] },
+      { duration: closing ? 300 : 500, easing: EASE, fill: 'both' },
+    )
+    .finished.then(() => undefined);
 }
 
 /** The panel grows out of its card, or shrinks back into it. Resolves when done. */
@@ -67,9 +82,40 @@ export default function ProjectDetail({
   const text = useRef<HTMLDivElement>(null);
   const picture = useRef<HTMLDivElement>(null);
   const closing = useRef(false);
+  const [skillsOpen, setSkillsOpen] = useState(false);
+  const skills = useRef<HTMLDivElement>(null);
+  const skillsText = useRef<HTMLDivElement>(null);
+  const opener = useRef<HTMLButtonElement>(null);
+  const back = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (!from || !dialog.current || !panel.current || !box.current || !text.current || !picture.current) return;
+    const [card, t] = [skills.current, skillsText.current];
+    if (!skillsOpen || !card || !t) return;
+    const refit = () => shrink(card, t, WITHOUT_PICTURE);
+    refit();
+    back.current?.focus();
+    slide(card, false);
+    window.addEventListener('resize', refit);
+    return () => window.removeEventListener('resize', refit);
+  }, [skillsOpen]);
+
+  const closeSkills = async () => {
+    if (skills.current) await slide(skills.current, true);
+    // Now, not on the next render: the project is inert until then and could not take the focus back
+    flushSync(() => setSkillsOpen(false));
+    opener.current?.focus();
+  };
+
+  useEffect(() => {
+    if (
+      !from ||
+      !dialog.current ||
+      !panel.current ||
+      !box.current ||
+      !text.current ||
+      !picture.current
+    )
+      return;
     const [b, t, pic] = [box.current, text.current, picture.current];
     dialog.current.showModal();
     lockScroll(true);
@@ -90,6 +136,7 @@ export default function ProjectDetail({
   const onClose = (e: SyntheticEvent<HTMLDialogElement>) => {
     closing.current = false;
     e.currentTarget.getAnimations({ subtree: true }).forEach((a) => a.cancel());
+    setSkillsOpen(false);
     lockScroll(false);
     onClosed();
   };
@@ -100,7 +147,8 @@ export default function ProjectDetail({
       aria-labelledby="project-detail-title"
       onCancel={(e) => {
         e.preventDefault();
-        close();
+        if (skillsOpen) closeSkills();
+        else close();
       }}
       onClose={onClose}
       onClick={(e) => {
@@ -115,6 +163,7 @@ export default function ProjectDetail({
         {/* The scrollbar is only a safety net: fit() makes the text fit first */}
         <div
           ref={box}
+          inert={skillsOpen}
           data-lenis-prevent
           className="flex w-full flex-col overflow-y-auto overscroll-contain lg:flex-row"
         >
@@ -153,10 +202,19 @@ export default function ProjectDetail({
               ))}
             </ul>
             <p className="text-sand mt-[0.9em] font-medium">{p.stack.join(' · ')}</p>
+            <button
+              ref={opener}
+              type="button"
+              onClick={() => setSkillsOpen(true)}
+              className="mt-[0.3em] min-h-11 cursor-pointer text-left text-[max(0.85em,13px)] underline decoration-1 underline-offset-4 hover:decoration-2"
+            >
+              {butLinks.open}
+            </button>
           </div>
         </div>
         <button
           type="button"
+          inert={skillsOpen}
           aria-label="Fermer le détail du projet"
           onClick={close}
           className="bg-ink hover:bg-accent-deep focus-visible:ring-sand absolute top-2 right-2 grid size-11 cursor-pointer place-items-center rounded-full transition-colors outline-none focus-visible:ring-2"
@@ -165,6 +223,45 @@ export default function ProjectDetail({
             <path d="M5 5l14 14M19 5L5 19" />
           </svg>
         </button>
+        {skillsOpen && (
+          <div
+            ref={skills}
+            data-lenis-prevent
+            className="border-ink bg-bg text-ink absolute inset-0 overflow-y-auto overscroll-contain rounded-2xl border-8"
+          >
+            {/* Sizes in em, as for the project: shrink() only has to change the font size of this block */}
+            <div ref={skillsText} className="p-[1.5em] lg:p-[2.5em]">
+              <button
+                ref={back}
+                type="button"
+                onClick={closeSkills}
+                className="-ml-[0.25em] flex min-h-11 cursor-pointer items-center gap-[0.4em] px-[0.25em] underline decoration-1 underline-offset-4 hover:decoration-2"
+              >
+                <svg
+                  aria-hidden
+                  viewBox="0 0 24 24"
+                  className="size-[1em] shrink-0 fill-none stroke-current stroke-2"
+                >
+                  <path d="M15 5l-7 7 7 7" />
+                </svg>
+                {butLinks.back}
+              </button>
+              <h4 className="mt-[0.5em] text-[2.1em] leading-[1.1] font-medium tracking-tight text-balance">
+                {butLinks.title}
+              </h4>
+              <p className="text-muted mt-[0.3em]">{p.title}</p>
+              <p className="mt-[0.9em] max-w-[62ch] leading-[1.45] text-pretty">{butLinks.intro}</p>
+              <dl className="mt-[1.4em] grid gap-[1.1em] lg:grid-cols-2 lg:gap-x-[2.5em]">
+                {p.competences.map((c) => (
+                  <div key={c.skill}>
+                    <dt className="text-[1.25em] font-medium tracking-tight">{c.skill}</dt>
+                    <dd className="mt-[0.2em] leading-[1.45] text-pretty">{c.how}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </div>
+        )}
       </div>
     </dialog>
   );

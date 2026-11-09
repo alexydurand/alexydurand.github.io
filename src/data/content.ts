@@ -119,6 +119,20 @@ export type Project = {
   stack: string[];
   summary: string;
   did: string[];
+  // What this project shows of each BUT skill it touched, in my own words (never the wording of the programme)
+  competences: {
+    skill: 'Réaliser' | 'Optimiser' | 'Administrer' | 'Gérer' | 'Conduire' | 'Collaborer';
+    how: string;
+  }[];
+};
+
+// The card over a project's details (ProjectDetail). Recruiters read this: "compétence" is the only BUT word
+export const butLinks = {
+  open: 'Voir le lien avec les compétences du BUT',
+  back: 'Retour au projet',
+  title: 'Compétences du BUT',
+  intro:
+    'Mon BUT Informatique me forme à six compétences : réaliser, optimiser, administrer, gérer, conduire et collaborer. Voici celles que ce projet m’a fait travailler.',
 };
 
 export const projects: Project[] = [
@@ -135,6 +149,24 @@ export const projects: Project[] = [
       'Fait : inscription et connexion sécurisées (bcrypt, JWT en cookie httpOnly), navigation responsive, mode sombre.',
       'En cours : les groupes, où chaque membre n’accède qu’aux données de son groupe. À venir : agenda, setlists, contrats PDF.',
     ],
+    competences: [
+      {
+        skill: 'Réaliser',
+        how: 'Je développe le front en Vue et le back en Express d’une application installable, utilisable sur téléphone comme sur ordinateur.',
+      },
+      {
+        skill: 'Gérer',
+        how: 'Je protège les données des utilisateurs : mots de passe hachés avec bcrypt et, bientôt, un accès limité aux données de son propre groupe.',
+      },
+      {
+        skill: 'Conduire',
+        how: 'Avec la cliente, nous avons cadré le besoin, écrit le cahier des charges et les maquettes, puis avancé en Scrum.',
+      },
+      {
+        skill: 'Collaborer',
+        how: 'Nous sommes cinq : je travaille surtout sur l’application et nous partageons le code avec Git.',
+      },
+    ],
   },
   {
     id: 'bomberman',
@@ -149,17 +181,42 @@ export const projects: Project[] = [
       'L’interface : trois cœurs mis à jour par signal, et un écran de fin qui met le jeu en pause et permet de relancer.',
       'Le décor du niveau : l’herbe et les fleurs.',
     ],
+    competences: [
+      {
+        skill: 'Réaliser',
+        how: 'J’ai codé la boucle de jeu : les vies du joueur, sa réapparition, la fin de partie et l’interface.',
+      },
+      {
+        skill: 'Optimiser',
+        how: 'J’ai utilisé les méthodes propres au jeu vidéo sous Godot : un GameManager global et des signaux qui mettent l’interface à jour.',
+      },
+      {
+        skill: 'Collaborer',
+        how: 'À quatre, chacun avait son domaine, réparti en user stories, et nous partagions le code avec Git.',
+      },
+    ],
   },
   {
     id: 'tournoi',
     title: 'Gestion de tournois e-sport',
     context: 'Projet universitaire · IUT de Blagnac',
     stack: ['Java'],
-    summary: 'Une application en Java pour gérer des tournois e-sport, avec une interface graphique.',
+    summary:
+      'Une application en Java pour gérer des tournois e-sport, avec une interface graphique.',
     did: [
       'Analyse des besoins avant de coder.',
       'Conception de l’application.',
       'Développement en Java d’une interface graphique fonctionnelle.',
+    ],
+    competences: [
+      {
+        skill: 'Réaliser',
+        how: 'J’ai conçu puis développé en Java une application dotée d’une interface graphique qui fonctionne.',
+      },
+      {
+        skill: 'Conduire',
+        how: 'J’ai analysé les besoins avant d’écrire la moindre ligne de code.',
+      },
     ],
   },
   {
@@ -173,18 +230,45 @@ export const projects: Project[] = [
       'Création des tables et des contraintes sous Oracle SQL Developer.',
       'Requêtes pour mettre à jour et interroger la base.',
     ],
+    competences: [
+      {
+        skill: 'Gérer',
+        how: 'J’ai modélisé les données, créé les tables et les contraintes sous Oracle, puis écrit les requêtes pour mettre à jour et interroger la base.',
+      },
+      {
+        skill: 'Conduire',
+        how: 'J’ai traduit les besoins décrits dans le cahier des charges en données à stocker.',
+      },
+    ],
   },
   {
     id: 'portfolio',
     title: 'Ce portfolio, en vibe coding',
     context: 'Projet personnel · 2026',
     stack: ['Claude Code', 'React', 'TypeScript', 'Tailwind CSS', 'Three.js', 'GSAP'],
-    summary:
-      'Le site que vous parcourez : je l’ai construit avec Claude Code.',
+    summary: 'Le site que vous parcourez : je l’ai construit avec Claude Code.',
     did: [
       'Des prompts détaillés : contenu, ordre des sections, effets voulus, références de design à suivre.',
       'Des skills et des plugins Claude : taste-skill, impeccable, ui-ux-pro-max, ponytail et les skills d’Emil Kowalski.',
       'Review et corrections de code : à chaque version, je relis tout et je liste précisément les améliorations à faire, jusqu’à ce résultat.',
+    ],
+    competences: [
+      {
+        skill: 'Réaliser',
+        how: 'Un site complet en React et TypeScript, construit avec Claude Code : je vérifie qu’il reste utilisable au clavier et sans animation.',
+      },
+      {
+        skill: 'Optimiser',
+        how: 'Le vol sur Hong Kong et la scène 3D ne se chargent qu’à l’approche et ne se dessinent qu’à l’écran, pour ménager les téléphones.',
+      },
+      {
+        skill: 'Administrer',
+        how: 'Je publie le site sur GitHub Pages : un workflow GitHub Actions le met en ligne à chaque envoi sur la branche principale.',
+      },
+      {
+        skill: 'Conduire',
+        how: 'À chaque version, je relis tout et je liste les corrections à faire, jusqu’au résultat voulu.',
+      },
     ],
   },
 ];
@@ -339,7 +423,7 @@ export const contact = { greeting: 'Écrivez-moi', place: 'Toulouse · Blagnac' 
 
 export const credits = [
   {
-    what: 'Le petit fantôme du carré de l’accueil (d’après « Shader Svg »)',
+    what: 'Le petit fantôme de l’accueil (d’après « Shader Svg »)',
     who: 'reuno-ui',
     licence: 'Licence non précisée',
     url: 'https://21st.dev/@reuno-ui/components/shader-svg',
