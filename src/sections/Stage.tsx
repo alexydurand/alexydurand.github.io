@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { gsap } from '../lib/gsap';
 import { skills, stage } from '../data/content';
 import { prefersReducedMotion } from '../lib/motion';
+import { scrollToHash } from '../lib/scroll';
 import useReveal from '../hooks/useReveal';
 import orangeLogo from '../assets/logos/orange.svg';
 import LogoStack from '../components/LogoStack';
@@ -154,6 +155,17 @@ export default function Stage() {
             </li>
           ))}
         </ul>
+        <a
+          href="#bilan"
+          data-reveal="0"
+          onClick={(e) => {
+            e.preventDefault();
+            scrollToHash('#bilan');
+          }}
+          className="text-lead decoration-orange mt-10 inline-flex min-h-11 items-center font-medium underline decoration-2 underline-offset-4 hover:decoration-white"
+        >
+          {stage.skillsLink}
+        </a>
       </div>
     </section>
   );

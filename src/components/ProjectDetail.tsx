@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type SyntheticEvent } from 'react';
+import { useEffect, useRef, useState, type MouseEvent, type SyntheticEvent } from 'react';
 import { flushSync } from 'react-dom';
 import { butLinks, type Project } from '../data/content';
 import { prefersReducedMotion } from '../lib/motion';
@@ -133,6 +133,15 @@ export default function ProjectDetail({
     dialog.current.close();
   };
 
+  // From a project to its place in the skills review
+  const toSkill = async (e: MouseEvent<HTMLAnchorElement>, skill: string) => {
+    e.preventDefault();
+    await close();
+    // Now, not when the dialog says it closed: while locked, the page ignores the jump
+    lockScroll(false);
+    window.dispatchEvent(new CustomEvent('show-skill', { detail: skill }));
+  };
+
   const onClose = (e: SyntheticEvent<HTMLDialogElement>) => {
     closing.current = false;
     e.currentTarget.getAnimations({ subtree: true }).forEach((a) => a.cancel());
@@ -254,7 +263,15 @@ export default function ProjectDetail({
               <dl className="mt-[1.4em] grid gap-[1.1em] lg:grid-cols-2 lg:gap-x-[2.5em]">
                 {p.competences.map((c) => (
                   <div key={c.skill}>
-                    <dt className="text-[1.25em] font-medium tracking-tight">{c.skill}</dt>
+                    <dt className="text-[1.25em] font-medium tracking-tight">
+                      <a
+                        href={`#bilan-${c.skill}`}
+                        onClick={(e) => toSkill(e, c.skill)}
+                        className="underline decoration-1 underline-offset-4 hover:decoration-2"
+                      >
+                        {c.skill}
+                      </a>
+                    </dt>
                     <dd className="mt-[0.2em] leading-[1.45] text-pretty">{c.how}</dd>
                   </div>
                 ))}

@@ -3,6 +3,7 @@ import Header from './components/Header';
 import Hero from './sections/Hero';
 import Intro from './sections/Intro';
 import Projects from './sections/Projects';
+import Bilan from './sections/Bilan';
 import Stage from './sections/Stage';
 import Loisirs from './sections/Loisirs';
 import Voyages from './sections/Voyages';
@@ -19,7 +20,7 @@ export default function App() {
     <>
       <a
         href="#contenu"
-        className="fixed top-3 left-3 z-[100] -translate-y-24 bg-ink px-4 py-3 text-bg focus-visible:translate-y-0"
+        className="bg-ink text-bg fixed top-3 left-3 z-[100] -translate-y-24 px-4 py-3 focus-visible:translate-y-0"
       >
         Aller au contenu
       </a>
@@ -29,6 +30,7 @@ export default function App() {
         <Intro />
         <Skills />
         <Projects />
+        <Bilan />
         <Parcours />
         <Stage />
         <Loisirs />

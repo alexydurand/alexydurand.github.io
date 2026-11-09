@@ -1,5 +1,12 @@
-import { useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from 'react';
-import { projects } from '../data/content';
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type KeyboardEvent,
+  type PointerEvent,
+} from 'react';
+import { projects, type Project } from '../data/content';
 import clsx from '../lib/clsx';
 import ProjectDetail from './ProjectDetail';
 import ProjectFragment from './ProjectFragment';
@@ -12,7 +19,8 @@ const offset = (i: number, active: number) => {
   return wrap(i - active + half) - half;
 };
 
-const ARROW = 'grid size-11 cursor-pointer place-items-center rounded-full transition-colors hover:bg-ink/10';
+const ARROW =
+  'grid size-11 cursor-pointer place-items-center rounded-full transition-colors hover:bg-ink/10';
 
 /** The projects as a fan of cards: drag, arrows or a side card to browse, the middle card opens its details. */
 export default function ProjectStack() {
@@ -24,6 +32,17 @@ export default function ProjectStack() {
   const dragged = useRef(false);
 
   const go = (i: number) => setActive(wrap(i));
+
+  // The skills review opens a project out of its own link, without coming back up here
+  useEffect(() => {
+    const onShow = (e: Event) => {
+      const { id, from } = (e as CustomEvent<{ id: Project['id']; from: HTMLElement }>).detail;
+      setActive(projects.findIndex((p) => p.id === id));
+      setExpanded(from);
+    };
+    window.addEventListener('show-project', onShow);
+    return () => window.removeEventListener('show-project', onShow);
+  }, []);
 
   const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
     dragged.current = false;
@@ -65,7 +84,12 @@ export default function ProjectStack() {
 
   return (
     <>
-      <div role="group" aria-roledescription="carrousel" aria-label="Mes projets" onKeyDown={onKeyDown}>
+      <div
+        role="group"
+        aria-roledescription="carrousel"
+        aria-label="Mes projets"
+        onKeyDown={onKeyDown}
+      >
         <div
           ref={stage}
           onPointerDown={onPointerDown}
@@ -121,8 +145,17 @@ export default function ProjectStack() {
         </div>
 
         <div className="mt-2 flex justify-center">
-          <button type="button" aria-label="Projet précédent" onClick={() => go(active - 1)} className={ARROW}>
-            <svg aria-hidden viewBox="0 0 24 24" className="size-5 fill-none stroke-current stroke-2">
+          <button
+            type="button"
+            aria-label="Projet précédent"
+            onClick={() => go(active - 1)}
+            className={ARROW}
+          >
+            <svg
+              aria-hidden
+              viewBox="0 0 24 24"
+              className="size-5 fill-none stroke-current stroke-2"
+            >
               <path d="M15 5l-7 7 7 7" />
             </svg>
           </button>
@@ -143,8 +176,17 @@ export default function ProjectStack() {
               />
             </button>
           ))}
-          <button type="button" aria-label="Projet suivant" onClick={() => go(active + 1)} className={ARROW}>
-            <svg aria-hidden viewBox="0 0 24 24" className="size-5 fill-none stroke-current stroke-2">
+          <button
+            type="button"
+            aria-label="Projet suivant"
+            onClick={() => go(active + 1)}
+            className={ARROW}
+          >
+            <svg
+              aria-hidden
+              viewBox="0 0 24 24"
+              className="size-5 fill-none stroke-current stroke-2"
+            >
               <path d="M9 5l7 7-7 7" />
             </svg>
           </button>
@@ -154,7 +196,11 @@ export default function ProjectStack() {
         </p>
       </div>
 
-      <ProjectDetail project={projects[active]} from={expanded} onClosed={() => setExpanded(null)} />
+      <ProjectDetail
+        project={projects[active]}
+        from={expanded}
+        onClosed={() => setExpanded(null)}
+      />
     </>
   );
 }

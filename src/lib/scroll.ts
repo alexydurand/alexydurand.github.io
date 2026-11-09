@@ -15,6 +15,25 @@ export const scrollToHash = (hash: string) => {
   target.focus({ preventScroll: true });
 };
 
+/**
+ * Scrolls to one hill of the skills review. Once stuck, a sticky element only reports where it is stuck,
+ * so its real place comes from what stands before it. `onlyBack`: just far enough to uncover it, if needed.
+ */
+export const scrollToStacked = (id: string, onlyBack = false) => {
+  const target = document.getElementById(id);
+  if (!target?.parentElement) return;
+  let y = target.parentElement.getBoundingClientRect().top + window.scrollY;
+  for (let el = target.previousElementSibling; el; el = el.previousElementSibling) {
+    y += (el as HTMLElement).offsetHeight;
+  }
+  // Not sticky on small screens: leave room for the hill above it and the bar
+  y -= parseFloat(getComputedStyle(target).top) || 96;
+  if (onlyBack && window.scrollY <= y) return;
+  if (lenis) lenis.scrollTo(y, { duration: onlyBack ? 0.8 : 1.4 });
+  else window.scrollTo(0, y);
+  if (!onlyBack) target.focus({ preventScroll: true });
+};
+
 /** Stops / restarts page scrolling (used while the mobile menu is open). */
 export const lockScroll = (locked: boolean) => {
   if (lenis) {

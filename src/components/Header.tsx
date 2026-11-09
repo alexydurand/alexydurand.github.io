@@ -37,7 +37,10 @@ function unreadable(header: HTMLElement, lightText: boolean) {
             if (wide) break;
             return true;
           }
-          const [r, g, b, a = 1] = getComputedStyle(el).backgroundColor.match(/[\d.]+/g)?.map(Number) ?? [];
+          const [r, g, b, a = 1] =
+            getComputedStyle(el)
+              .backgroundColor.match(/[\d.]+/g)
+              ?.map(Number) ?? [];
           if (r === undefined || a < 0.5) continue;
           // A full-width band is what the colour of the words already follows
           if (!wide && 0.2126 * r + 0.7152 * g + 0.0722 * b < 110 !== lightText) return true;
@@ -55,7 +58,8 @@ function unreadable(header: HTMLElement, lightText: boolean) {
  */
 function bandUnder(header: HTMLElement) {
   const y = (header.firstElementChild?.getBoundingClientRect().height ?? 64) / 2;
-  let el: Element | null = document.elementsFromPoint(window.innerWidth / 2, y).find((e) => !header.contains(e)) ?? null;
+  let el: Element | null =
+    document.elementsFromPoint(window.innerWidth / 2, y).find((e) => !header.contains(e)) ?? null;
   for (; el; el = el.parentElement) {
     const bg = getComputedStyle(el).backgroundColor;
     const [r, g, b, a = 1] = bg.match(/[\d.]+/g)?.map(Number) ?? [];
@@ -154,7 +158,7 @@ export default function Header() {
   return (
     <header
       className={clsx(
-        'fixed inset-x-0 top-0 z-50 transition-[translate,background-color] duration-500 ease-out-expo motion-reduce:transition-none',
+        'ease-out-expo fixed inset-x-0 top-0 z-50 transition-[translate,background-color] duration-500 motion-reduce:transition-none',
         hidden && !open && '-translate-y-full',
       )}
       style={band && !open ? { backgroundColor: band.bg } : undefined}
@@ -169,7 +173,7 @@ export default function Header() {
         <a
           href="#top"
           onClick={(e) => go(e, '#top')}
-          className="-mx-2 px-2 py-3 text-body font-medium tracking-tight"
+          className="text-body -mx-2 px-2 py-3 font-medium tracking-tight"
         >
           <span data-word>
             {person.firstName} {person.lastName}
@@ -183,12 +187,12 @@ export default function Header() {
                 <a
                   href={item.href}
                   onClick={(e) => go(e, item.href)}
-                  className="group relative block px-3 py-3 text-body"
+                  className="group text-body relative block px-2 py-3 lg:px-3"
                 >
                   <span data-word>{item.label}</span>
                   <span
                     aria-hidden
-                    className="absolute inset-x-3 bottom-2 h-0.5 origin-right scale-x-0 bg-current transition-transform duration-300 ease-out-expo group-hover:origin-left group-hover:scale-x-100"
+                    className="ease-out-expo absolute inset-x-2 bottom-2 h-0.5 origin-right scale-x-0 bg-current transition-transform duration-300 group-hover:origin-left group-hover:scale-x-100 lg:inset-x-3"
                   />
                 </a>
               </li>
@@ -197,7 +201,7 @@ export default function Header() {
               <a
                 href={person.cv}
                 download
-                className="ml-3 block rounded-lg bg-accent px-5 py-3 text-body text-accent-ink transition-colors hover:bg-accent-deep focus-visible:bg-accent-deep"
+                className="bg-accent text-body text-accent-ink hover:bg-accent-deep focus-visible:bg-accent-deep ml-3 block rounded-lg px-5 py-3 transition-colors"
               >
                 CV
               </a>
@@ -208,7 +212,7 @@ export default function Header() {
         <button
           ref={toggle}
           type="button"
-          className="-mr-2 min-h-11 px-2 text-body font-medium md:hidden"
+          className="text-body -mr-2 min-h-11 px-2 font-medium md:hidden"
           aria-expanded={open}
           aria-controls="menu-mobile"
           onClick={() => setOpen((v) => !v)}
@@ -221,7 +225,7 @@ export default function Header() {
         id="menu-mobile"
         ref={panel}
         hidden={!open}
-        className="fixed inset-0 bg-ink pt-24 text-bg md:hidden"
+        className="bg-ink text-bg fixed inset-0 pt-24 md:hidden"
       >
         <nav aria-label="Menu" className="frame flex h-full flex-col justify-between pb-10">
           <ul>
@@ -230,14 +234,18 @@ export default function Header() {
                 <a
                   href={item.href}
                   onClick={(e) => go(e, item.href)}
-                  className="display block py-2 text-[15vw] active:text-accent"
+                  className="display active:text-accent block py-2 text-[15vw]"
                 >
                   {item.label}
                 </a>
               </li>
             ))}
           </ul>
-          <a href={person.cv} download className="block rounded-lg bg-accent px-5 py-4 text-center text-lead text-accent-ink">
+          <a
+            href={person.cv}
+            download
+            className="bg-accent text-lead text-accent-ink block rounded-lg px-5 py-4 text-center"
+          >
             Télécharger mon CV
           </a>
         </nav>

@@ -21,6 +21,7 @@ export const hero = {
 
 export const nav = [
   { href: '#projets', label: 'Projets' },
+  { href: '#bilan', label: 'Compétences' },
   { href: '#parcours', label: 'Parcours' },
   { href: '#stage', label: 'Stage' },
   { href: '#loisirs', label: 'Loisirs' },
@@ -132,7 +133,7 @@ export const butLinks = {
   back: 'Retour au projet',
   title: 'Compétences du BUT',
   intro:
-    'Mon BUT Informatique me forme à six compétences : réaliser, optimiser, administrer, gérer, conduire et collaborer. Voici celles que ce projet m’a fait travailler.',
+    'Mon BUT Informatique me forme à six compétences : réaliser, optimiser, administrer, gérer, conduire et collaborer. Voici celles que ce projet m’a fait travailler.',
 };
 
 export const projects: Project[] = [
@@ -147,7 +148,7 @@ export const projects: Project[] = [
     did: [
       'Fait : cadrage avec la cliente, cahier des charges et maquettes, en méthode Scrum.',
       'Fait : inscription et connexion sécurisées (bcrypt, JWT en cookie httpOnly), navigation responsive, mode sombre.',
-      'En cours : les groupes, où chaque membre n’accède qu’aux données de son groupe. À venir : agenda, setlists, contrats PDF.',
+      'Fait : les groupes, où chaque membre n’accède qu’aux données de son groupe. À venir : agenda, setlists, contrats PDF.',
     ],
     competences: [
       {
@@ -156,7 +157,7 @@ export const projects: Project[] = [
       },
       {
         skill: 'Gérer',
-        how: 'Je protège les données des utilisateurs : mots de passe hachés avec bcrypt et, bientôt, un accès limité aux données de son propre groupe.',
+        how: 'Je protège les données des utilisateurs : mots de passe hachés avec bcrypt, et chaque membre n’accède qu’aux données de son groupe.',
       },
       {
         skill: 'Conduire',
@@ -164,7 +165,7 @@ export const projects: Project[] = [
       },
       {
         skill: 'Collaborer',
-        how: 'Nous sommes cinq : je travaille surtout sur l’application et nous partageons le code avec Git.',
+        how: 'Nous sommes cinq : je travaille surtout sur l’application et nous partageons le code avec Git.',
       },
     ],
   },
@@ -176,19 +177,19 @@ export const projects: Project[] = [
     summary:
       'En cinq séances, nous avons refait le principe de Bomberman en 3D : bombes qui explosent en croix, murs destructibles, ennemis autonomes et bonus. Chacun avait son domaine, réparti en user stories. Le mien : la boucle de jeu, des vies du joueur à la fin de partie.',
     did: [
-      'Les vies : une explosion ou un ennemi retire une vie, et le joueur réapparaît à son point de départ.',
+      'Les vies : une explosion ou un ennemi retire une vie, et le joueur réapparaît à son point de départ.',
       'La fin de partie : un GameManager global compte les vies et les ennemis, puis déclare la défaite ou la victoire.',
       'L’interface : trois cœurs mis à jour par signal, et un écran de fin qui met le jeu en pause et permet de relancer.',
-      'Le décor du niveau : l’herbe et les fleurs.',
+      'Le décor du niveau : l’herbe et les fleurs.',
     ],
     competences: [
       {
         skill: 'Réaliser',
-        how: 'J’ai codé la boucle de jeu : les vies du joueur, sa réapparition, la fin de partie et l’interface.',
+        how: 'J’ai codé la boucle de jeu : les vies du joueur, sa réapparition, la fin de partie et l’interface.',
       },
       {
         skill: 'Optimiser',
-        how: 'J’ai utilisé les méthodes propres au jeu vidéo sous Godot : un GameManager global et des signaux qui mettent l’interface à jour.',
+        how: 'J’ai utilisé les méthodes propres au jeu vidéo sous Godot : un GameManager global et des signaux qui mettent l’interface à jour.',
       },
       {
         skill: 'Collaborer',
@@ -255,7 +256,7 @@ export const projects: Project[] = [
     competences: [
       {
         skill: 'Réaliser',
-        how: 'Un site complet en React et TypeScript, construit avec Claude Code : je vérifie qu’il reste utilisable au clavier et sans animation.',
+        how: 'Un site complet en React et TypeScript, construit avec Claude Code : je vérifie qu’il reste utilisable au clavier et sans animation.',
       },
       {
         skill: 'Optimiser',
@@ -263,7 +264,7 @@ export const projects: Project[] = [
       },
       {
         skill: 'Administrer',
-        how: 'Je publie le site sur GitHub Pages : un workflow GitHub Actions le met en ligne à chaque envoi sur la branche principale.',
+        how: 'Je publie le site sur GitHub Pages : un workflow GitHub Actions le met en ligne à chaque envoi sur la branche principale.',
       },
       {
         skill: 'Conduire',
@@ -272,6 +273,144 @@ export const projects: Project[] = [
     ],
   },
 ];
+
+/* ---------- Bilan des compétences ---------- */
+
+export type BilanProof = { label: string; project?: Project['id']; href?: string };
+export type BilanStep = { when: string; text: string; proofs?: BilanProof[] };
+
+const STAGE: BilanProof = { label: 'Voir le stage chez Orange', href: '#stage' };
+const KILLKENY: BilanProof = { label: 'Voir Kill Keny', project: 'killkeny' };
+const BOMBERMAN: BilanProof = { label: 'Voir Bomberman', project: 'bomberman' };
+const TOURNOI: BilanProof = { label: 'Voir le tournoi e-sport', project: 'tournoi' };
+const BDD: BilanProof = { label: 'Voir la base de données', project: 'bdd' };
+const PORTFOLIO: BilanProof = { label: 'Voir ce portfolio', project: 'portfolio' };
+
+// In my own words: the grading grid forbids copying the programme, and "compétence" is the only BUT word allowed
+export const bilan = {
+  heading: ['Mes', 'compétences'],
+  lead: 'De la première année à aujourd’hui, six compétences ont grandi avec mes projets. Voici comment, preuves à l’appui.',
+  skills: [
+    {
+      name: 'Réaliser',
+      promise: 'Transformer un besoin en application qui fonctionne.',
+      steps: [
+        {
+          when: '1re année',
+          text: 'Une application Java de gestion de tournois e-sport, de l’analyse des besoins à l’interface graphique.',
+          proofs: [TOURNOI],
+        },
+        {
+          when: '2e année',
+          text: 'Chez Orange, je passe aux outils internes d’une vraie entreprise : deux applications Power Apps et deux sites web, dont un full-stack.',
+          proofs: [STAGE],
+        },
+        {
+          when: 'Aujourd’hui',
+          text: 'Une application installable pour un vrai groupe de musique, du front en Vue au back en Express, et la boucle de jeu d’un Bomberman 3D.',
+          proofs: [KILLKENY, BOMBERMAN],
+        },
+      ],
+    },
+    {
+      name: 'Optimiser',
+      promise: 'Chercher ce qui convient le mieux, pas seulement ce qui marche.',
+      steps: [
+        {
+          when: '1re année',
+          text: 'Comparer plusieurs approches algorithmiques sur un même problème, plutôt que de garder la première qui marche.',
+        },
+        {
+          when: 'Aujourd’hui',
+          text: 'Un GameManager et des signaux pour organiser Bomberman. Et sur ce portfolio, les scènes lourdes ne se chargent qu’à l’approche et ne se dessinent qu’à l’écran.',
+          proofs: [BOMBERMAN, PORTFOLIO],
+        },
+      ],
+    },
+    {
+      name: 'Administrer',
+      promise: 'Mettre un service en ligne et le garder sûr.',
+      steps: [
+        { when: '1re année', text: 'Installer et configurer mon poste de développement.' },
+        {
+          when: 'Aujourd’hui',
+          text: 'Sur Kill Keny, des mots de passe hachés, des cookies httpOnly et des requêtes préparées. Et ce portfolio se met en ligne tout seul sur GitHub Pages à chaque mise à jour.',
+          proofs: [KILLKENY, PORTFOLIO],
+        },
+      ],
+    },
+    {
+      name: 'Gérer',
+      promise: 'Organiser les données pour qu’elles servent à décider.',
+      steps: [
+        {
+          when: '1re année',
+          text: 'Une base relationnelle conçue à partir d’un cahier des charges, puis interrogée en SQL sous Oracle.',
+          proofs: [BDD],
+        },
+        {
+          when: '2e année',
+          text: 'Chez Orange, un rapport Power BI pour analyser l’inventaire du parc de serveurs, et des applications connectées à SharePoint.',
+          proofs: [STAGE],
+        },
+        {
+          when: 'Aujourd’hui',
+          text: 'Les données de Kill Keny sous MariaDB, où chaque membre n’accède qu’à celles de son groupe. J’apprends aussi Neo4j.',
+          proofs: [KILLKENY],
+        },
+      ],
+    },
+    {
+      name: 'Conduire',
+      promise: 'Comprendre ce que veut le client, puis tenir le cap.',
+      steps: [
+        {
+          when: '1re année',
+          text: 'Recueillir et formaliser des besoins, et les analyser avant d’écrire la moindre ligne de code.',
+          proofs: [TOURNOI],
+        },
+        {
+          when: 'Aujourd’hui',
+          text: 'Pour Kill Keny : deux réunions avec la cliente, un cahier des charges, des maquettes, puis un suivi en Scrum sur cinq sprints.',
+          proofs: [KILLKENY],
+        },
+      ],
+    },
+    {
+      name: 'Collaborer',
+      promise: 'Trouver ma place dans une équipe et avancer avec elle.',
+      steps: [
+        {
+          when: '2e année',
+          text: 'Chez Orange, je découvre le travail en entreprise, avec un site diffusé sur les canaux internes du groupe.',
+          proofs: [STAGE],
+        },
+        {
+          when: 'Aujourd’hui',
+          text: 'À cinq sur Kill Keny, avec un Scrum Master et un Product Owner : chaque fonctionnalité passe par une branche et une pull request. À quatre sur Bomberman, chacun son domaine.',
+          proofs: [KILLKENY, BOMBERMAN],
+        },
+      ],
+    },
+  ] satisfies { name: Project['competences'][number]['skill']; promise: string; steps: BilanStep[] }[],
+  beyond: {
+    title: 'Et en dehors du programme',
+    items: [
+      {
+        name: 'Le low-code',
+        text: 'Power Apps et Power Automate, découverts chez Orange. Ils ne figurent pas au programme du BUT, et ils m’ont servi à construire des outils internes.',
+      },
+      {
+        name: 'Développer avec une IA',
+        text: 'Claude Code, pour construire ce portfolio : décrire précisément le besoin, outiller l’agent, relire chaque version.',
+      },
+    ],
+  },
+  next: {
+    title: 'Et ensuite',
+    text: 'La donnée. Chez Orange, elle m’a donné envie d’aller plus loin : c’est l’orientation que je cherche pour mon stage de 3e année, avant de poursuivre mes études pour me spécialiser.',
+  },
+};
 
 /* ---------- Parcours ---------- */
 
@@ -353,6 +492,7 @@ export const stage = {
       tools: ['React', 'Node.js', 'Express', 'API REST'],
     },
   ] satisfies Mission[],
+  skillsLink: 'Ce que ce stage a changé dans mes compétences',
   takeaway:
     'Ce stage m’a donné envie d’aller plus loin dans la donnée : c’est l’orientation que je cherche pour mon stage de 3e année.',
 };

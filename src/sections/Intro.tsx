@@ -109,6 +109,8 @@ export default function Intro() {
             ? `path('${ghostPath(centre - (231 * inner) / 2 - b.left, top + 144.5 * (scale - inner) - b.top, inner)}')`
             : 'inset(50%)';
       resident.style.transform = `translate3d(${left - b.left}px, ${top - b.top}px, 0) scale(${scale})`;
+      // Gone once faded: it is outside the clipped band, and at this scale it would widen the page
+      resident.style.display = p < GHOST_OUT ? '' : 'none';
       // Fades in with the title on load
       resident.style.opacity = p > 0 ? '1' : getComputedStyle(title).opacity;
       const c = range(p, 0.7, 1);
