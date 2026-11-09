@@ -11,7 +11,7 @@ import { scrollToHash, scrollToStacked } from '../lib/scroll';
 const W = 1440;
 const H = 100;
 
-// Far to near, from the sand of the home page sky down to its black ground. All low on the left and at
+// Far to near, from the sand of the home page sky down to its dark hills. All low on the left and at
 // the far right, where the name and arrow of the hill behind must stay visible once the hills are stacked.
 // The first one is the crest of the home page hills, measured: only the sky stands behind it.
 const LAYERS: { colors: string; arrow: string; theme: 'light' | 'dark'; ridge: Point[] }[] = [
@@ -111,14 +111,6 @@ const LAYERS: { colors: string; arrow: string; theme: 'light' | 'dark'; ridge: P
       [1440, 82],
     ],
   },
-];
-const GROUND: Point[] = [
-  [0, 90],
-  [320, 84],
-  [660, 92],
-  [940, 66],
-  [1180, 18],
-  [1440, 34],
 ];
 // The next section (Parcours) arrives as one more hill
 const NEXT_HILL: Point[] = [
@@ -255,7 +247,7 @@ export default function Bilan() {
                 {
                   '--i': i,
                   '--from': `var(--color-dusk-${i + 1})`,
-                  '--to': i < LAYERS.length - 1 ? `var(--color-dusk-${i + 2})` : 'var(--color-ink)',
+                  '--to': `var(--color-dusk-${Math.min(i + 2, LAYERS.length)})`,
                 } as CSSProperties
               }
               className={clsx('bilan-ridge outline-none', LAYERS[i].colors)}
@@ -355,14 +347,7 @@ export default function Bilan() {
         })}
       </ul>
 
-      <div data-theme="dark" className="bg-ink fill-ink text-bg relative">
-        <Ridge points={GROUND} className="bottom-[calc(100%-1px)]" />
-        <div className="frame grid gap-8 pt-8 pb-[calc(var(--ridge-h)+5rem)] lg:grid-cols-12 lg:gap-10 lg:pb-[calc(var(--ridge-h)+6rem)]">
-          <h3 className="text-head font-medium tracking-tight lg:col-span-5">{bilan.next.title}</h3>
-          <p className="text-lead text-sand max-w-[46ch] text-pretty lg:col-span-6 lg:col-start-7">
-            {bilan.next.text}
-          </p>
-        </div>
+      <div className="relative">
         <Ridge points={NEXT_HILL} className="fill-surface bottom-[-1px]" />
       </div>
     </section>

@@ -397,10 +397,6 @@ export const bilan = {
     promise: string;
     steps: BilanStep[];
   }[],
-  next: {
-    title: 'Et ensuite',
-    text: 'La donnée. Chez Orange, elle m’a donné envie d’aller plus loin : c’est l’orientation que je cherche pour mon stage de 3e année, avant de poursuivre mes études pour me spécialiser.',
-  },
 };
 
 /* ---------- Parcours ---------- */
