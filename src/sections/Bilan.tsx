@@ -357,24 +357,11 @@ export default function Bilan() {
 
       <div data-theme="dark" className="bg-ink fill-ink text-bg relative">
         <Ridge points={GROUND} className="bottom-[calc(100%-1px)]" />
-        <div className="frame grid gap-14 pt-8 pb-[calc(var(--ridge-h)+5rem)] lg:grid-cols-12 lg:gap-10 lg:pb-[calc(var(--ridge-h)+7rem)]">
-          <div className="lg:col-span-8">
-            <h3 className="text-head font-medium tracking-tight text-balance">
-              {bilan.beyond.title}
-            </h3>
-            <dl className="mt-8 grid gap-8 sm:grid-cols-2 lg:gap-10">
-              {bilan.beyond.items.map((item) => (
-                <div key={item.name}>
-                  <dt className="text-lead font-medium">{item.name}</dt>
-                  <dd className="mt-2 max-w-[46ch] text-pretty">{item.text}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-          <div className="lg:col-span-4">
-            <h3 className="text-head font-medium tracking-tight">{bilan.next.title}</h3>
-            <p className="text-sand mt-8 text-pretty">{bilan.next.text}</p>
-          </div>
+        <div className="frame grid gap-8 pt-8 pb-[calc(var(--ridge-h)+5rem)] lg:grid-cols-12 lg:gap-10 lg:pb-[calc(var(--ridge-h)+6rem)]">
+          <h3 className="text-head font-medium tracking-tight lg:col-span-5">{bilan.next.title}</h3>
+          <p className="text-lead text-sand max-w-[46ch] text-pretty lg:col-span-6 lg:col-start-7">
+            {bilan.next.text}
+          </p>
         </div>
         <Ridge points={NEXT_HILL} className="fill-surface bottom-[-1px]" />
       </div>

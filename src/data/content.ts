@@ -392,20 +392,11 @@ export const bilan = {
         },
       ],
     },
-  ] satisfies { name: Project['competences'][number]['skill']; promise: string; steps: BilanStep[] }[],
-  beyond: {
-    title: 'Et en dehors du programme',
-    items: [
-      {
-        name: 'Le low-code',
-        text: 'Power Apps et Power Automate, découverts chez Orange. Ils ne figurent pas au programme du BUT, et ils m’ont servi à construire des outils internes.',
-      },
-      {
-        name: 'Développer avec une IA',
-        text: 'Claude Code, pour construire ce portfolio : décrire précisément le besoin, outiller l’agent, relire chaque version.',
-      },
-    ],
-  },
+  ] satisfies {
+    name: Project['competences'][number]['skill'];
+    promise: string;
+    steps: BilanStep[];
+  }[],
   next: {
     title: 'Et ensuite',
     text: 'La donnée. Chez Orange, elle m’a donné envie d’aller plus loin : c’est l’orientation que je cherche pour mon stage de 3e année, avant de poursuivre mes études pour me spécialiser.',
