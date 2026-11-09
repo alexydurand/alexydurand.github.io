@@ -12,7 +12,7 @@ export default function Projects() {
       <div className="frame">
         <div className="flex flex-col items-start gap-2 md:flex-row md:items-end md:justify-between md:gap-6">
           <h2 id="projets-title" data-reveal="0" className="display title-xl">
-            Projets
+            Mes projets
           </h2>
           <a
             data-reveal="1"

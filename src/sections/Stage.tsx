@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 import { gsap } from '../lib/gsap';
 import { skills, stage } from '../data/content';
 import { prefersReducedMotion } from '../lib/motion';
-import { scrollToHash } from '../lib/scroll';
 import useReveal from '../hooks/useReveal';
 import orangeLogo from '../assets/logos/orange.svg';
 import LogoStack from '../components/LogoStack';
@@ -78,7 +77,7 @@ export default function Stage() {
         </h2>
 
         <div className="mt-16 grid items-start gap-x-6 gap-y-12 md:mt-28 md:grid-cols-12">
-          <div ref={square} className="aspect-square w-full will-change-transform md:col-span-5">
+          <div ref={square} className="aspect-square w-full will-change-transform md:col-span-5 md:ml-[3vw]">
             <img
               src={orangeLogo}
               alt="Logo Orange"
@@ -155,17 +154,6 @@ export default function Stage() {
             </li>
           ))}
         </ul>
-        <a
-          href="#bilan"
-          data-reveal="0"
-          onClick={(e) => {
-            e.preventDefault();
-            scrollToHash('#bilan');
-          }}
-          className="text-lead decoration-orange mt-10 inline-flex min-h-11 items-center font-medium underline decoration-2 underline-offset-4 hover:decoration-white"
-        >
-          {stage.skillsLink}
-        </a>
       </div>
     </section>
   );

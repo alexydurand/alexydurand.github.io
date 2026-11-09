@@ -5,6 +5,7 @@ import Vinyl from '../components/Vinyl';
 import ChessBoard from '../components/ChessBoard';
 import ChessPieces from '../components/ChessPieces';
 import Circuit from '../components/Circuit';
+import Arena from '../components/Arena';
 import useMediaQuery from '../hooks/useMediaQuery';
 import clsx from '../lib/clsx';
 
@@ -112,30 +113,16 @@ export default function Loisirs() {
                           )}
 
                           {h.games && (
-                            // Hovering a logo lifts it and dims the others
-                            <ul className="group/games grid grid-cols-2 items-center gap-6 sm:grid-cols-4 md:col-span-7 md:col-start-6 md:gap-10">
-                              {h.games.map((g, k) => (
-                                <li
-                                  key={g.name}
-                                  style={{ transitionDelay: isOpen ? `${150 + k * 70}ms` : '0ms' }}
-                                  className={clsx(
-                                    'group/game ease-out-expo grid h-16 place-items-center transition-[opacity,translate] duration-500 motion-reduce:transition-none sm:h-20 lg:h-24',
-                                    isOpen
-                                      ? 'translate-y-0 opacity-100'
-                                      : 'translate-y-4 opacity-0',
-                                  )}
-                                >
-                                  <img
-                                    src={LOGOS[`../assets/logos/${g.logo}.svg`]}
-                                    alt={g.name}
-                                    width={160}
-                                    height={60}
-                                    loading="lazy"
-                                    className="ease-out-expo max-h-full w-[85%] object-contain transition-[opacity,scale,translate,filter] duration-500 group-hover/game:-translate-y-1.5 group-hover/game:scale-105 group-hover/game:opacity-100! group-hover/games:opacity-35 motion-reduce:group-hover/game:translate-y-0 motion-reduce:group-hover/game:scale-100"
-                                  />
-                                </li>
-                              ))}
-                            </ul>
+                            <div className="md:col-span-7 md:flex md:justify-end">
+                              <Arena
+                                games={h.games.map((g) => ({
+                                  name: g.name,
+                                  src: LOGOS[`../assets/logos/${g.logo}.svg`],
+                                }))}
+                                playing={isOpen}
+                                still={reducedMotion}
+                              />
+                            </div>
                           )}
 
                           {h.records && (

@@ -18,12 +18,12 @@
   --color-paper: #ffffff;
   /* The beige of the home page sky */
   --color-sand: #e5b987;
-  /* The hills of the skills review (Bilan), from that sky down to its dark hills */
+  /* The hills of the skills review (Bilan), from that sky down to its dark hills, evenly spaced in OKLab lightness */
   --color-dusk-1: #d9ac7d;
-  --color-dusk-2: #c99c72;
-  --color-dusk-3: #b58a67;
-  --color-dusk-4: #8f6a51;
-  --color-dusk-5: #6e5140;
+  --color-dusk-2: #bb936d;
+  --color-dusk-3: #9d7b5c;
+  --color-dusk-4: #81644d;
+  --color-dusk-5: #654e3e;
   --color-dusk-6: #4b392f;
   /* Footer landscape: pale far ridges down to the black ground */
   --color-sky: #f1eee6;
@@ -206,9 +206,12 @@
   max-width: none;
 }
 
-/* The wider the screen, the more of the picture's right side shows, up to the top of the hill */
+/* The wider the screen, the more of the picture's right side shows, up to the top of the hill.
+   A little larger there, around the point where the crest cuts it */
 @media (min-aspect-ratio: 5/4) {
   .hero-portrait {
+    scale: 1.2;
+    transform-origin: 50% 80%;
     --x: 0.585;
     --y: 0.42;
     --w: 0.21;
@@ -254,11 +257,12 @@
   }
 }
 
-/* Hero: the dark ground of the hills dissolves into the page (scrim on a picture) */
+/* Hero: the dark ground of the hills dissolves into the page (scrim on a picture). On phones whose
+   toolbar hides (lvh > svh), it stays solid over that extra height, which shows below the hero at rest */
 .hero-fade {
   background: linear-gradient(
     to bottom,
-    var(--color-ink),
+    var(--color-ink) calc(100lvh - 100svh),
     rgb(18 17 15 / 0)
   ); /* taste-skill-ignore: scrim on a picture */
 }
@@ -313,5 +317,34 @@
 @keyframes march {
   to {
     stroke-dashoffset: -24;
+  }
+}
+
+/* Esports hall (Arena.tsx): the game coming up on the screen, the crowd's wave, spotlights, phones */
+@keyframes screen-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+@keyframes ola {
+  40% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes beam {
+  from {
+    transform: rotate(-16deg);
+  }
+  to {
+    transform: rotate(16deg);
+  }
+}
+
+@keyframes twinkle {
+  from {
+    opacity: 0.15;
   }
 }

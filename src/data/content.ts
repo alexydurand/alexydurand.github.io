@@ -20,6 +20,7 @@ export const hero = {
 };
 
 export const nav = [
+  { href: '#outils', label: 'Outils' },
   { href: '#projets', label: 'Projets' },
   { href: '#bilan', label: 'Compétences' },
   { href: '#parcours', label: 'Parcours' },
@@ -34,7 +35,7 @@ export const nav = [
 export type Skill = { name: string; logo: string; learning?: boolean };
 
 export const skills = {
-  heading: 'Ce que je sais faire',
+  heading: 'Mes outils',
   // The moving strips: data first, then the rest
   stripData: ['SQL', 'Oracle', 'Power BI', 'SharePoint', 'Neo4j'],
   stripDev: [
@@ -289,7 +290,6 @@ const PORTFOLIO: BilanProof = { label: 'Voir ce portfolio', project: 'portfolio'
 // In my own words: the grading grid forbids copying the programme, and "compétence" is the only BUT word allowed
 export const bilan = {
   heading: ['Mes', 'compétences'],
-  lead: 'De la première année à aujourd’hui, six compétences ont grandi avec mes projets. Voici comment, preuves à l’appui.',
   skills: [
     {
       name: 'Réaliser',
@@ -479,7 +479,6 @@ export const stage = {
       tools: ['React', 'Node.js', 'Express', 'API REST'],
     },
   ] satisfies Mission[],
-  skillsLink: 'Ce que ce stage a changé dans mes compétences',
   takeaway:
     'Ce stage m’a donné envie d’aller plus loin dans la donnée : c’est l’orientation que je cherche pour mon stage de 3e année.',
 };
@@ -502,12 +501,12 @@ export type Hobby = {
 };
 
 export const loisirs = {
-  heading: 'Loisirs',
+  heading: 'Mes loisirs',
   hobbies: [
     {
       id: 'jeux',
       title: 'Esports',
-      text: 'Je regarde surtout les grands événements de quatre jeux : League of Legends, Counter-Strike 2, Valorant et Rocket League. Ce que j’aime : le niveau des meilleures équipes et l’ambiance des salles pleines.',
+      text: 'Je regarde principalement les grands événements de quatre jeux, pour le niveau des meilleures équipes et l’ambiance des salles pleines.',
       games: [
         { name: 'League of Legends', logo: 'lol' },
         { name: 'Counter-Strike 2', logo: 'cs2' },

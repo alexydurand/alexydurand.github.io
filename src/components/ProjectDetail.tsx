@@ -93,17 +93,19 @@ export default function ProjectDetail({
     if (!skillsOpen || !card || !t) return;
     const refit = () => shrink(card, t, WITHOUT_PICTURE);
     refit();
-    back.current?.focus();
+    // Without scrolling: Safari scrolls late, once the card has been pushed below, and left it cut off at the top
+    back.current?.focus({ preventScroll: true });
     slide(card, false);
     window.addEventListener('resize', refit);
     return () => window.removeEventListener('resize', refit);
   }, [skillsOpen]);
 
-  const closeSkills = async () => {
+  // Back to the link only from the keyboard: on a touch screen its focus ring would show for nothing
+  const closeSkills = async (fromKeyboard: boolean) => {
     if (skills.current) await slide(skills.current, true);
     // Now, not on the next render: the project is inert until then and could not take the focus back
     flushSync(() => setSkillsOpen(false));
-    opener.current?.focus();
+    (fromKeyboard ? opener : dialog).current?.focus();
   };
 
   useEffect(() => {
@@ -118,6 +120,8 @@ export default function ProjectDetail({
       return;
     const [b, t, pic] = [box.current, text.current, picture.current];
     dialog.current.showModal();
+    // The dialog itself, rather than its first link, which would show its focus ring after a tap
+    dialog.current.focus();
     lockScroll(true);
     const refit = () => fit(b, t, pic);
     refit();
@@ -153,21 +157,22 @@ export default function ProjectDetail({
   return (
     <dialog
       ref={dialog}
+      tabIndex={-1}
       aria-labelledby="project-detail-title"
       onCancel={(e) => {
         e.preventDefault();
-        if (skillsOpen) closeSkills();
+        if (skillsOpen) closeSkills(true);
         else close();
       }}
       onClose={onClose}
       onClick={(e) => {
         if (e.target === e.currentTarget) close();
       }}
-      className="backdrop:bg-ink/70 fixed inset-0 m-0 size-full max-h-none max-w-none place-items-center bg-transparent p-2 open:grid md:p-6"
+      className="backdrop:bg-ink/70 fixed inset-0 m-0 outline-none size-full max-h-none max-w-none place-items-center bg-transparent p-2 open:grid md:p-6"
     >
       <div
         ref={panel}
-        className="bg-ink relative flex max-h-full w-full max-w-6xl origin-top-left overflow-hidden rounded-2xl text-white"
+        className="bg-ink relative flex max-h-full w-full max-w-6xl min-h-0 origin-top-left overflow-clip rounded-2xl text-white"
       >
         {/* The scrollbar is only a safety net: fit() makes the text fit first */}
         <div
@@ -236,14 +241,15 @@ export default function ProjectDetail({
           <div
             ref={skills}
             data-lenis-prevent
-            className="border-ink bg-bg text-ink absolute inset-0 overflow-y-auto overscroll-contain rounded-2xl border-8"
+            className="bg-ink absolute inset-0 overflow-y-auto overscroll-contain rounded-2xl text-white"
           >
             {/* Sizes in em, as for the project: shrink() only has to change the font size of this block */}
             <div ref={skillsText} className="p-[1.5em] lg:p-[2.5em]">
               <button
                 ref={back}
                 type="button"
-                onClick={closeSkills}
+                // A click from the keyboard has no pointer, so detail is 0
+                onClick={(e) => closeSkills(e.detail === 0)}
                 className="-ml-[0.25em] flex min-h-11 cursor-pointer items-center gap-[0.4em] px-[0.25em] underline decoration-1 underline-offset-4 hover:decoration-2"
               >
                 <svg
@@ -258,7 +264,7 @@ export default function ProjectDetail({
               <h4 className="mt-[0.5em] text-[2.1em] leading-[1.1] font-medium tracking-tight text-balance">
                 {butLinks.title}
               </h4>
-              <p className="text-muted mt-[0.3em]">{p.title}</p>
+              <p className="mt-[0.3em] text-white/70">{p.title}</p>
               <p className="mt-[0.9em] max-w-[62ch] leading-[1.45] text-pretty">{butLinks.intro}</p>
               <dl className="mt-[1.4em] grid gap-[1.1em] lg:grid-cols-2 lg:gap-x-[2.5em]">
                 {p.competences.map((c) => (
@@ -267,7 +273,7 @@ export default function ProjectDetail({
                       <a
                         href={`#bilan-${c.skill}`}
                         onClick={(e) => toSkill(e, c.skill)}
-                        className="underline decoration-1 underline-offset-4 hover:decoration-2"
+                        className="text-sand underline decoration-1 underline-offset-4 hover:decoration-2"
                       >
                         {c.skill}
                       </a>

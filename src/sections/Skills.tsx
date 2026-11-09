@@ -22,13 +22,13 @@ export default function Skills() {
   };
 
   return (
-    <section id="competences" ref={root} tabIndex={-1} aria-labelledby="skills-title" className="bg-bg pb-24 outline-none md:pb-36">
+    <section id="outils" ref={root} tabIndex={-1} aria-labelledby="skills-title" className="bg-bg pb-24 outline-none md:pb-36">
       <div className="frame pt-20 md:pt-28">
-        <h2 id="skills-title" className="sr-only">
+        <h2 id="skills-title" data-reveal="0" className="display title-xl">
           {skills.heading}
         </h2>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-12">
+        <div className="mt-12 grid gap-6 md:mt-20 md:grid-cols-2 lg:grid-cols-12">
           {skills.groups.map((g, i) => (
             <article
               key={g.title}

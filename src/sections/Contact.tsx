@@ -24,7 +24,7 @@ export default function Contact() {
   return (
     <section id="contact" ref={root} tabIndex={-1} aria-labelledby="contact-title" className="bg-bg outline-none">
       <div data-theme="dark" className="frame flex min-h-[150px] items-end justify-between gap-6 bg-accent pt-10 pb-5 text-accent-ink max-md:min-h-[96px]">
-        <h2 id="contact-title" data-reveal="0" className="display text-[11vw] leading-none md:text-[clamp(2.75rem,6vw,5.5rem)]">
+        <h2 id="contact-title" data-reveal="0" className="display text-[7vw] leading-none md:text-[clamp(2.75rem,6vw,5.5rem)]">
           {contact.greeting}
         </h2>
         <a

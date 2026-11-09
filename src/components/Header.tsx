@@ -180,19 +180,19 @@ export default function Header() {
           </span>
         </a>
 
-        <nav aria-label="Navigation principale" className="hidden md:block">
-          <ul className="flex items-center gap-1 lg:gap-3">
+        <nav aria-label="Navigation principale" className="hidden lg:block">
+          <ul className="flex items-center gap-3">
             {nav.map((item) => (
               <li key={item.href}>
                 <a
                   href={item.href}
                   onClick={(e) => go(e, item.href)}
-                  className="group text-body relative block px-2 py-3 lg:px-3"
+                  className="group text-body relative block px-3 py-3"
                 >
                   <span data-word>{item.label}</span>
                   <span
                     aria-hidden
-                    className="ease-out-expo absolute inset-x-2 bottom-2 h-0.5 origin-right scale-x-0 bg-current transition-transform duration-300 group-hover:origin-left group-hover:scale-x-100 lg:inset-x-3"
+                    className="ease-out-expo absolute inset-x-3 bottom-2 h-0.5 origin-right scale-x-0 bg-current transition-transform duration-300 group-hover:origin-left group-hover:scale-x-100"
                   />
                 </a>
               </li>
@@ -212,7 +212,7 @@ export default function Header() {
         <button
           ref={toggle}
           type="button"
-          className="text-body -mr-2 min-h-11 px-2 font-medium md:hidden"
+          className="text-body -mr-2 min-h-11 px-2 font-medium lg:hidden"
           aria-expanded={open}
           aria-controls="menu-mobile"
           onClick={() => setOpen((v) => !v)}
@@ -225,7 +225,7 @@ export default function Header() {
         id="menu-mobile"
         ref={panel}
         hidden={!open}
-        className="bg-ink text-bg fixed inset-0 pt-24 md:hidden"
+        className="bg-ink text-bg fixed inset-0 pt-24 lg:hidden"
       >
         <nav aria-label="Menu" className="frame flex h-full flex-col justify-between pb-10">
           <ul>
@@ -234,7 +234,7 @@ export default function Header() {
                 <a
                   href={item.href}
                   onClick={(e) => go(e, item.href)}
-                  className="display active:text-accent block py-2 text-[15vw]"
+                  className="display active:text-accent block py-1.5 text-[min(11vw,6.5svh)]"
                 >
                   {item.label}
                 </a>

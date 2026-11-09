@@ -22,6 +22,8 @@ export const scrollToHash = (hash: string) => {
 export const scrollToStacked = (id: string, onlyBack = false) => {
   const target = document.getElementById(id);
   if (!target?.parentElement) return;
+  // Not stuck (small screens), nothing can cover it; and a scroll started here would fight the finger
+  if (onlyBack && getComputedStyle(target).position !== 'sticky') return;
   let y = target.parentElement.getBoundingClientRect().top + window.scrollY;
   for (let el = target.previousElementSibling; el; el = el.previousElementSibling) {
     y += (el as HTMLElement).offsetHeight;

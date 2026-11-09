@@ -209,7 +209,7 @@ export default function Bilan() {
       aria-labelledby="bilan-title"
       className="bilan bg-sand text-ink outline-none"
     >
-      <div ref={head} className="frame relative pt-24 pb-[calc(var(--ridge-h)+6rem)] md:pt-36">
+      <div ref={head} className="frame relative pt-24 pb-[calc(var(--ridge-h)+6rem)] md:pt-36 md:pb-[calc(var(--ridge-h)+3rem)]">
         <h2 id="bilan-title" className="display title-xl max-sm:text-[15vw]">
           <span data-reveal="0" className="block">
             {bilan.heading[0]}
@@ -218,9 +218,6 @@ export default function Bilan() {
             {bilan.heading[1]}
           </span>
         </h2>
-        <p data-reveal="2" className="text-lead mt-6 max-w-[42ch] text-pretty md:mt-10">
-          {bilan.lead}
-        </p>
         {!reducedMotion && (
           <div
             ref={peek}

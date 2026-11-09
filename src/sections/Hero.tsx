@@ -19,7 +19,7 @@ export default function Hero() {
     const el = root.current;
     if (!el || prefersReducedMotion()) return;
     const ctx = gsap.context(() => {
-      gsap.from('[data-hero-title] > *', {
+      gsap.from('[data-hero-title] > *, [data-hero-role]', {
         y: 40,
         opacity: 0,
         duration: 1,
@@ -55,10 +55,14 @@ export default function Hero() {
             data-layer="title"
             className="absolute inset-0 flex items-center pb-[12svh] [@media(max-aspect-ratio:5/4)]:pb-[34svh]"
           >
-            <div data-hero-title className="frame text-ink">
+            {/* --t: size of the name. On a tall screen it stands on two lines, and its line goes down on the hills */}
+            <div
+              data-hero-title
+              className="frame text-ink [--t:clamp(2.75rem,10vw,10rem)] [@media(max-aspect-ratio:5/4)]:[--t:min(28vw,12.5svh)]"
+            >
               <h1
                 id="hero-title"
-                className="display text-[clamp(2.75rem,10vw,10rem)] font-bold whitespace-nowrap"
+                className="display ml-[3vw] text-(length:--t) font-bold whitespace-nowrap [@media(max-aspect-ratio:5/4)]:ml-0"
               >
                 {/* The ghost's place: the next band grows out of it (Intro.tsx); drawn here only without motion */}
                 <span
@@ -66,9 +70,13 @@ export default function Hero() {
                   data-ghost
                   className="ghost-shape motion-reduce:bg-ink mr-[0.1em] inline-block aspect-[231/289] h-[0.72em]"
                 />
-                {person.firstName} {person.lastName}
+                {person.firstName}{' '}
+                <span className="[@media(max-aspect-ratio:5/4)]:block">{person.lastName}</span>
               </h1>
-              <p className="text-lead mt-3 font-medium md:mt-5">{person.role}</p>
+              {/* Lined up with the first name, not the ghost (its width and margin, in the name's em) */}
+              <p className="text-lead mt-5 ml-[calc(3vw+var(--t)*0.675)] font-medium [@media(max-aspect-ratio:5/4)]:hidden">
+                {person.role}
+              </p>
             </div>
           </div>
           <div
@@ -83,19 +91,27 @@ export default function Hero() {
               className="hero-portrait"
             />
           </div>
-          <img
-            data-layer="foreground"
-            src={foreground}
-            alt="Des collines sombres sous un ciel beige"
-            width={2400}
-            height={1361}
-            className={layerImg}
-          />
+          <div data-layer="foreground" className={layerImg}>
+            <img
+              src={foreground}
+              alt="Des collines sombres sous un ciel beige"
+              width={2400}
+              height={1361}
+              className="size-full object-cover"
+            />
+            {/* Tall screens: the line moves down onto the dark hills, which it fills */}
+            <p
+              data-hero-role
+              className="frame text-bg absolute inset-x-0 bottom-[16svh] hidden text-[clamp(1.375rem,6.2vw,2.5rem)] leading-tight font-medium text-balance [@media(max-aspect-ratio:5/4)]:block"
+            >
+              {person.role}
+            </p>
+          </div>
         </div>
         {/* Just below the fold: the dark ground of the hills dissolves into the page once it scrolls */}
         <div
           aria-hidden
-          className="hero-fade pointer-events-none absolute inset-x-0 top-full h-[24%]"
+          className="hero-fade pointer-events-none absolute inset-x-0 top-full h-[calc(24%+100lvh-100svh)]"
         />
       </div>
     </section>
