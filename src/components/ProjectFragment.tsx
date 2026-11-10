@@ -24,7 +24,7 @@ function Window({ title, children, dark }: { title: string; children: React.Reac
     <div
       data-ui
       className={`flex h-full flex-col overflow-hidden border text-[13px] ${
-        dark ? 'border-white/10 bg-code text-code-ink' : 'border-ink/15 bg-paper text-ink'
+        dark ? 'border-white/10 bg-code text-code-ink' : 'keep-light border-ink/15 bg-paper text-ink'
       }`}
     >
       <div className={`flex items-center gap-2 px-3 py-2 ${dark ? 'bg-code-bar' : 'bg-surface'}`}>
@@ -132,7 +132,7 @@ const TEAMS = ['Nova', 'Kraken', 'Orion', 'Vortex', 'Atlas', 'Phénix', 'Titan',
 
 function Match({ a, b, win }: { a: string; b: string; win: 0 | 1 }) {
   return (
-    <div className="w-full border border-ink/15 bg-paper">
+    <div className="keep-light w-full border border-ink/15 bg-paper">
       {[a, b].map((t, i) => (
         <div
           key={t}

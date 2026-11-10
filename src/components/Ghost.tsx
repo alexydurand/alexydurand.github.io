@@ -68,7 +68,7 @@ export default function Ghost({ progress }: { progress: RefObject<number> }) {
         className="ghost-shape absolute inset-0 size-full"
       />
       <svg viewBox="0 0 231 289" className="absolute inset-0 size-full">
-        <g ref={eyes} className="fill-ink">
+        <g ref={eyes} className="fill-coal">
           {[80, 150].map((cx) => (
             <ellipse
               key={cx}

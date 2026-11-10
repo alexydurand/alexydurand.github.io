@@ -17,7 +17,7 @@ const H = 100;
 const LAYERS: { colors: string; arrow: string; theme: 'light' | 'dark'; ridge: Point[] }[] = [
   {
     colors: 'fill-dusk-1 text-ink',
-    arrow: 'bg-ink text-white',
+    arrow: 'bg-ink text-bg',
     theme: 'light',
     ridge: [
       [0, 69],
@@ -38,7 +38,7 @@ const LAYERS: { colors: string; arrow: string; theme: 'light' | 'dark'; ridge: P
   },
   {
     colors: 'fill-dusk-2 text-ink',
-    arrow: 'bg-ink text-white',
+    arrow: 'bg-ink text-bg',
     theme: 'light',
     ridge: [
       [0, 86],
@@ -53,7 +53,7 @@ const LAYERS: { colors: string; arrow: string; theme: 'light' | 'dark'; ridge: P
   },
   {
     colors: 'fill-dusk-3 text-ink',
-    arrow: 'bg-ink text-white',
+    arrow: 'bg-ink text-bg',
     theme: 'light',
     ridge: [
       [0, 90],
@@ -68,7 +68,7 @@ const LAYERS: { colors: string; arrow: string; theme: 'light' | 'dark'; ridge: P
   },
   {
     colors: 'fill-dusk-4 text-white',
-    arrow: 'bg-white text-ink',
+    arrow: 'bg-white text-coal',
     theme: 'dark',
     ridge: [
       [0, 84],
@@ -83,7 +83,7 @@ const LAYERS: { colors: string; arrow: string; theme: 'light' | 'dark'; ridge: P
   },
   {
     colors: 'fill-dusk-5 text-white',
-    arrow: 'bg-white text-ink',
+    arrow: 'bg-white text-coal',
     theme: 'dark',
     ridge: [
       [0, 92],
@@ -98,7 +98,7 @@ const LAYERS: { colors: string; arrow: string; theme: 'light' | 'dark'; ridge: P
   },
   {
     colors: 'fill-dusk-6 text-white',
-    arrow: 'bg-white text-ink',
+    arrow: 'bg-white text-coal',
     theme: 'dark',
     ridge: [
       [0, 86],
@@ -112,7 +112,7 @@ const LAYERS: { colors: string; arrow: string; theme: 'light' | 'dark'; ridge: P
     ],
   },
 ];
-// The next section (Parcours) arrives as one more hill
+// The next section (Stage, nearly black) arrives as one more hill, the darkest
 const NEXT_HILL: Point[] = [
   [0, 88],
   [300, 92],
@@ -207,9 +207,12 @@ export default function Bilan() {
       ref={root}
       tabIndex={-1}
       aria-labelledby="bilan-title"
-      className="bilan bg-sand text-ink outline-none"
+      className="bilan bg-sand dark:bg-bg text-ink outline-none"
     >
-      <div ref={head} className="frame relative pt-24 pb-[calc(var(--ridge-h)+6rem)] md:pt-36 md:pb-[calc(var(--ridge-h)+3rem)]">
+      <div
+        ref={head}
+        className="frame relative pt-24 pb-[calc(var(--ridge-h)+6rem)] md:pt-36 md:pb-[calc(var(--ridge-h)+3rem)]"
+      >
         <h2 id="bilan-title" className="display title-xl max-sm:text-[15vw]">
           <span data-reveal="0" className="block">
             {bilan.heading[0]}
@@ -236,7 +239,7 @@ export default function Bilan() {
           const opener = `bilan-${skill.name}-opener`;
           return (
             <li
-              key={skill.name}
+              key={i}
               id={`bilan-${skill.name}`}
               tabIndex={-1}
               data-theme={LAYERS[i].theme}
@@ -244,7 +247,9 @@ export default function Bilan() {
                 {
                   '--i': i,
                   '--from': `var(--color-dusk-${i + 1})`,
-                  '--to': `var(--color-dusk-${Math.min(i + 2, LAYERS.length)})`,
+                  // The last one already darkens towards the black of the Stage section below
+                  '--to':
+                    i + 1 < LAYERS.length ? `var(--color-dusk-${i + 2})` : 'var(--color-stage)',
                 } as CSSProperties
               }
               className={clsx('bilan-ridge outline-none', LAYERS[i].colors)}
@@ -345,7 +350,7 @@ export default function Bilan() {
       </ul>
 
       <div className="relative">
-        <Ridge points={NEXT_HILL} className="fill-surface bottom-[-1px]" />
+        <Ridge points={NEXT_HILL} className="fill-stage bottom-[-1px]" />
       </div>
     </section>
   );

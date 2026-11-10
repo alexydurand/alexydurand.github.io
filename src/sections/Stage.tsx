@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from '../lib/gsap';
-import { skills, stage } from '../data/content';
+import { skills, stage, ui } from '../data/content';
 import { prefersReducedMotion } from '../lib/motion';
 import useReveal from '../hooks/useReveal';
 import orangeLogo from '../assets/logos/orange.svg';
@@ -77,10 +77,13 @@ export default function Stage() {
         </h2>
 
         <div className="mt-16 grid items-start gap-x-6 gap-y-12 md:mt-28 md:grid-cols-12">
-          <div ref={square} className="aspect-square w-full will-change-transform md:col-span-5 md:ml-[3vw]">
+          <div
+            ref={square}
+            className="aspect-square w-full will-change-transform md:col-span-5 md:ml-[3vw]"
+          >
             <img
               src={orangeLogo}
-              alt="Logo Orange"
+              alt={ui.orangeLogo}
               width={284}
               height={284}
               className="size-full"
@@ -112,12 +115,12 @@ export default function Stage() {
         </div>
 
         <h3 data-reveal="0" className="text-head mt-24 font-medium tracking-tight md:mt-36">
-          Mes missions
+          {ui.missions}
         </h3>
         {/* One card per mission. The reveal animates the li (GSAP pins its `scale`); the hover zoom is on the card inside */}
         <ul className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {stage.missions.map((m, i) => (
-            <li key={m.title} data-mission data-reveal={i} className="flex">
+            <li key={i} data-mission data-reveal={i} className="flex">
               <div className="group ease-out-expo relative flex w-full flex-col bg-white/[0.05] p-6 transition-[scale] duration-300 hover:scale-[1.03] motion-reduce:hover:scale-100 md:p-8">
                 <span
                   data-bar
@@ -146,7 +149,7 @@ export default function Stage() {
                       rel="noreferrer"
                       className="text-body decoration-orange font-medium underline decoration-2 underline-offset-4 hover:decoration-white"
                     >
-                      Voir le site
+                      {ui.seeSite}
                     </a>
                   )}
                 </div>

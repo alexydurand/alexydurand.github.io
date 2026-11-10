@@ -1,6 +1,6 @@
 import { useEffect, useRef, type MouseEvent } from 'react';
 import { gsap } from '../lib/gsap';
-import { nav, person } from '../data/content';
+import { nav, person, ui } from '../data/content';
 import { prefersReducedMotion } from '../lib/motion';
 import { ridgePath, type Point } from '../lib/ridge';
 import { scrollToHash } from '../lib/scroll';
@@ -140,7 +140,7 @@ export default function Footer() {
 
   const columns = [
     {
-      title: 'Le site',
+      title: ui.footer.site,
       links: nav.map((n) => ({
         label: n.label,
         href: n.href,
@@ -148,19 +148,19 @@ export default function Footer() {
       })),
     },
     {
-      title: 'Me trouver',
+      title: ui.footer.find,
       links: [
-        { label: 'E-mail', href: `mailto:${person.email}` },
+        { label: ui.email, href: `mailto:${person.email}` },
         { label: 'LinkedIn', href: person.linkedin, external: true },
         { label: 'GitHub', href: person.github, external: true },
       ],
     },
     {
-      title: 'Infos',
+      title: ui.footer.info,
       links: [
-        { label: 'Mentions légales et crédits', href: 'mentions-legales.html' },
+        { label: ui.footer.legal, href: 'mentions-legales.html' },
         {
-          label: 'Retour en haut',
+          label: ui.footer.top,
           href: '#top',
           onClick: (e: MouseEvent<HTMLAnchorElement>) => go(e, '#top'),
         },
@@ -169,7 +169,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer ref={root} data-theme="light" className="bg-sky text-ink overflow-hidden">
+    <footer ref={root} data-theme="light" className="footer-land bg-sky text-ink overflow-hidden">
       {/* The viewBox starts just above the highest peak (y 104): no empty sky to scroll through */}
       <svg
         aria-hidden
@@ -197,7 +197,7 @@ export default function Footer() {
 
       <div className="bg-hill-6 -mt-px pb-8">
         <div className="frame relative z-10 pt-2">
-          <div className="bg-paper grid gap-10 rounded-2xl p-6 md:grid-cols-12 md:p-10">
+          <div className="bg-paper dark:bg-surface grid gap-10 rounded-2xl p-6 md:grid-cols-12 md:p-10">
             <div className="md:col-span-5">
               <p className="display text-[clamp(2.5rem,1rem+4vw,4.5rem)] leading-[0.95]">
                 {person.firstName} {person.lastName}
@@ -208,17 +208,17 @@ export default function Footer() {
                   download
                   className="bg-accent text-body text-accent-ink hover:bg-accent-deep inline-flex min-h-12 items-center rounded-full px-6 font-medium transition-colors"
                 >
-                  Télécharger mon CV
+                  {ui.downloadCv}
                 </a>
                 <a
                   href={`mailto:${person.email}`}
                   className="text-body py-3 underline decoration-1 underline-offset-4 hover:decoration-2"
                 >
-                  M’écrire
+                  {ui.footer.write}
                 </a>
               </div>
             </div>
-            <nav aria-label="Pied de page" className="grid gap-8 sm:grid-cols-3 md:col-span-7">
+            <nav aria-label={ui.footer.label} className="grid gap-8 sm:grid-cols-3 md:col-span-7">
               {columns.map((c) => (
                 <div key={c.title}>
                   <p className="text-small text-muted">{c.title}</p>

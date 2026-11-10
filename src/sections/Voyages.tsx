@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import useScrollProgress from '../hooks/useScrollProgress';
 import useMediaQuery from '../hooks/useMediaQuery';
 import { easeInOut, range } from '../lib/motion';
+import { ui } from '../data/content';
 import hongKong from '../assets/cities/hong-kong.webp';
 import lisbonne from '../assets/cities/lisbonne.webp';
 import montreal from '../assets/cities/montreal.webp';
@@ -15,8 +16,6 @@ type Box = [number, number, number, number];
 type Slot = {
   id: string;
   src: string;
-  alt: string;
-  city?: string;
   // Which part of the photo to keep when the frame crops it
   focus?: string;
   desktop: Box;
@@ -29,8 +28,6 @@ const SLOTS: Slot[] = [
   {
     id: 'hk',
     src: hongKong,
-    alt: 'Les tours du centre de Hong Kong la nuit, vues du ciel',
-    city: 'Hong Kong',
     desktop: [26, 24, 0, 1],
     mobile: [58, 26, 16, -1],
     depth: 0,
@@ -38,8 +35,6 @@ const SLOTS: Slot[] = [
   {
     id: 'lisbonne',
     src: lisbonne,
-    alt: 'Le château Saint-Georges au-dessus des toits de Lisbonne',
-    city: 'Lisbonne',
     desktop: [30, 20, 0, -29],
     mobile: [58, 17, -16, -29.5],
     depth: 0.4,
@@ -47,8 +42,6 @@ const SLOTS: Slot[] = [
   {
     id: 'paris',
     src: paris,
-    alt: 'La tour Eiffel illuminée au-dessus de la Seine, à l’heure bleue',
-    city: 'Paris',
     focus: '50% 40%',
     desktop: [17, 44, -28, -4],
     mobile: [28, 26, -31, -1],
@@ -57,8 +50,6 @@ const SLOTS: Slot[] = [
   {
     id: 'montreal',
     src: montreal,
-    alt: 'Les tours du centre-ville de Montréal vues du mont Royal',
-    city: 'Montréal',
     desktop: [24, 22, 29, -21],
     mobile: [30, 17, 30, -29.5],
     depth: 0.45,
@@ -66,8 +57,6 @@ const SLOTS: Slot[] = [
   {
     id: 'toronto-nuit',
     src: torontoNuit,
-    alt: 'Toronto la nuit, reflétée dans le lac Ontario',
-    city: 'Toronto',
     focus: '50% 50%',
     desktop: [26, 18, 30, 9],
     mobile: [44, 18, 23, 28],
@@ -76,8 +65,6 @@ const SLOTS: Slot[] = [
   {
     id: 'shenzhen',
     src: shenzhen,
-    alt: 'Le centre de Shenzhen illuminé, la nuit',
-    city: 'Shenzhen',
     desktop: [24, 20, -2, 29.5],
     mobile: [44, 18, -23, 28],
     depth: 0.6,
@@ -184,7 +171,7 @@ export default function Voyages() {
 
   return (
     // Its title and sentence are the last row of Loisirs, just above
-    <section aria-label="Photos de voyage" className="relative z-10">
+    <section aria-label={ui.travel} className="relative z-10">
       <div ref={wrapper} style={reducedMotion ? undefined : { height: `${VOYAGES_SVH}svh` }}>
         <div ref={stage} data-theme="light" className="bg-bg sticky top-0 h-svh overflow-hidden">
           {!mobile && box[0] > 0 && (
@@ -224,7 +211,7 @@ export default function Voyages() {
                 >
                   <img
                     src={s.src}
-                    alt={s.alt}
+                    alt={ui.cities[s.id][1]}
                     width={1200}
                     height={800}
                     loading="lazy"
@@ -232,11 +219,9 @@ export default function Voyages() {
                     className="bg-surface-2 size-full rounded-md object-cover"
                     style={s.focus ? { objectPosition: s.focus } : undefined}
                   />
-                  {s.city && (
-                    <p className="text-small md:text-body absolute top-full left-0 mt-1.5">
-                      {s.city}
-                    </p>
-                  )}
+                  <p className="text-small md:text-body absolute top-full left-0 mt-1.5">
+                    {ui.cities[s.id][0]}
+                  </p>
                 </div>
               );
             })}

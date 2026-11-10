@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import clsx from '../lib/clsx';
 import { scrollToHash } from '../lib/scroll';
+import { ui } from '../data/content';
 
 /** Round button that appears once the visitor has scrolled past the first screen. */
 export default function BackToTop() {
@@ -17,7 +18,7 @@ export default function BackToTop() {
     <button
       type="button"
       onClick={() => scrollToHash('#top')}
-      aria-label="Revenir en haut de la page"
+      aria-label={ui.backToTop}
       tabIndex={visible ? 0 : -1}
       className={clsx(
         'group fixed right-[var(--spacing-gutter)] bottom-[var(--spacing-gutter)] z-40 grid size-14 place-items-center rounded-full bg-accent text-accent-ink shadow-lg transition-[opacity,translate,scale] duration-300 ease-out-expo hover:scale-110 hover:bg-accent-deep md:size-16', // taste-skill-ignore: floating button

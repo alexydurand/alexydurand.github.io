@@ -20,7 +20,7 @@ export default function Circuit({ playing, still }: { playing: boolean; still: b
 
   return (
     <svg ref={svg} aria-hidden viewBox="0 0 640 335" className="w-full max-w-xl">
-      <path d={TRACK} fill="none" strokeWidth="16" strokeLinejoin="round" className="stroke-ink" />
+      <path d={TRACK} fill="none" strokeWidth="16" strokeLinejoin="round" className="stroke-coal dark:stroke-hill-5" />
       <path d={TRACK} fill="none" strokeWidth="1.5" strokeDasharray="6 10" className="stroke-white/40" />
       {/* Start and finish */}
       <rect x="412" y="300" width="4" height="20" className="fill-paper" />

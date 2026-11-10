@@ -100,7 +100,7 @@ export default function MentionsLegales() {
         </div>
       </main>
 
-      <footer className="bg-ink text-bg">
+      <footer className="bg-coal text-white">
         <div className="frame flex flex-col gap-3 py-10 text-small sm:flex-row sm:justify-between">
           <p>
             © 2026 {person.firstName} {person.lastName}

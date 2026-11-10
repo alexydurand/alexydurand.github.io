@@ -1,12 +1,17 @@
 @import 'tailwindcss';
 @import '@fontsource-variable/hanken-grotesk';
 
+/* Dark mode: the header button puts .dark on <html> (saved in the browser, read before paint in index.html) */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   /* Sober palette after PaperDrops: beige paper, near-black ink, white. Orange and stage black only in Stage */
   --color-bg: #f8f6f1;
   --color-surface: #efebe3;
   --color-surface-2: #e3ded3;
   --color-ink: #12110f;
+  /* Black that stays black in dark mode: dark bands and cards (intro, projects, contact) */
+  --color-coal: #12110f;
   --color-muted: #6c675e;
   --color-accent: #12110f;
   --color-accent-deep: #34312c;
@@ -58,6 +63,50 @@
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+/* Dark mode: the tokens that make the page swap. The fixed ones (coal, paper, sand, stage, night, orange,
+   hill-*, code-*) keep their colour, so dark bands, logos and pictures stay as they are. */
+html.dark {
+  color-scheme: dark;
+  --color-bg: #12110f;
+  --color-surface: #1c1a17;
+  --color-surface-2: #2e2b27;
+  --color-ink: #f1eee6;
+  --color-muted: #a39c90;
+  --color-accent: #f1eee6;
+  --color-accent-deep: #d6d0c4;
+  --color-accent-ink: #12110f;
+  /* The skills hills at night, from the far one down to the black of the Stage section */
+  --color-dusk-1: #44362b;
+  --color-dusk-2: #3c2f26;
+  --color-dusk-3: #332921;
+  --color-dusk-4: #2b221c;
+  --color-dusk-5: #241c17;
+  --color-dusk-6: #1c1612;
+}
+
+/* Still light in dark mode: mock-ups of light apps (projects) and the beige Vibe coding card */
+html.dark .keep-light {
+  --color-bg: #f8f6f1;
+  --color-surface: #efebe3;
+  --color-surface-2: #e3ded3;
+  --color-ink: #12110f;
+  --color-muted: #6c675e;
+  --color-accent: #12110f;
+  --color-accent-deep: #34312c;
+  --color-accent-ink: #ffffff;
+}
+
+/* The footer landscape at night: dark sky, the nearer the hill, the more moonlight */
+html.dark .footer-land {
+  --color-sky: #12110f;
+  --color-hill-1: #191714;
+  --color-hill-2: #1f1d19;
+  --color-hill-3: #26231f;
+  --color-hill-4: #2d2a25;
+  --color-hill-5: #35312b;
+  --color-hill-6: #3c3731;
 }
 
 @layer base {
@@ -262,7 +311,7 @@
 .hero-fade {
   background: linear-gradient(
     to bottom,
-    var(--color-ink) calc(100lvh - 100svh),
+    var(--color-coal) calc(100lvh - 100svh),
     rgb(18 17 15 / 0)
   ); /* taste-skill-ignore: scrim on a picture */
 }
@@ -320,14 +369,7 @@
   }
 }
 
-/* Esports hall (Arena.tsx): the game coming up on the screen, the crowd's wave, spotlights, phones */
-@keyframes screen-in {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-}
-
+/* Esports hall (Arena.tsx): the crowd's wave, spotlights, phones */
 @keyframes ola {
   40% {
     transform: translateY(-10px);

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from '../lib/gsap';
-import { person } from '../data/content';
+import { person, ui } from '../data/content';
 import { prefersReducedMotion } from '../lib/motion';
 import sky from '../assets/hero/sky.webp';
 import foreground from '../assets/hero/foreground.webp';
@@ -39,7 +39,14 @@ export default function Hero() {
   }, []);
 
   return (
-    <section id="top" ref={root} aria-labelledby="hero-title" className="bg-bg relative">
+    // Same in dark mode: its own light colours (keep-light), and dark words in the bar (always-light)
+    <section
+      id="top"
+      ref={root}
+      aria-labelledby="hero-title"
+      data-theme="always-light"
+      className="keep-light bg-bg relative"
+    >
       <div className="relative h-svh min-h-[560px]">
         <div className="absolute inset-0 overflow-hidden">
           <img
@@ -68,7 +75,7 @@ export default function Hero() {
                 <span
                   aria-hidden
                   data-ghost
-                  className="ghost-shape motion-reduce:bg-ink mr-[0.1em] inline-block aspect-[231/289] h-[0.72em]"
+                  className="ghost-shape motion-reduce:bg-coal mr-[0.1em] inline-block aspect-[231/289] h-[0.72em]"
                 />
                 {person.firstName}{' '}
                 <span className="[@media(max-aspect-ratio:5/4)]:block">{person.lastName}</span>
@@ -85,7 +92,7 @@ export default function Hero() {
           >
             <img
               src={portrait}
-              alt={`Portrait de ${person.firstName} ${person.lastName}`}
+              alt={ui.portrait}
               width={601}
               height={613}
               className="hero-portrait"
@@ -94,7 +101,7 @@ export default function Hero() {
           <div data-layer="foreground" className={layerImg}>
             <img
               src={foreground}
-              alt="Des collines sombres sous un ciel beige"
+              alt={ui.hills}
               width={2400}
               height={1361}
               className="size-full object-cover"
@@ -102,7 +109,7 @@ export default function Hero() {
             {/* Tall screens: the line moves down onto the dark hills, which it fills */}
             <p
               data-hero-role
-              className="frame text-bg absolute inset-x-0 bottom-[16svh] hidden text-[clamp(1.375rem,6.2vw,2.5rem)] leading-tight font-medium text-balance [@media(max-aspect-ratio:5/4)]:block"
+              className="frame absolute inset-x-0 bottom-[16svh] hidden text-[clamp(1.375rem,6.2vw,2.5rem)] leading-tight font-medium text-balance text-white [@media(max-aspect-ratio:5/4)]:block"
             >
               {person.role}
             </p>

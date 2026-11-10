@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type MouseEvent, type SyntheticEvent } from 'react';
 import { flushSync } from 'react-dom';
-import { butLinks, type Project } from '../data/content';
+import { butLinks, ui, type Project } from '../data/content';
 import { prefersReducedMotion } from '../lib/motion';
 import { lockScroll } from '../lib/scroll';
 import ProjectFragment from './ProjectFragment';
@@ -168,11 +168,11 @@ export default function ProjectDetail({
       onClick={(e) => {
         if (e.target === e.currentTarget) close();
       }}
-      className="backdrop:bg-ink/70 fixed inset-0 m-0 outline-none size-full max-h-none max-w-none place-items-center bg-transparent p-2 open:grid md:p-6"
+      className="backdrop:bg-coal/70 fixed inset-0 m-0 outline-none size-full max-h-none max-w-none place-items-center bg-transparent p-2 open:grid md:p-6"
     >
       <div
         ref={panel}
-        className="bg-ink relative flex max-h-full w-full max-w-6xl min-h-0 origin-top-left overflow-clip rounded-2xl text-white"
+        className="bg-coal relative flex max-h-full w-full max-w-6xl min-h-0 origin-top-left overflow-clip rounded-2xl text-white"
       >
         {/* The scrollbar is only a safety net: fit() makes the text fit first */}
         <div
@@ -195,7 +195,7 @@ export default function ProjectDetail({
             <p className="flex flex-wrap items-center gap-x-[0.7em] gap-y-1 pr-10 text-[max(0.8em,13px)] text-white/70">
               {p.context}
               {p.status && (
-                <span className="bg-sand text-ink rounded-full px-[0.8em] py-[0.15em] font-medium">
+                <span className="bg-sand text-coal rounded-full px-[0.8em] py-[0.15em] font-medium">
                   {p.status}
                 </span>
               )}
@@ -229,9 +229,9 @@ export default function ProjectDetail({
         <button
           type="button"
           inert={skillsOpen}
-          aria-label="Fermer le détail du projet"
+          aria-label={ui.closeProject}
           onClick={close}
-          className="bg-ink hover:bg-accent-deep focus-visible:ring-sand absolute top-2 right-2 grid size-11 cursor-pointer place-items-center rounded-full transition-colors outline-none focus-visible:ring-2"
+          className="bg-coal focus-visible:ring-sand absolute hover:bg-white/15 top-2 right-2 grid size-11 cursor-pointer place-items-center rounded-full transition-colors outline-none focus-visible:ring-2"
         >
           <svg aria-hidden viewBox="0 0 24 24" className="size-5 fill-none stroke-current stroke-2">
             <path d="M5 5l14 14M19 5L5 19" />
@@ -241,7 +241,7 @@ export default function ProjectDetail({
           <div
             ref={skills}
             data-lenis-prevent
-            className="bg-ink absolute inset-0 overflow-y-auto overscroll-contain rounded-2xl text-white"
+            className="bg-coal absolute inset-0 overflow-y-auto overscroll-contain rounded-2xl text-white"
           >
             {/* Sizes in em, as for the project: shrink() only has to change the font size of this block */}
             <div ref={skillsText} className="p-[1.5em] lg:p-[2.5em]">

@@ -6,7 +6,7 @@ import {
   type KeyboardEvent,
   type PointerEvent,
 } from 'react';
-import { projects, type Project } from '../data/content';
+import { projects, ui, type Project } from '../data/content';
 import clsx from '../lib/clsx';
 import ProjectDetail from './ProjectDetail';
 import ProjectFragment from './ProjectFragment';
@@ -87,7 +87,7 @@ export default function ProjectStack() {
       <div
         role="group"
         aria-roledescription="carrousel"
-        aria-label="Mes projets"
+        aria-label={ui.projects}
         onKeyDown={onKeyDown}
       >
         <div
@@ -106,7 +106,7 @@ export default function ProjectStack() {
                 aria-hidden={off !== 0 || undefined}
                 style={{ '--off': off, zIndex: 10 - Math.abs(off) } as CSSProperties}
                 className={clsx(
-                  'stack-card border-bg bg-ink absolute inset-0 m-auto flex h-(--card-h) w-(--card-w) flex-col overflow-hidden rounded-2xl border-2 text-white',
+                  'stack-card border-bg bg-coal dark:bg-surface absolute inset-0 m-auto flex h-(--card-h) w-(--card-w) flex-col overflow-hidden rounded-2xl border-2 text-white',
                   // Not invisible: the button keeps the focus, which the dialog gives back when it closes
                   off === 0 && expanded && 'opacity-0',
                 )}
@@ -131,7 +131,7 @@ export default function ProjectStack() {
                   type="button"
                   tabIndex={off === 0 ? 0 : -1}
                   aria-haspopup={off === 0 ? 'dialog' : undefined}
-                  aria-label={`Voir le détail : ${p.title}`}
+                  aria-label={`${ui.seeProject} ${p.title}`}
                   onClick={(e) => {
                     if (dragged.current) return;
                     if (off === 0) setExpanded(e.currentTarget.parentElement);
@@ -147,7 +147,7 @@ export default function ProjectStack() {
         <div className="mt-2 flex justify-center">
           <button
             type="button"
-            aria-label="Projet précédent"
+            aria-label={ui.prevProject}
             onClick={() => go(active - 1)}
             className={ARROW}
           >
@@ -163,7 +163,7 @@ export default function ProjectStack() {
             <button
               key={p.id}
               type="button"
-              aria-label={`Projet ${i + 1} : ${p.title}`}
+              aria-label={`${ui.project} ${i + 1} : ${p.title}`}
               aria-current={i === active || undefined}
               onClick={() => go(i)}
               className="group grid size-11 cursor-pointer place-items-center"
@@ -178,7 +178,7 @@ export default function ProjectStack() {
           ))}
           <button
             type="button"
-            aria-label="Projet suivant"
+            aria-label={ui.nextProject}
             onClick={() => go(active + 1)}
             className={ARROW}
           >

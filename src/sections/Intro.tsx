@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, type MouseEvent } from 'react';
 import { gsap } from '../lib/gsap';
-import { hero, person, skills } from '../data/content';
+import { hero, person, skills, ui } from '../data/content';
 import { easeInOut, range } from '../lib/motion';
 import { scrollToHash } from '../lib/scroll';
 import Ghost from '../components/Ghost';
@@ -147,7 +147,7 @@ export default function Intro() {
   };
 
   return (
-    <section aria-label="Présentation" className="relative">
+    <section aria-label={ui.intro} className="relative">
       <div ref={wrapper} className={reducedMotion ? undefined : '-mt-[100svh] h-[200svh]'}>
         {/* Pinned like the band but outside it: the band's clip must not cut the ghost */}
         {!reducedMotion && (
@@ -165,7 +165,7 @@ export default function Intro() {
           ref={band}
           data-theme="dark"
           style={reducedMotion ? undefined : { clipPath: 'inset(50%)' }}
-          className="bg-ink text-bg sticky top-0 flex min-h-svh flex-col justify-center gap-16 overflow-hidden py-24 md:gap-24"
+          className="bg-coal sticky top-0 flex min-h-svh flex-col justify-center gap-16 overflow-hidden py-24 text-white md:gap-24"
         >
           <div
             ref={content}
@@ -196,7 +196,7 @@ export default function Intro() {
           {/* Languages and tools, data first */}
           <div className="space-y-1">
             <Strip items={skills.stripData} className="text-sand" stripRef={dataStrip} />
-            <Strip items={skills.stripDev} className="text-bg" stripRef={devStrip} />
+            <Strip items={skills.stripDev} className="text-white" stripRef={devStrip} />
           </div>
         </div>
       </div>
