@@ -1,9 +1,11 @@
-import { useRef, type MouseEvent } from 'react';
+import { useEffect, useRef, type MouseEvent } from 'react';
 import { skills, ui } from '../data/content';
 import { scrollToHash } from '../lib/scroll';
 import useReveal from '../hooks/useReveal';
 import clsx from '../lib/clsx';
 import LogoStack from '../components/LogoStack';
+import { gsap } from '../lib/gsap';
+import { prefersReducedMotion } from '../lib/motion';
 import type { Skill } from '../data/content';
 
 // European language levels, in order
@@ -15,6 +17,49 @@ const logo = (name: string) => LOGOS[`../assets/logos/${name}.svg`];
 export default function Skills() {
   const root = useRef<HTMLElement>(null);
   useReveal(root);
+
+  // Once a card is in, its content follows: the logos pop up one by one, the Vibe coding lines slide in,
+  // the language levels fill up. Under the mouse, a card tilts towards the pointer.
+  useEffect(() => {
+    const el = root.current;
+    if (!el || prefersReducedMotion()) return;
+    const ctx = gsap.context(() => {
+      const follow = (selector: string, from: gsap.TweenVars, items = ':scope > *') =>
+        el.querySelectorAll<HTMLElement>(selector).forEach((group) =>
+          gsap.from(group.querySelectorAll(items), {
+            duration: 0.8,
+            delay: 0.25,
+            ...from,
+            scrollTrigger: { trigger: group, start: 'top 90%', once: true },
+          }),
+        );
+      follow('[data-logos]', { scale: 0.4, y: 14, opacity: 0, stagger: 0.06, ease: 'back.out(2.2)' });
+      follow('[data-lines]', { x: -28, opacity: 0, stagger: 0.1, ease: 'expo.out' });
+      follow('[data-levels]', { scaleX: 0, stagger: 0.08, ease: 'expo.out' }, 'span > span');
+
+      // GSAP owns the cards' transform (their entrance, useReveal), so it tilts them too
+      const cleanups = [...el.querySelectorAll<HTMLElement>('[data-tilt]')].map((card) => {
+        gsap.set(card, { transformPerspective: 1000 });
+        const rx = gsap.quickTo(card, 'rotationX', { duration: 0.6, ease: 'expo.out' });
+        const ry = gsap.quickTo(card, 'rotationY', { duration: 0.6, ease: 'expo.out' });
+        const move = (e: PointerEvent) => {
+          if (e.pointerType !== 'mouse') return;
+          const r = card.getBoundingClientRect();
+          ry(((e.clientX - r.left) / r.width - 0.5) * 8);
+          rx(-((e.clientY - r.top) / r.height - 0.5) * 8);
+        };
+        const leave = () => (rx(0), ry(0));
+        card.addEventListener('pointermove', move);
+        card.addEventListener('pointerleave', leave);
+        return () => {
+          card.removeEventListener('pointermove', move);
+          card.removeEventListener('pointerleave', leave);
+        };
+      });
+      return () => cleanups.forEach((off) => off());
+    }, el);
+    return () => ctx.revert();
+  }, []);
 
   const toProjects = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -39,9 +84,10 @@ export default function Skills() {
             <article
               key={i}
               data-reveal={i}
+              data-tilt
               className={clsx(
-                'group p-6 md:p-8',
-                g.lead ? 'bg-coal dark:bg-surface-2 text-white' : 'bg-surface',
+                'p-6 md:p-8',
+                g.lead ? 'bg-surface-2 text-white' : 'bg-surface',
                 i === 2 ? 'lg:col-span-5' : 'lg:col-span-6',
               )}
             >
@@ -63,13 +109,14 @@ export default function Skills() {
             </article>
           ))}
 
-          {/* AI-assisted development gets its own box, in the beige of the home page */}
+          {/* AI-assisted development gets its own box */}
           <article
             data-reveal="1"
-            className="keep-light group bg-sand text-ink grid gap-6 p-6 md:col-span-2 md:p-8 lg:col-span-7 lg:grid-cols-[auto_1fr] lg:gap-10"
+            data-tilt
+            className="group bg-surface-2 grid text-white gap-6 p-6 md:col-span-2 md:p-8 lg:col-span-7 lg:grid-cols-[auto_1fr] lg:gap-10"
           >
             <div className="flex items-center gap-5 lg:flex-col lg:items-start">
-              <span className="bg-paper grid size-16 shrink-0 place-items-center p-3 lg:size-20 lg:p-4">
+              <span className="grid size-16 shrink-0 place-items-center lg:size-20">
                 <img
                   src={logo(skills.vibe.tool.logo)}
                   alt=""
@@ -85,9 +132,9 @@ export default function Skills() {
                 </p>
               </div>
             </div>
-            <ul className="text-small space-y-4 self-center">
-              {skills.vibe.items.map(([term, detail]) => (
-                <li key={term} className="flex gap-3">
+            <ul data-lines className="text-small space-y-4 self-center">
+              {skills.vibe.items.map(([term, detail], i) => (
+                <li key={i} className="flex gap-3">
                   <span aria-hidden className="bg-ink mt-[0.75em] size-1.5 shrink-0" />
                   <span>
                     <span className="text-lead block font-medium">{term}</span>
@@ -100,7 +147,8 @@ export default function Skills() {
 
           <div
             data-reveal="0"
-            className="bg-coal dark:bg-surface-2 p-6 text-white md:p-8 lg:col-span-8"
+            data-tilt
+            className="bg-surface-2 p-6 text-white md:p-8 lg:col-span-8"
           >
             <h3 className="text-lead font-medium">{ui.soft}</h3>
             <ul className="mt-6 space-y-1">
@@ -119,13 +167,13 @@ export default function Skills() {
             </ul>
           </div>
           {/* Level on the European scale; hovering the card redraws the bar */}
-          <div data-reveal="1" className="group bg-surface p-6 md:p-8 lg:col-span-4">
+          <div data-reveal="1" data-tilt className="group bg-surface p-6 md:p-8 lg:col-span-4">
             <h3 className="text-lead font-medium">{ui.languages}</h3>
-            <ul className="mt-6 space-y-6">
-              {skills.languages.map((l) => {
+            <ul data-levels className="mt-6 space-y-6">
+              {skills.languages.map((l, i) => {
                 const reached = CEFR.indexOf(l.level);
                 return (
-                  <li key={l.name}>
+                  <li key={i}>
                     <p className="text-lead flex items-baseline justify-between">
                       {l.name} <span className="text-accent font-medium">{l.level}</span>
                     </p>

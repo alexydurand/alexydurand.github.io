@@ -160,12 +160,6 @@ export default function Voyages() {
       const k = SLOTS[i].depth * e;
       el.style.transform = `translate3d(${(x - cx) * k}px, ${(y - cy) * k}px, 0)`;
     });
-    // Tell the header once the dark picture is behind it
-    const theme = e > 0.5 ? 'dark' : 'light';
-    if (st.dataset.theme !== theme) {
-      st.dataset.theme = theme;
-      window.dispatchEvent(new Event('header-theme'));
-    }
   }, []);
   useScrollProgress(wrapper, onProgress, !reducedMotion);
 
@@ -173,7 +167,7 @@ export default function Voyages() {
     // Its title and sentence are the last row of Loisirs, just above
     <section aria-label={ui.travel} className="relative z-10">
       <div ref={wrapper} style={reducedMotion ? undefined : { height: `${VOYAGES_SVH}svh` }}>
-        <div ref={stage} data-theme="light" className="bg-bg sticky top-0 h-svh overflow-hidden">
+        <div ref={stage} data-theme="dark" className="bg-bg sticky top-0 h-svh overflow-hidden">
           {!mobile && box[0] > 0 && (
             <svg
               ref={route}

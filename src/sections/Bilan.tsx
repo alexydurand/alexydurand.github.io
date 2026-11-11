@@ -11,7 +11,7 @@ import { scrollToHash, scrollToStacked } from '../lib/scroll';
 const W = 1440;
 const H = 100;
 
-// Far to near, from the sand of the home page sky down to its dark hills. All low on the left and at
+// Far to near, from a sky a little darker than the home page one down to its dark hills. All low on the left and at
 // the far right, where the name and arrow of the hill behind must stay visible once the hills are stacked.
 // The first one is the crest of the home page hills, measured: only the sky stands behind it.
 const LAYERS: { colors: string; arrow: string; theme: 'light' | 'dark'; ridge: Point[] }[] = [
@@ -52,9 +52,9 @@ const LAYERS: { colors: string; arrow: string; theme: 'light' | 'dark'; ridge: P
     ],
   },
   {
-    colors: 'fill-dusk-3 text-ink',
-    arrow: 'bg-ink text-bg',
-    theme: 'light',
+    colors: 'fill-dusk-3 text-white',
+    arrow: 'bg-white text-coal',
+    theme: 'dark',
     ridge: [
       [0, 90],
       [300, 84],
@@ -207,12 +207,17 @@ export default function Bilan() {
       ref={root}
       tabIndex={-1}
       aria-labelledby="bilan-title"
-      className="bilan bg-sand dark:bg-bg text-ink outline-none"
+      // The header takes the colour of the frontmost hill (Header.tsx)
+      data-theme="light"
+      data-header-stack
+      className="bilan keep-light bg-dusk-0 text-ink outline-none"
     >
       <div
         ref={head}
-        className="frame relative pt-24 pb-[calc(var(--ridge-h)+6rem)] md:pt-36 md:pb-[calc(var(--ridge-h)+3rem)]"
+        className="frame relative pt-16 pb-[calc(var(--ridge-h)+6rem)] md:pt-24 md:pb-[calc(var(--ridge-h)+3rem)]"
       >
+        {/* The black of the projects comes down as a hill: the mirror of the one that leads to Stage */}
+        <Ridge points={NEXT_HILL} className="fill-coal -top-px -scale-y-100" />
         <h2 id="bilan-title" className="display title-xl max-sm:text-[15vw]">
           <span data-reveal="0" className="block">
             {bilan.heading[0]}

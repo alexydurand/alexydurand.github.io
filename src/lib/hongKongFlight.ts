@@ -7,6 +7,12 @@ export interface HongKongFlight extends SceneHandle {
 
 // Images cut from two Pexels clips (content.ts → credits), with a portrait crop for phones: public/hong-kong/
 const FRAMES = { desktop: 120, mobile: 90 };
+// Their size in pixels: a canvas sharper than them would only cost drawing time
+const SIZE = { desktop: [1440, 810], mobile: [630, 1120] };
+// Frames decoded around the current one (the first images to arrive are 8 apart), and kept up to this
+// distance: at most 13 decoded at once, ≈ 4.7 MB each
+const AHEAD = 4;
+const KEEP = 6;
 // Drawn slightly larger than the screen, so the pointer can pan without showing an edge
 const OVERSCAN = 1.03;
 const PAN = 0.012;
@@ -19,7 +25,13 @@ export default function createHongKongFlight(
   const ctx = canvas.getContext('2d')!;
   const folder = mobile ? 'mobile' : 'desktop';
   const count = mobile ? FRAMES.mobile : FRAMES.desktop;
-  const loaded: (HTMLImageElement | undefined)[] = [];
+  // The files stay compressed; only the frames around the current one are decoded, off the main thread.
+  // Drawn straight from an <img>, each new frame was decoded during the paint: ~50 ms stalls while scrolling.
+  const files: (Blob | undefined)[] = [];
+  const frames = new Map<number, ImageBitmap>();
+  const decoding = new Set<number>();
+  const loading = new AbortController();
+  let disposed = false;
   let target = 0;
   let now = 0;
   let pointerX = 0;
@@ -31,16 +43,42 @@ export default function createHongKongFlight(
 
   const nearest = (i: number) => {
     for (let d = 0; d < count; d++) {
-      const img = loaded[i - d] ?? loaded[i + d];
+      const img = frames.get(i - d) ?? frames.get(i + d);
       if (img) return img;
     }
   };
 
-  const paint = (img: HTMLImageElement, alpha: number) => {
+  // Decodes the frames close to i, lets go of those far from it
+  const prepare = (i: number) => {
+    for (const [k, frame] of frames) {
+      if (Math.abs(k - i) > KEEP) {
+        frame.close();
+        frames.delete(k);
+      }
+    }
+    for (let k = Math.max(0, i - AHEAD); k <= Math.min(count - 1, i + AHEAD); k++) {
+      const file = files[k];
+      if (!file || frames.has(k) || decoding.has(k)) continue;
+      decoding.add(k);
+      createImageBitmap(file).then(
+        (frame) => {
+          decoding.delete(k);
+          if (disposed || Math.abs(k - Math.round(now * (count - 1))) > KEEP) return frame.close();
+          frames.set(k, frame);
+          stale = true;
+          // Nothing scrolls then, and the section may not count as active yet
+          if (reducedMotion) draw();
+        },
+        () => decoding.delete(k),
+      );
+    }
+  };
+
+  const paint = (img: ImageBitmap, alpha: number) => {
     const { width: W, height: H } = canvas;
-    const scale = Math.max(W / img.naturalWidth, H / img.naturalHeight) * OVERSCAN;
-    const w = img.naturalWidth * scale;
-    const h = img.naturalHeight * scale;
+    const scale = Math.max(W / img.width, H / img.height) * OVERSCAN;
+    const w = img.width * scale;
+    const h = img.height * scale;
     ctx.globalAlpha = alpha;
     ctx.drawImage(img, (W - w) / 2 - panX * W * PAN, (H - h) / 2 + panY * H * PAN, w, h);
   };
@@ -48,12 +86,13 @@ export default function createHongKongFlight(
   const draw = () => {
     const position = now * (count - 1);
     const i = Math.floor(position);
+    prepare(i);
     const base = nearest(i);
     if (!base) return;
     paint(base, 1);
     // Blend into the next image: the motion stays smooth between two frames
-    const next = loaded[i + 1];
-    if (next && base === loaded[i]) paint(next, position - i);
+    const next = frames.get(i + 1);
+    if (next && base === frames.get(i)) paint(next, position - i);
   };
 
   // Coarse to fine: any scroll position has an image close by, long before they have all arrived.
@@ -64,20 +103,19 @@ export default function createHongKongFlight(
       for (let i = 0; i < count; i += step) order.add(i);
     }
   }
-  const images = [...order].map((i) => {
-    const img = new Image();
-    img.decoding = 'async';
+  for (const i of order) {
     // Behind the collage photos, which load at the same moment and show first
-    img.fetchPriority = 'low';
-    img.onload = () => {
-      loaded[i] = img;
-      stale = true;
-      // Nothing scrolls then, and the section may not count as active yet
-      if (reducedMotion) draw();
-    };
-    img.src = `hong-kong/${folder}/${String(i).padStart(3, '0')}.webp`;
-    return img;
-  });
+    fetch(`hong-kong/${folder}/${String(i).padStart(3, '0')}.webp`, {
+      priority: 'low',
+      signal: loading.signal,
+    })
+      .then((response) => response.blob())
+      .then((file) => {
+        files[i] = file;
+        prepare(Math.floor(now * (count - 1)));
+      })
+      .catch(() => {});
+  }
 
   const loop = () => {
     raf = requestAnimationFrame(loop);
@@ -94,7 +132,9 @@ export default function createHongKongFlight(
   };
 
   const resize = () => {
-    const ratio = Math.min(window.devicePixelRatio, 1.5);
+    const [fw, fh] = SIZE[folder];
+    const sharpest = Math.max(fw / canvas.clientWidth, fh / canvas.clientHeight, 1);
+    const ratio = Math.min(window.devicePixelRatio, 1.5, sharpest);
     canvas.width = canvas.clientWidth * ratio;
     canvas.height = canvas.clientHeight * ratio;
     draw();
@@ -116,11 +156,11 @@ export default function createHongKongFlight(
       pointerY = y;
     },
     dispose() {
+      disposed = true;
       cancelAnimationFrame(raf);
-      for (const img of images) {
-        img.onload = null;
-        img.src = '';
-      }
+      loading.abort();
+      for (const frame of frames.values()) frame.close();
+      frames.clear();
     },
   };
 }

@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import clsx from '../lib/clsx';
-import { nav, person, setLang, ui } from '../data/content';
-
-const TOGGLE =
-  'text-body grid size-11 cursor-pointer place-items-center rounded-full font-medium transition-colors hover:bg-current/10';
+import { lang, nav, person, setLang, ui } from '../data/content';
 import { lockScroll, scrollToHash } from '../lib/scroll';
+import frFlag from '../assets/flags/fr.svg';
+import gbFlag from '../assets/flags/gb.svg';
 
 /** True when a line of this element's own text passes through the point. */
 function textAt(el: Element, x: number, y: number) {
@@ -79,27 +78,14 @@ export default function Header() {
   const [dark, setDark] = useState(false);
   // Background taken from the band under the bar, while its words can't be read
   const [band, setBand] = useState<{ bg: string; light: boolean } | null>(null);
+  // Over a stack of bands (the skills hills): the colour of the frontmost one, whatever lies under the bar
+  const [stackBg, setStackBg] = useState<string | null>(null);
   const bar = useRef<HTMLDivElement>(null);
   const toggle = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLDivElement>(null);
-  const [darkMode, setDarkMode] = useState(() =>
-    document.documentElement.classList.contains('dark'),
-  );
-
-  const switchTheme = () => {
-    const next = !darkMode;
-    document.documentElement.classList.toggle('dark', next);
-    try {
-      localStorage.setItem('theme', next ? 'dark' : 'light');
-    } catch {
-      // Storage blocked: dark for this visit only
-    }
-    setDarkMode(next);
-    window.dispatchEvent(new Event('header-theme'));
-  };
 
   // Hide while scrolling down, show again when scrolling up.
-  // The bar is transparent, its text light over sections marked data-theme="dark". While its words
+  // The bar is transparent, its text dark over sections marked data-theme="light". While its words
   // can't be read (see unreadable) it takes the colour of the band below, so it still blends in.
   useEffect(() => {
     let last = window.scrollY;
@@ -117,27 +103,32 @@ export default function Header() {
       down = y > last && y > 240;
       setHidden(down);
       last = y;
+      // Hidden: nothing to colour. The hit-testing below is most of what scrolling costs on this page
+      if (down) return;
       // At most every 80 ms: the test hit-tests a few dozen points
       if (!pending) pending = window.setTimeout(check, 80);
       const below = document
         .elementsFromPoint(window.innerWidth / 2, (bar.current?.offsetHeight ?? 64) / 2)
         // The first one that belongs to a themed section: the intro's empty wrapper lies over the home page
         .find((el) => !bar.current?.parentElement?.contains(el) && el.closest('[data-theme]'));
-      // Light words over sections marked dark, and everywhere once the page itself is dark,
-      // except over what stays light (the home page)
-      const theme = below?.closest('[data-theme]')?.getAttribute('data-theme');
-      lightText =
-        theme === 'dark' ||
-        (document.documentElement.classList.contains('dark') && theme !== 'always-light');
+      // The frontmost band of a stack is the last one that has come well into view
+      const stack = below?.closest('[data-header-stack]');
+      const front =
+        stack &&
+        ([...stack.querySelectorAll('[data-theme]')]
+          .filter((el) => el.getBoundingClientRect().top < window.innerHeight * 0.7)
+          .pop() ??
+          stack);
+      // Light words on the dark page, dark ones over what stays light (home page, skills review)
+      lightText = (front || below?.closest('[data-theme]'))?.getAttribute('data-theme') !== 'light';
       setDark(lightText);
+      setStackBg(front ? getComputedStyle(front).backgroundColor : null);
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('header-theme', onScroll);
     return () => {
       window.clearTimeout(pending);
       window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('header-theme', onScroll);
     };
   }, []);
 
@@ -171,6 +162,8 @@ export default function Header() {
     };
   }, [open]);
 
+  const fill = stackBg ? { bg: stackBg, light: dark } : band;
+
   const go = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     setOpen(false);
@@ -185,13 +178,13 @@ export default function Header() {
         'ease-out-expo fixed inset-x-0 top-0 z-50 transition-[translate,background-color] duration-500 motion-reduce:transition-none',
         hidden && !open && '-translate-y-full',
       )}
-      style={band && !open ? { backgroundColor: band.bg } : undefined}
+      style={fill && !open ? { backgroundColor: fill.bg } : undefined}
     >
       <div
         ref={bar}
         className={clsx(
           'frame relative z-10 flex h-16 items-center justify-between transition-colors duration-300 md:h-20',
-          open || (band ? band.light : dark) ? 'text-white' : 'text-coal',
+          open || (fill ? fill.light : dark) ? 'text-white' : 'text-coal',
         )}
       >
         <a
@@ -226,7 +219,7 @@ export default function Header() {
                 <a
                   href={person.cv}
                   download
-                  className="bg-accent text-body text-accent-ink hover:bg-accent-deep focus-visible:bg-accent-deep ml-3 block rounded-lg px-5 py-3 transition-colors"
+                  className="bg-coal text-body hover:bg-surface-2 focus-visible:bg-surface-2 ml-3 block rounded-lg px-5 py-3 text-white ring-1 ring-white/20 transition-colors ring-inset"
                 >
                   CV
                 </a>
@@ -234,39 +227,22 @@ export default function Header() {
             </ul>
           </nav>
 
+          {/* The flag of the language being read; a click switches to the other one */}
           <button
             type="button"
-            onClick={() => setLang(ui.otherLang.lang === 'en' ? 'en' : 'fr')}
+            onClick={() => setLang(lang === 'fr' ? 'en' : 'fr')}
             lang={ui.otherLang.lang}
             aria-label={ui.otherLang.label}
-            className={TOGGLE}
+            title={ui.otherLang.label}
+            className="group grid size-11 cursor-pointer place-items-center rounded-full transition-colors hover:bg-current/10"
           >
-            <span data-word aria-hidden>
-              {ui.otherLang.short}
-            </span>
-          </button>
-          <button
-            type="button"
-            onClick={switchTheme}
-            aria-label={darkMode ? ui.toLight : ui.toDark}
-            className={TOGGLE}
-          >
-            <svg
-              data-word
-              aria-hidden
-              viewBox="0 0 24 24"
-              className="size-5 fill-none stroke-current stroke-2"
-              strokeLinecap="round"
-            >
-              {darkMode ? (
-                <>
-                  <circle cx="12" cy="12" r="4.5" />
-                  <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
-                </>
-              ) : (
-                <path d="M20.5 14.5A8.5 8.5 0 1 1 9.5 3.5a7 7 0 0 0 11 11Z" />
-              )}
-            </svg>
+            <img
+              src={lang === 'fr' ? frFlag : gbFlag}
+              alt=""
+              width={24}
+              height={24}
+              className="ease-out-expo size-6 rounded-full ring-1 ring-current/25 transition-transform duration-300 group-hover:scale-110 motion-reduce:transition-none"
+            />
           </button>
 
           <button

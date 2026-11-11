@@ -16,10 +16,10 @@ export default function LogoStack({
   className?: string;
 }) {
   return (
-    <div aria-hidden className={clsx('flex flex-wrap gap-3', className)}>
+    <div data-logos aria-hidden className={clsx('flex flex-wrap gap-3', className)}>
       {items.map((s) => (
         <img
-          key={s.name}
+          key={s.logo}
           src={LOGOS[`../assets/logos/${s.logo}.svg`]}
           alt=""
           width={44}

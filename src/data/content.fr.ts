@@ -602,10 +602,8 @@ export const ui = {
   menu: 'Menu',
   close: 'Fermer',
   downloadCv: 'Télécharger mon CV',
-  toDark: 'Passer en mode sombre',
-  toLight: 'Passer en mode clair',
-  // The other language: what the button shows, and what it says to screen readers
-  otherLang: { short: 'EN', label: 'Read this site in English', lang: 'en' },
+  // The other language, as the flag button says it to screen readers
+  otherLang: { label: 'Read this site in English', lang: 'en' },
   backToTop: 'Revenir en haut de la page',
   intro: 'Présentation',
   portrait: 'Portrait d’Alexy Durand',

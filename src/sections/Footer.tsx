@@ -169,7 +169,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer ref={root} data-theme="light" className="footer-land bg-sky text-ink overflow-hidden">
+    <footer ref={root} data-theme="dark" className="footer-land bg-sky text-ink overflow-hidden">
       {/* The viewBox starts just above the highest peak (y 104): no empty sky to scroll through */}
       <svg
         aria-hidden

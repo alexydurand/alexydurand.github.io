@@ -66,7 +66,8 @@ const createChessScene: SceneFactory<ChessScene> = (canvas, { reducedMotion }) =
   const token = (name: string) => new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue(name).trim());
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  // Sharper than 1.5 costs a lot on a small integrated GPU, for little to see
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 

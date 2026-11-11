@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,15 +9,6 @@
       content="Mentions légales du portfolio d'Alexy Durand : éditeur, hébergeur, crédits et données personnelles."
     />
     <meta name="robots" content="noindex" />
-    <!-- Dark by default, unless light was chosen with the header button: applied before the first paint -->
-    <script>
-      try {
-        if (localStorage.getItem('theme') !== 'light')
-          document.documentElement.classList.add('dark');
-      } catch {
-        document.documentElement.classList.add('dark');
-      }
-    </script>
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
   </head>
   <body>

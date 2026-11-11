@@ -39,12 +39,12 @@ export default function Hero() {
   }, []);
 
   return (
-    // Same in dark mode: its own light colours (keep-light), and dark words in the bar (always-light)
+    // Stays light on the dark page: its own light colours (keep-light), dark words in the bar
     <section
       id="top"
       ref={root}
       aria-labelledby="hero-title"
-      data-theme="always-light"
+      data-theme="light"
       className="keep-light bg-bg relative"
     >
       <div className="relative h-svh min-h-[560px]">

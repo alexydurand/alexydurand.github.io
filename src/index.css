@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 @import '@fontsource-variable/hanken-grotesk';
 
-/* Dark mode: the header button puts .dark on <html> (saved in the browser, read before paint in index.html) */
+/* The site is dark: .dark is set once and for all on <html> (index.html), .keep-light keeps a block light */
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
@@ -23,13 +23,15 @@
   --color-paper: #ffffff;
   /* The beige of the home page sky */
   --color-sand: #e5b987;
-  /* The hills of the skills review (Bilan), from that sky down to its dark hills, evenly spaced in OKLab lightness */
-  --color-dusk-1: #d9ac7d;
-  --color-dusk-2: #bb936d;
-  --color-dusk-3: #9d7b5c;
-  --color-dusk-4: #81644d;
-  --color-dusk-5: #654e3e;
-  --color-dusk-6: #4b392f;
+  /* The skills review (Bilan): its sky (0) and hills, the home page sand and hills taken 20% towards their
+     night colours (OKLab). Text ink on 0 to 2, white on 3 to 6 (contrast ≥ 4.5:1) */
+  --color-dusk-0: #c29d73;
+  --color-dusk-1: #b9936c;
+  --color-dusk-2: #a07e5e;
+  --color-dusk-3: #866a50;
+  --color-dusk-4: #6f5643;
+  --color-dusk-5: #574336;
+  --color-dusk-6: #413229;
   /* Footer landscape: pale far ridges down to the black ground */
   --color-sky: #f1eee6;
   --color-hill-1: #e9e5dc;
@@ -65,8 +67,7 @@
   --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
 }
 
-/* Dark mode: the tokens that make the page swap. The fixed ones (coal, paper, sand, stage, night, orange,
-   hill-*, code-*) keep their colour, so dark bands, logos and pictures stay as they are. */
+/* The dark page. The fixed tokens (coal, paper, sand, stage, night, orange, hill-*, code-*) keep their colour */
 html.dark {
   color-scheme: dark;
   --color-bg: #12110f;
@@ -77,16 +78,9 @@ html.dark {
   --color-accent: #f1eee6;
   --color-accent-deep: #d6d0c4;
   --color-accent-ink: #12110f;
-  /* The skills hills at night, from the far one down to the black of the Stage section */
-  --color-dusk-1: #44362b;
-  --color-dusk-2: #3c2f26;
-  --color-dusk-3: #332921;
-  --color-dusk-4: #2b221c;
-  --color-dusk-5: #241c17;
-  --color-dusk-6: #1c1612;
 }
 
-/* Still light in dark mode: mock-ups of light apps (projects) and the beige Vibe coding card */
+/* Still light: the home page, mock-ups of light apps (projects), the skills review */
 html.dark .keep-light {
   --color-bg: #f8f6f1;
   --color-surface: #efebe3;
@@ -162,6 +156,11 @@ html.dark .footer-land {
 
 @utility tabular {
   font-variant-numeric: tabular-nums;
+}
+
+/* Endless animations (records, arena lights) stop inside a closed row: unseen, they still cost every frame */
+[inert] * {
+  animation-play-state: paused;
 }
 
 /* Elements that animate in with JS start visible; JS adds .will-reveal only when motion is allowed. */
@@ -284,16 +283,22 @@ html.dark .footer-land {
 }
 
 /* Skills review (Bilan): each hill stops just under the name of the one before, and the landscape builds up.
-   Only where an open hill fits on screen: stuck, whatever is taller than the screen could never be read. */
+   Only where an open hill fits on screen: stuck, whatever is taller than the screen could never be read.
+   Its sky darkens towards the black hill that comes down from the projects, as its last hill does below. */
 .bilan {
   --ridge-h: clamp(2.5rem, 5.5vw, 4.5rem);
+  background-image: linear-gradient(
+    color-mix(in oklab, var(--color-dusk-0), var(--color-coal) 55%),
+    var(--color-dusk-0) 7rem
+  ); /* taste-skill-ignore: Alexy asked for the same soft edge as at the bottom */
 }
 
 /* The foot of each hill already leans towards the colour of the next, so that their edge stays soft */
 .bilan-ridge {
   position: relative;
-  background: var(--from);
-  background: linear-gradient(
+  /* The colour alone too: the header reads it to take the colour of the hill */
+  background-color: var(--from);
+  background-image: linear-gradient(
     var(--from) calc(100% - 7rem),
     color-mix(in oklab, var(--from), var(--to) 55%)
   ); /* taste-skill-ignore: Alexy asked for a softer gradient between the hills */
