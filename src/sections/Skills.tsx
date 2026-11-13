@@ -33,7 +33,13 @@ export default function Skills() {
             scrollTrigger: { trigger: group, start: 'top 90%', once: true },
           }),
         );
-      follow('[data-logos]', { scale: 0.4, y: 14, opacity: 0, stagger: 0.06, ease: 'back.out(2.2)' });
+      follow('[data-logos]', {
+        scale: 0.4,
+        y: 14,
+        opacity: 0,
+        stagger: 0.06,
+        ease: 'back.out(2.2)',
+      });
       follow('[data-lines]', { x: -28, opacity: 0, stagger: 0.1, ease: 'expo.out' });
       follow('[data-levels]', { scaleX: 0, stagger: 0.08, ease: 'expo.out' }, 'span > span');
 
@@ -113,7 +119,7 @@ export default function Skills() {
           <article
             data-reveal="1"
             data-tilt
-            className="group bg-surface-2 grid text-white gap-6 p-6 md:col-span-2 md:p-8 lg:col-span-7 lg:grid-cols-[auto_1fr] lg:gap-10"
+            className="group bg-surface-2 grid gap-6 p-6 text-white md:col-span-2 md:p-8 lg:col-span-7 lg:grid-cols-[auto_1fr] lg:gap-10"
           >
             <div className="flex items-center gap-5 lg:flex-col lg:items-start">
               <span className="grid size-16 shrink-0 place-items-center lg:size-20">
@@ -193,8 +199,11 @@ export default function Skills() {
                       aria-hidden
                       className="text-small text-muted tabular mt-2 grid grid-cols-6 gap-1"
                     >
+                      {/* Each name at the end of its segment: the filled bar ends on the level reached */}
                       {CEFR.map((lv) => (
-                        <span key={lv}>{lv}</span>
+                        <span key={lv} className="text-right">
+                          {lv}
+                        </span>
                       ))}
                     </div>
                   </li>

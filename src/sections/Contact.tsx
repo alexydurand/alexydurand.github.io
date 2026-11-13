@@ -84,8 +84,11 @@ export default function Contact() {
             rel="noreferrer"
             className="group frame flex min-h-[96px] items-end justify-between gap-6 pt-8 pb-5 md:min-h-[150px]"
           >
-            <span className="display ease-out-expo text-[7vw] leading-none transition-transform duration-500 group-hover:translate-x-[2vw] motion-reduce:group-hover:translate-x-0 md:text-[clamp(2.75rem,6vw,5.5rem)]">
-              {contact.place}
+            {/* Revealed with the rows above: shown alone, it appeared before them */}
+            <span data-reveal={rows().length} className="block min-w-0">
+              <span className="display ease-out-expo block text-[7vw] leading-none transition-transform duration-500 group-hover:translate-x-[2vw] motion-reduce:group-hover:translate-x-0 md:text-[clamp(2.75rem,6vw,5.5rem)]">
+                {contact.place}
+              </span>
             </span>
             <span className="text-small mb-2 flex shrink-0 items-center gap-3">
               <span className="hidden sm:inline">{ui.map}</span>

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import Lenis from 'lenis';
 import { gsap, ScrollTrigger } from '../lib/gsap';
-import { prefersReducedMotion } from '../lib/motion';
+import { isCoarsePointer, prefersReducedMotion } from '../lib/motion';
 import { setLenis } from '../lib/scroll';
 
 /** Lenis smooth scrolling, driven by GSAP's ticker so ScrollTrigger stays in sync. */
@@ -15,9 +15,12 @@ export default function useSmoothScroll() {
     const onScroll = () => {
       lastScroll = performance.now();
     };
-    // Never mid-scroll: a refresh puts the scroll position back, which stops a phone's fling dead
+    // On phones never mid-scroll: a refresh puts the scroll position back, which stops a fling dead.
+    // With a mouse or trackpad, right away: waiting for a pause left Hong Kong and Contact measured
+    // before a row had opened or closed above them, so they played late, then jumped
     const refresh = () => {
-      if (performance.now() - lastScroll < 250) timer = window.setTimeout(refresh, 250);
+      if (isCoarsePointer() && performance.now() - lastScroll < 250)
+        timer = window.setTimeout(refresh, 250);
       else ScrollTrigger.refresh();
     };
     const ro = new ResizeObserver(() => {

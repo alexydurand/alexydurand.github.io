@@ -56,10 +56,11 @@ function unreadable(header: HTMLElement, lightText: boolean) {
 
 /**
  * Colour of the full-width band under the bar (a section, a Loisirs row), not of a card inside it,
- * and whether it is dark enough to need light text.
+ * and whether it is dark enough to need light text. Read just above the bar's bottom edge: that is
+ * where the bar meets the page, so the two must match there.
  */
 function bandUnder(header: HTMLElement) {
-  const y = (header.firstElementChild?.getBoundingClientRect().height ?? 64) / 2;
+  const y = (header.firstElementChild?.getBoundingClientRect().height ?? 64) - 2;
   let el: Element | null =
     document.elementsFromPoint(window.innerWidth / 2, y).find((e) => !header.contains(e)) ?? null;
   for (; el; el = el.parentElement) {
@@ -78,8 +79,6 @@ export default function Header() {
   const [dark, setDark] = useState(false);
   // Background taken from the band under the bar, while its words can't be read
   const [band, setBand] = useState<{ bg: string; light: boolean } | null>(null);
-  // Over a stack of bands (the skills hills): the colour of the frontmost one, whatever lies under the bar
-  const [stackBg, setStackBg] = useState<string | null>(null);
   const bar = useRef<HTMLDivElement>(null);
   const toggle = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLDivElement>(null);
@@ -111,18 +110,9 @@ export default function Header() {
         .elementsFromPoint(window.innerWidth / 2, (bar.current?.offsetHeight ?? 64) / 2)
         // The first one that belongs to a themed section: the intro's empty wrapper lies over the home page
         .find((el) => !bar.current?.parentElement?.contains(el) && el.closest('[data-theme]'));
-      // The frontmost band of a stack is the last one that has come well into view
-      const stack = below?.closest('[data-header-stack]');
-      const front =
-        stack &&
-        ([...stack.querySelectorAll('[data-theme]')]
-          .filter((el) => el.getBoundingClientRect().top < window.innerHeight * 0.7)
-          .pop() ??
-          stack);
       // Light words on the dark page, dark ones over what stays light (home page, skills review)
-      lightText = (front || below?.closest('[data-theme]'))?.getAttribute('data-theme') !== 'light';
+      lightText = below?.closest('[data-theme]')?.getAttribute('data-theme') !== 'light';
       setDark(lightText);
-      setStackBg(front ? getComputedStyle(front).backgroundColor : null);
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -162,8 +152,6 @@ export default function Header() {
     };
   }, [open]);
 
-  const fill = stackBg ? { bg: stackBg, light: dark } : band;
-
   const go = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     setOpen(false);
@@ -178,13 +166,13 @@ export default function Header() {
         'ease-out-expo fixed inset-x-0 top-0 z-50 transition-[translate,background-color] duration-500 motion-reduce:transition-none',
         hidden && !open && '-translate-y-full',
       )}
-      style={fill && !open ? { backgroundColor: fill.bg } : undefined}
+      style={band && !open ? { backgroundColor: band.bg } : undefined}
     >
       <div
         ref={bar}
         className={clsx(
           'frame relative z-10 flex h-16 items-center justify-between transition-colors duration-300 md:h-20',
-          open || (fill ? fill.light : dark) ? 'text-white' : 'text-coal',
+          open || (band ? band.light : dark) ? 'text-white' : 'text-coal',
         )}
       >
         <a

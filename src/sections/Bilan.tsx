@@ -207,9 +207,7 @@ export default function Bilan() {
       ref={root}
       tabIndex={-1}
       aria-labelledby="bilan-title"
-      // The header takes the colour of the frontmost hill (Header.tsx)
       data-theme="light"
-      data-header-stack
       className="bilan keep-light bg-dusk-0 text-ink outline-none"
     >
       <div

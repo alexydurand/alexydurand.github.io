@@ -2,7 +2,11 @@
 import * as fr from './content.fr';
 import type { BilanProof, Hobby, Mission, Project, Skill } from './content.fr';
 
-export const person = { ...fr.person, role: 'Third-year Computer Science student' };
+export const person = {
+  ...fr.person,
+  role: 'Third-year Computer Science student',
+  cv: 'cv/CV-Alexy-Durand-EN.pdf',
+};
 
 export const hero = {
   sentence:
