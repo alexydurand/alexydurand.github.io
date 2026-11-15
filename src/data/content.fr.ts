@@ -112,7 +112,7 @@ export const skills = {
 /* ---------- Projets ---------- */
 
 export type Project = {
-  id: 'killkeny' | 'bomberman' | 'tournoi' | 'bdd' | 'portfolio';
+  id: 'killkeny' | 'pokevaleur' | 'bomberman' | 'tournoi' | 'bdd' | 'portfolio';
   title: string;
   context: string;
   // Shown as a badge next to the context
@@ -167,6 +167,43 @@ export const projects: Project[] = [
       {
         skill: 'Collaborer',
         how: 'Nous sommes cinq : je travaille surtout sur l’application et nous partageons le code avec Git.',
+      },
+    ],
+  },
+  {
+    id: 'pokevaleur',
+    title: 'PokéValeur : ma collection Pokémon en euros',
+    context: 'Projet personnel · 2026',
+    status: 'V1 en ligne',
+    stack: ['React', 'TypeScript', 'Supabase', 'GitHub Actions', 'Tesseract.js', 'Claude Code'],
+    summary:
+      'Une application installable (PWA) qui estime chaque jour la valeur de ma collection : cartes françaises, anglaises et japonaises, produits scellés et cartes gradées. Aucune application ne couvrait tout cela sans abonnement, alors je l’ai créée avec Claude Code, pour 0 € par mois.',
+    did: [
+      'Une tâche de nuit sur GitHub Actions lit les prix publics de Cardmarket (plus de 80 000 produits), garde ceux de ma collection et les écrit dans Supabase. En cas d’échec, les prix de la veille restent.',
+      'Un tableau de bord : valeur totale, plus-value, courbes de 7 jours à 1 an et un badge de fiabilité sur chaque prix.',
+      'Le scan d’une carte par photo : l’OCR lit le numéro imprimé en bas de la carte, directement dans le navigateur.',
+      'Des montants en centimes entiers, des règles de prix couvertes par 139 tests et la sécurité par ligne sur toutes les tables.',
+    ],
+    competences: [
+      {
+        skill: 'Réaliser',
+        how: 'Une application installable en React et TypeScript, que j’utilise chaque jour sur mon iPhone et mon Mac, avec un scan de cartes par photo.',
+      },
+      {
+        skill: 'Optimiser',
+        how: 'J’ai comparé les sources de prix, toutes payantes ou incomplètes, puis choisi une solution à 0 € : la tâche de nuit fait le travail lourd et l’application ne lit que sa base.',
+      },
+      {
+        skill: 'Administrer',
+        how: 'J’ai configuré Supabase, GitHub Actions et Cloudflare Pages. Chaque table est protégée ligne par ligne et les secrets restent côté serveur.',
+      },
+      {
+        skill: 'Gérer',
+        how: 'Six tables PostgreSQL, des montants en centimes entiers et un historique des prix qui alimente les courbes de valeur.',
+      },
+      {
+        skill: 'Conduire',
+        how: 'J’ai écrit le cahier des charges, puis avancé en cinq étapes, chacune validée avant la suivante, avec un journal de décisions.',
       },
     ],
   },

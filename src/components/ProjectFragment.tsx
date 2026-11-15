@@ -2,12 +2,14 @@ import type { Project } from '../data/content';
 
 /**
  * Each project drawn as a cropped piece of its own interface (HTML/CSS, no screenshots).
- * Concert, level, teams, rows and stories are sample content.
+ * Concert, prices, level, teams, rows and stories are sample content.
  */
 export default function ProjectFragment({ id }: { id: Project['id'] }) {
   switch (id) {
     case 'killkeny':
       return <BandManager />;
+    case 'pokevaleur':
+      return <Collection />;
     case 'bomberman':
       return <GodotLevel />;
     case 'tournoi':
@@ -19,18 +21,28 @@ export default function ProjectFragment({ id }: { id: Project['id'] }) {
   }
 }
 
-function Window({ title, children, dark }: { title: string; children: React.ReactNode; dark?: boolean }) {
+function Window({
+  title,
+  children,
+  dark,
+}: {
+  title: string;
+  children: React.ReactNode;
+  dark?: boolean;
+}) {
   return (
     <div
       data-ui
       className={`flex h-full flex-col overflow-hidden border text-[13px] ${
-        dark ? 'border-white/10 bg-code text-code-ink' : 'keep-light border-ink/15 bg-paper text-ink'
+        dark
+          ? 'bg-code text-code-ink border-white/10'
+          : 'keep-light border-ink/15 bg-paper text-ink'
       }`}
     >
       <div className={`flex items-center gap-2 px-3 py-2 ${dark ? 'bg-code-bar' : 'bg-surface'}`}>
-        <span className="size-2.5 rounded-full bg-dot-red" />
-        <span className="size-2.5 rounded-full bg-dot-amber" />
-        <span className="size-2.5 rounded-full bg-dot-green" />
+        <span className="bg-dot-red size-2.5 rounded-full" />
+        <span className="bg-dot-amber size-2.5 rounded-full" />
+        <span className="bg-dot-green size-2.5 rounded-full" />
         <span className="ml-2 truncate opacity-70">{title}</span>
       </div>
       <div className="relative min-h-0 flex-1">{children}</div>
@@ -51,11 +63,11 @@ function BandManager() {
         <div className="flex items-center justify-between gap-3 px-4 pt-4">
           <p className="text-[15px] font-medium">Kill Keny</p>
           <span className="flex items-center gap-1.5 text-[11.5px] opacity-75">
-            <span className="size-1.5 rounded-full bg-dot-green" />
+            <span className="bg-dot-green size-1.5 rounded-full" />
             API et base en ligne
           </span>
         </div>
-        <div className="m-3 bg-code-bar p-3 sm:m-4 sm:p-4">
+        <div className="bg-code-bar m-3 p-3 sm:m-4 sm:p-4">
           <p className="text-[11.5px] opacity-60">Prochain concert</p>
           <p className="mt-1 text-[17px] font-medium">Samedi · 21&nbsp;h</p>
           <p className="opacity-75">Fête de village · Agen</p>
@@ -67,8 +79,64 @@ function BandManager() {
             </p>
           ))}
         </div>
-        <div className="mt-3 grid shrink-0 grid-cols-4 bg-code-bar text-center text-[11.5px]">
+        <div className="bg-code-bar mt-3 grid shrink-0 grid-cols-4 text-center text-[11.5px]">
           {['Accueil', 'Agenda', 'Setlists', 'Groupe'].map((t, i) => (
+            <span key={t} className={`py-2.5 ${i === 0 ? 'text-code-key' : 'opacity-60'}`}>
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
+    </Window>
+  );
+}
+
+const ITEMS = [
+  ['Dracaufeu ex · 199/165', '84,20 €', 'Fiable', 'bg-dot-green'],
+  ['Display scellé · FR', '212,00 €', 'Fiable', 'bg-dot-green'],
+  ['Mewtwo · PSA 9', '145,00 €', 'À vérifier', 'bg-dot-amber'],
+  ['Coffret dresseur d’élite · JP', '58,40 €', 'Fiable', 'bg-dot-green'],
+  ['Pikachu · reverse', '3,10 €', 'Ancien', 'bg-dot-red'],
+];
+
+// The dashboard of the collection app (phone layout): value, 30-day curve, items with their price badge
+function Collection() {
+  return (
+    <Window title="PokéValeur · Tableau de bord" dark>
+      <div className="flex h-full flex-col">
+        <div className="px-4 pt-4">
+          <p className="text-[11.5px] opacity-60">Valeur de la collection</p>
+          <p className="tabular mt-1 text-[20px] font-medium">1&nbsp;284,50&nbsp;€</p>
+          <p className="tabular text-dot-green text-[11.5px]">
+            +212,30&nbsp;€ (+19,8&nbsp;%) · 24&nbsp;h +0,6&nbsp;%
+          </p>
+        </div>
+        <svg viewBox="0 0 100 30" preserveAspectRatio="none" className="mx-4 mt-2 h-10 shrink-0">
+          <polyline
+            points="0,26 9,24 18,25 27,20 36,21 45,17 54,18 63,12 72,13 81,9 90,7 100,3"
+            fill="none"
+            strokeWidth={2}
+            vectorEffect="non-scaling-stroke"
+            className="stroke-code-key"
+          />
+        </svg>
+        <ul className="mt-3 min-h-0 flex-1 space-y-2 overflow-hidden px-3 sm:px-4">
+          {ITEMS.map(([name, price, badge, dot]) => (
+            <li
+              key={name}
+              className="bg-code-bar flex items-center justify-between gap-3 px-3 py-2"
+            >
+              <span className="truncate">{name}</span>
+              <span className="flex shrink-0 items-center gap-1.5 text-[11.5px]">
+                <span className={`size-1.5 rounded-full ${dot}`} />
+                <span className="opacity-75">{badge}</span>
+                <span className="tabular ml-1.5 text-[13px]">{price}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+        <div className="bg-code-bar mt-3 grid shrink-0 grid-cols-4 text-center text-[11.5px]">
+          {['Accueil', 'Collection', 'Scanner', 'Réglages'].map((t, i) => (
             <span key={t} className={`py-2.5 ${i === 0 ? 'text-code-key' : 'opacity-60'}`}>
               {t}
             </span>
@@ -95,8 +163,13 @@ const TILE: Record<string, string> = {
   x: 'fill-dot-amber',
   X: 'fill-dot-red',
 };
-const PIECE: Record<string, string> = { P: 'fill-code-key', E: 'fill-dot-red', '*': 'fill-dot-green' };
-const HEART = 'M12 21s-7.5-4.6-10-9.3C.4 8.4 2.1 4.5 6 4.5c2.4 0 4.2 1.4 6 3.6 1.8-2.2 3.6-3.6 6-3.6 3.9 0 5.6 3.9 4 7.2-2.5 4.7-10 9.3-10 9.3z';
+const PIECE: Record<string, string> = {
+  P: 'fill-code-key',
+  E: 'fill-dot-red',
+  '*': 'fill-dot-green',
+};
+const HEART =
+  'M12 21s-7.5-4.6-10-9.3C.4 8.4 2.1 4.5 6 4.5c2.4 0 4.2 1.4 6 3.6 1.8-2.2 3.6-3.6 6-3.6 3.9 0 5.6 3.9 4 7.2-2.5 4.7-10 9.3-10 9.3z';
 
 // The part of the game Alexy built sits on top: hearts and the enemies left
 function GodotLevel() {
@@ -106,7 +179,11 @@ function GodotLevel() {
         <div className="flex items-center justify-between gap-3">
           <span className="flex gap-1">
             {[true, true, false].map((full, i) => (
-              <svg key={i} viewBox="0 0 24 24" className={`size-5 ${full ? 'fill-dot-red' : 'fill-white/15'}`}>
+              <svg
+                key={i}
+                viewBox="0 0 24 24"
+                className={`size-5 ${full ? 'fill-dot-red' : 'fill-white/15'}`}
+              >
                 <path d={HEART} />
               </svg>
             ))}
@@ -117,7 +194,13 @@ function GodotLevel() {
           {LEVEL.flatMap((row, y) =>
             [...row].map((c, x) => (
               <g key={`${x}-${y}`}>
-                <rect x={x + 0.03} y={y + 0.03} width={0.94} height={0.94} className={TILE[c] ?? 'fill-code-bar'} />
+                <rect
+                  x={x + 0.03}
+                  y={y + 0.03}
+                  width={0.94}
+                  height={0.94}
+                  className={TILE[c] ?? 'fill-code-bar'}
+                />
                 {PIECE[c] && <circle cx={x + 0.5} cy={y + 0.5} r={0.3} className={PIECE[c]} />}
               </g>
             )),
@@ -132,7 +215,7 @@ const TEAMS = ['Nova', 'Kraken', 'Orion', 'Vortex', 'Atlas', 'Phénix', 'Titan',
 
 function Match({ a, b, win }: { a: string; b: string; win: 0 | 1 }) {
   return (
-    <div className="keep-light w-full border border-ink/15 bg-paper">
+    <div className="keep-light border-ink/15 bg-paper w-full border">
       {[a, b].map((t, i) => (
         <div
           key={t}
@@ -150,7 +233,7 @@ function Tournament() {
   return (
     <Window title="Tournoi e-sport · Gestion des matchs">
       <div className="flex h-full">
-        <aside className="hidden w-32 shrink-0 bg-surface p-3 sm:block">
+        <aside className="bg-surface hidden w-32 shrink-0 p-3 sm:block">
           <p className="font-medium">Équipes</p>
           <ul className="mt-2 space-y-1">
             {TEAMS.map((t, i) => (
@@ -173,7 +256,7 @@ function Tournament() {
           </div>
           <div>
             <Match a="Nova" b="Zéphyr" win={0} />
-            <p className="mt-2 text-center font-medium text-accent">Vainqueur&nbsp;: Nova</p>
+            <p className="text-accent mt-2 text-center font-medium">Vainqueur&nbsp;: Nova</p>
           </div>
         </div>
       </div>
@@ -187,13 +270,15 @@ function Database() {
       <div className="flex h-full flex-col">
         <pre className="flex-1 overflow-hidden p-4 font-mono text-[12.5px] leading-relaxed">
           <code>
-            <span className="text-code-key">SELECT</span> e.nom, <span className="text-code-key">COUNT</span>(m.id){' '}
+            <span className="text-code-key">SELECT</span> e.nom,{' '}
+            <span className="text-code-key">COUNT</span>(m.id){' '}
             <span className="text-code-key">AS</span> matchs{'\n'}
             <span className="text-code-key">FROM</span> equipe e{'\n'}
-            <span className="text-code-key">JOIN</span> participation m <span className="text-code-key">ON</span>{' '}
-            m.id_equipe = e.id{'\n'}
+            <span className="text-code-key">JOIN</span> participation m{' '}
+            <span className="text-code-key">ON</span> m.id_equipe = e.id{'\n'}
             <span className="text-code-key">GROUP BY</span> e.nom{'\n'}
-            <span className="text-code-key">ORDER BY</span> matchs <span className="text-code-key">DESC</span>;
+            <span className="text-code-key">ORDER BY</span> matchs{' '}
+            <span className="text-code-key">DESC</span>;
           </code>
         </pre>
         <table className={`w-full ${TABLE_RULE} text-left text-[12.5px]`}>
@@ -232,21 +317,27 @@ function Session() {
   );
   const step = (text: string, done = true) => (
     <p className="pl-4 opacity-75">
-      <span className={`mr-2 inline-block size-1.5 rounded-full align-middle ${done ? 'bg-dot-green' : 'bg-dot-amber'}`} />
+      <span
+        className={`mr-2 inline-block size-1.5 rounded-full align-middle ${done ? 'bg-dot-green' : 'bg-dot-amber'}`}
+      />
       {text}
     </p>
   );
   return (
     <Window title="Terminal · claude" dark>
       <div className={`h-full overflow-hidden p-4 ${TERMINAL} text-[12.5px] leading-relaxed`}>
-        {prompt('Portfolio one-page en React + TypeScript, Tailwind v4, parallax GSAP et scène 3D Three.js.')}
+        {prompt(
+          'Portfolio one-page en React + TypeScript, Tailwind v4, parallax GSAP et scène 3D Three.js.',
+        )}
         {step('Skill(taste-skill) · direction artistique et design system')}
         {step('Skill(ui-ux-pro-max) · accessibilité WCAG AA, prefers-reduced-motion')}
         {step('Write(src/sections/Hero.tsx)')}
         {prompt('Header transparent, texte adapté au fond via data-theme. Accent à revoir.')}
         {step('Skill(impeccable) · palette en tokens @theme')}
         {step('Update(src/index.css)')}
-        {prompt('Scroll Hong Kong trop long, supprime la zone morte et ne rends la 3D qu’à l’écran.')}
+        {prompt(
+          'Scroll Hong Kong trop long, supprime la zone morte et ne rends la 3D qu’à l’écran.',
+        )}
         {step('Update(src/sections/Voyages.tsx)', false)}
       </div>
     </Window>

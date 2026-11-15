@@ -96,6 +96,43 @@ export const projects: Project[] = [
     ],
   },
   {
+    id: 'pokevaleur',
+    title: 'PokéValeur: my Pokémon collection in euros',
+    context: 'Personal project · 2026',
+    status: 'V1 live',
+    stack: ['React', 'TypeScript', 'Supabase', 'GitHub Actions', 'Tesseract.js', 'Claude Code'],
+    summary:
+      'An installable app (PWA) that estimates the value of my collection every day: French, English and Japanese cards, sealed products and graded cards. No app covered all of that without a subscription, so I built my own with Claude Code, for €0 a month.',
+    did: [
+      'A nightly job on GitHub Actions reads Cardmarket’s public price files (over 80,000 products), keeps the ones in my collection and writes them to Supabase. If it fails, yesterday’s prices stay.',
+      'A dashboard: total value, profit, charts from 7 days to 1 year and a reliability badge on every price.',
+      'Scanning a card from a photo: OCR reads the number printed at the bottom of the card, right in the browser.',
+      'Amounts stored as whole cents, price rules covered by 139 tests and row-level security on every table.',
+    ],
+    competences: [
+      {
+        skill: 'Build',
+        how: 'An installable app in React and TypeScript that I use every day on my iPhone and my Mac, with card scanning from a photo.',
+      },
+      {
+        skill: 'Optimize',
+        how: 'I compared the price sources, all paid or incomplete, then chose a €0 solution: the nightly job does the heavy lifting and the app only reads its own database.',
+      },
+      {
+        skill: 'Administer',
+        how: 'I set up Supabase, GitHub Actions and Cloudflare Pages. Every table is protected row by row and the secrets stay on the server.',
+      },
+      {
+        skill: 'Manage',
+        how: 'Six PostgreSQL tables, amounts stored as whole cents and a price history that feeds the value charts.',
+      },
+      {
+        skill: 'Lead',
+        how: 'I wrote the specifications, then moved forward in five stages, each one approved before the next, with a decision log.',
+      },
+    ],
+  },
+  {
     id: 'bomberman',
     title: 'Bomberman 3D in Godot',
     context: '3rd-year lab project · IUT de Blagnac · team of 4',
