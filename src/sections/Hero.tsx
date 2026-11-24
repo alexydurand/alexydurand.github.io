@@ -3,99 +3,22 @@ import { gsap } from '../lib/gsap';
 import { person, ui } from '../data/content';
 import { prefersReducedMotion } from '../lib/motion';
 import { crestPath, type Point } from '../lib/ridge';
+import { MIDDLE_LEFT, MIDDLE_RIGHT, NEAR, TOP } from '../lib/hills';
+import WinterScene from '../components/WinterScene';
+import Snow from '../components/Snow';
 import foreground from '../assets/hero/foreground.webp';
 import portrait from '../assets/hero/portrait.webp';
 
 // How far each layer lags behind the scroll (yPercent over the hero): far layers lag most
 const DEPTH = { title: 40, portrait: 25, foreground: 10 };
 
-// The crests of the hills, measured on their picture (2400 × 1361), far to near: on the dark, a white line
-// draws each one, brighter the farther it is. The middle hill shows on both sides of the far one.
+// On the dark, a white line draws each crest, brighter the farther it is. The middle hill shows on both
+// sides of the far one.
 const CRESTS: { pts: Point[]; className: string }[] = [
-  {
-    pts: [
-      [0, 1006],
-      [80, 1017],
-      [160, 1028],
-      [240, 1034],
-      [320, 1036],
-      [400, 1032],
-      [480, 1028],
-      [560, 1024],
-      [640, 1024],
-      [720, 1030],
-      [760, 1033],
-      [800, 1030],
-      [840, 1029],
-      [880, 1039],
-      [960, 1044],
-      [1040, 1045],
-      [1120, 1042],
-      [1200, 1038],
-      [1280, 1022],
-      [1360, 1009],
-      [1440, 1002],
-      [1520, 1000],
-      [1560, 1006],
-      [1600, 1015],
-      [1680, 1019],
-      [1760, 1018],
-      [1840, 1009],
-      [1920, 987],
-      [2000, 963],
-      [2080, 940],
-      [2160, 919],
-      [2240, 900],
-      [2280, 895],
-      [2400, 895],
-    ],
-    className: 'stroke-[2.5] opacity-90',
-  },
-  {
-    pts: [
-      [0, 1143],
-      [120, 1150],
-      [240, 1136],
-      [300, 1124],
-      [420, 1098],
-      [480, 1088],
-      [540, 1072],
-      [600, 1060],
-      [660, 1048],
-      [740, 1034],
-    ],
-    className: 'stroke-2 opacity-55',
-  },
-  {
-    pts: [
-      [1580, 1012],
-      [1680, 1036],
-      [1800, 1042],
-      [1920, 1045],
-      [2040, 1041],
-      [2160, 1042],
-      [2280, 1047],
-      [2400, 1056],
-    ],
-    className: 'stroke-2 opacity-55',
-  },
-  {
-    pts: [
-      [0, 1268],
-      [240, 1282],
-      [450, 1250],
-      [700, 1274],
-      [1000, 1268],
-      [1300, 1230],
-      [1550, 1250],
-      [1800, 1236],
-      [1950, 1188],
-      [2100, 1140],
-      [2220, 1116],
-      [2400, 1160],
-    ],
-    className: 'stroke-2 opacity-35',
-  },
+  { pts: TOP, className: 'stroke-[2.5] opacity-90' },
+  { pts: MIDDLE_LEFT, className: 'stroke-2 opacity-55' },
+  { pts: MIDDLE_RIGHT, className: 'stroke-2 opacity-55' },
+  { pts: NEAR, className: 'stroke-2 opacity-35' },
 ];
 
 const layerImg =
@@ -224,6 +147,7 @@ export default function Hero() {
                 <path key={String(pts[0])} d={crestPath(pts)} className={className} />
               ))}
             </svg>
+            <WinterScene />
             {/* Tall screens: the line moves down onto the dark hills, which it fills */}
             <p
               data-hero-role
@@ -232,6 +156,7 @@ export default function Hero() {
               {person.role}
             </p>
           </div>
+          <Snow />
         </div>
         {/* Just below the fold: the dark ground of the hills dissolves into the page once it scrolls */}
         <div

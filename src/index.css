@@ -48,6 +48,18 @@
   --color-dot-red: #ff5f57;
   --color-dot-amber: #febc2e;
   --color-dot-green: #28c840;
+  /* Winter on the home page hills (WinterScene.tsx): spruces, snow, baubles and lights */
+  --color-fir: #1a3626;
+  --color-fir-deep: #0b1811;
+  --color-fir-light: #2b5238;
+  --color-snow: #dfe7ee;
+  --color-carrot: #e0702c;
+  --color-twig: #5a4030;
+  --color-bulb-red: #ff4d5a;
+  --color-bulb-gold: #ffd166;
+  --color-bulb-blue: #5ec8ff;
+  --color-bulb-green: #7be495;
+  --color-bulb-pink: #ff7ac8;
 
   --font-sans: 'Hanken Grotesk Variable', 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
 
@@ -158,8 +170,10 @@ html.dark .footer-land {
   font-variant-numeric: tabular-nums;
 }
 
-/* Endless animations (records, arena lights) stop inside a closed row: unseen, they still cost every frame */
-[inert] * {
+/* Endless animations (records, arena lights, the spruces' lights) stop inside a closed row or off screen
+   (data-away, set by Snow.tsx): unseen, they still cost every frame */
+[inert] *,
+[data-away] * {
   animation-play-state: paused;
 }
 
@@ -387,6 +401,13 @@ html.dark .footer-land {
   }
   to {
     transform: rotate(16deg);
+  }
+}
+
+/* Christmas lights on the home page (WinterScene.tsx): a soft glimmer, not a blink */
+@keyframes glimmer {
+  from {
+    opacity: 0.45;
   }
 }
 
