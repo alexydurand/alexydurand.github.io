@@ -80,7 +80,7 @@ html.dark {
   --color-accent-ink: #12110f;
 }
 
-/* Still light: the home page, mock-ups of light apps (projects), the skills review */
+/* Still light: mock-ups of light apps (projects), the skills review */
 html.dark .keep-light {
   --color-bg: #f8f6f1;
   --color-surface: #efebe3;

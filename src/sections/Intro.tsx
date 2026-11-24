@@ -53,7 +53,7 @@ const COVER = 4;
 const DOME_SAG = 0.07;
 
 /**
- * The ghost beside the name on the home page (Hero, `data-ghost`) grows with the scroll until it
+ * The ghost after the name on the home page, in place of a ® (Hero, `data-ghost`), grows with the scroll until it
  * fills the screen and becomes this dark band: the sentence, the CV, the moving strips of languages.
  * The band starts 100svh early, pinned over the hero and clipped to the ghost's shape until then.
  */
@@ -61,6 +61,7 @@ export default function Intro() {
   const wrapper = useRef<HTMLDivElement>(null);
   const band = useRef<HTMLDivElement>(null);
   const ghost = useRef<HTMLDivElement>(null);
+  const outline = useRef<SVGPathElement>(null);
   const content = useRef<HTMLDivElement>(null);
   const dataStrip = useRef<HTMLDivElement>(null);
   const devStrip = useRef<HTMLDivElement>(null);
@@ -79,10 +80,10 @@ export default function Intro() {
     const el = band.current;
     const box = content.current;
     const resident = ghost.current;
+    const line = outline.current;
     const slot = document.querySelector<HTMLElement>('[data-ghost]');
-    const title = slot?.parentElement;
     const block = document.querySelector<HTMLElement>('[data-hero-title]');
-    if (!el || !box || !resident || !slot || !title || !block || reducedMotion) return;
+    if (!el || !box || !resident || !line || !slot || !block || reducedMotion) return;
     let done = false;
     const tick = () => {
       const p = progress.current;
@@ -102,17 +103,20 @@ export default function Intro() {
       const left = centre - (231 * scale) / 2;
       // The dark shape starts inside the ghost, out of sight even as it floats, and fills it as it fades
       const inner = scale * (0.85 + 0.15 * range(p, 0, GHOST_OUT));
-      el.style.clipPath =
-        p >= 1
-          ? 'none'
-          : p > 0
-            ? `path('${ghostPath(centre - (231 * inner) / 2 - b.left, top + 144.5 * (scale - inner) - b.top, inner)}')`
-            : 'inset(50%)';
+      const shape = ghostPath(
+        centre - (231 * inner) / 2 - b.left,
+        top + 144.5 * (scale - inner) - b.top,
+        inner,
+      );
+      el.style.clipPath = p >= 1 ? 'none' : p > 0 ? `path('${shape}')` : 'inset(50%)';
+      // Dark on the dark home page: a white line shows its edge, once the coloured ghost has faded
+      line.setAttribute('d', p > 0 && p < 1 ? shape : '');
+      line.style.opacity = String(range(p, GHOST_OUT / 2, GHOST_OUT));
       resident.style.transform = `translate3d(${left - b.left}px, ${top - b.top}px, 0) scale(${scale})`;
       // Gone once faded: it is outside the clipped band, and at this scale it would widen the page
       resident.style.display = p < GHOST_OUT ? '' : 'none';
-      // Fades in with the title on load
-      resident.style.opacity = p > 0 ? '1' : getComputedStyle(title).opacity;
+      // Pops up with its place on load (Hero.tsx)
+      resident.style.opacity = p > 0 ? '1' : getComputedStyle(slot).opacity;
       const c = range(p, 0.7, 1);
       box.style.opacity = String(c);
       box.style.transform = `translate3d(0, ${(1 - c) * 40}px, 0)`;
@@ -159,6 +163,9 @@ export default function Intro() {
             >
               <Ghost progress={progress} />
             </div>
+            <svg aria-hidden className="absolute top-0 left-0 h-svh w-full overflow-visible">
+              <path ref={outline} className="fill-none stroke-white stroke-[1.5]" />
+            </svg>
           </div>
         )}
         <div
