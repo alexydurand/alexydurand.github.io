@@ -168,11 +168,11 @@ export default function ProjectDetail({
       onClick={(e) => {
         if (e.target === e.currentTarget) close();
       }}
-      className="backdrop:bg-coal/70 fixed inset-0 m-0 outline-none size-full max-h-none max-w-none place-items-center bg-transparent p-2 open:grid md:p-6"
+      className="backdrop:bg-coal/70 fixed inset-0 m-0 size-full max-h-none max-w-none place-items-center bg-transparent p-2 outline-none open:grid md:p-6"
     >
       <div
         ref={panel}
-        className="bg-coal relative flex max-h-full w-full max-w-6xl min-h-0 origin-top-left overflow-clip rounded-2xl text-white"
+        className="bg-coal relative flex max-h-full min-h-0 w-full max-w-6xl origin-top-left overflow-clip rounded-2xl text-white"
       >
         {/* The scrollbar is only a safety net: fit() makes the text fit first */}
         <div
@@ -215,12 +215,12 @@ export default function ProjectDetail({
                 </li>
               ))}
             </ul>
-            <p className="text-aurora mt-[0.9em] font-medium">{p.stack.join(' · ')}</p>
+            {/* No list of tools here: the card already shows their keys */}
             <button
               ref={opener}
               type="button"
               onClick={() => setSkillsOpen(true)}
-              className="mt-[0.3em] min-h-11 cursor-pointer text-left text-[max(0.85em,13px)] underline decoration-1 underline-offset-4 hover:decoration-2"
+              className="mt-[0.6em] min-h-11 cursor-pointer text-left text-[max(0.85em,13px)] underline decoration-1 underline-offset-4 hover:decoration-2"
             >
               {butLinks.open}
             </button>
@@ -231,7 +231,7 @@ export default function ProjectDetail({
           inert={skillsOpen}
           aria-label={ui.closeProject}
           onClick={close}
-          className="bg-coal focus-visible:ring-aurora absolute hover:bg-white/15 top-2 right-2 grid size-11 cursor-pointer place-items-center rounded-full transition-colors outline-none focus-visible:ring-2"
+          className="bg-coal focus-visible:ring-aurora absolute top-2 right-2 grid size-11 cursor-pointer place-items-center rounded-full transition-colors outline-none hover:bg-white/15 focus-visible:ring-2"
         >
           <svg aria-hidden viewBox="0 0 24 24" className="size-5 fill-none stroke-current stroke-2">
             <path d="M5 5l14 14M19 5L5 19" />
@@ -271,7 +271,7 @@ export default function ProjectDetail({
                   <div key={c.skill}>
                     <dt className="text-[1.25em] font-medium tracking-tight">
                       <a
-                        href={`#bilan-${c.skill}`}
+                        href="#bilan-keys"
                         onClick={(e) => toSkill(e, c.skill)}
                         className="text-aurora underline decoration-1 underline-offset-4 hover:decoration-2"
                       >

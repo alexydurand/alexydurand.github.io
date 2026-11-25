@@ -80,9 +80,10 @@ export default function Intro() {
     const box = content.current;
     const resident = ghost.current;
     const line = outline.current;
-    const slot = document.querySelector<HTMLElement>('[data-ghost]');
+    // Two places for it (Hero.tsx), one shown at a time: after the last name, or after the first on two lines
+    const slots = [...document.querySelectorAll<HTMLElement>('[data-ghost]')];
     const block = document.querySelector<HTMLElement>('[data-hero-title]');
-    if (!el || !box || !resident || !line || !slot || !block || reducedMotion) return;
+    if (!el || !box || !resident || !line || !slots.length || !block || reducedMotion) return;
     let done = false;
     let last = '';
     // Until then the hero's entrance (Hero.tsx) moves the ghost's place by itself
@@ -95,6 +96,7 @@ export default function Intro() {
       const key = `${p} ${window.scrollY} ${window.innerWidth} ${window.innerHeight}`;
       if (key === last && performance.now() > settled) return;
       last = key;
+      const slot = slots.find((s) => s.offsetWidth) ?? slots[0];
       const s = slot.getBoundingClientRect();
       const b = el.getBoundingClientRect();
       const below = block.getBoundingClientRect().bottom + s.height * 0.25;
@@ -170,11 +172,12 @@ export default function Intro() {
             </svg>
           </div>
         )}
+        {/* Low on a phone, centred above: either way little room under the strips, Mes outils follows close */}
         <div
           ref={band}
           data-theme="dark"
           style={reducedMotion ? undefined : { clipPath: 'inset(50%)' }}
-          className="bg-coal pointer-events-auto sticky top-0 flex min-h-svh flex-col justify-center gap-16 overflow-hidden py-24 text-white md:gap-24"
+          className="bg-coal pointer-events-auto sticky top-0 flex min-h-svh flex-col justify-end gap-16 overflow-hidden pt-24 pb-28 text-white md:justify-center md:gap-24 md:pb-0"
         >
           <div
             ref={content}

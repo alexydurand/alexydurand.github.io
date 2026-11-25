@@ -4,9 +4,14 @@ import { hero, person } from '../data/content';
 import { prefersReducedMotion } from '../lib/motion';
 import { scrollToHash } from '../lib/scroll';
 import Aurora from '../components/Aurora';
+import clsx from '../lib/clsx';
 
 // Each word rises out of a line just under its letters (room for the descender of the y)
 const mask = 'inline-block [clip-path:inset(-0.3em_-0.1em_-0.25em)]';
+// The ghost in place of a ®: after the last name on one line, after the first name on two (tall screens), where
+// it stands above the end of the last name. The next band grows out of the one shown (Intro.tsx)
+const ghost =
+  'ghost-shape motion-reduce:bg-ink relative -top-[0.38em] ml-[0.05em] aspect-[231/289] h-[0.34em]';
 
 export default function Hero() {
   const root = useRef<HTMLElement>(null);
@@ -62,7 +67,11 @@ export default function Hero() {
               data-hero-title
               className="frame text-ink text-center [--t:clamp(2.75rem,12.5vw,13rem)] [@media(max-aspect-ratio:5/4)]:[--t:min(28vw,12.5svh)]"
             >
-              <h1 id="hero-title" className="display text-(length:--t) font-bold whitespace-nowrap">
+              {/* Centred as a block, its two lines (tall screens) aligned on the left */}
+              <h1
+                id="hero-title"
+                className="display inline-block text-left text-(length:--t) font-bold whitespace-nowrap"
+              >
                 <span className="sr-only">
                   {person.firstName} {person.lastName}
                 </span>
@@ -71,17 +80,20 @@ export default function Hero() {
                     <span data-hero-word className="inline-block">
                       {person.firstName}
                     </span>
-                  </span>{' '}
+                  </span>
+                  <span
+                    data-ghost
+                    className={clsx(ghost, 'hidden [@media(max-aspect-ratio:5/4)]:inline-block')}
+                  />{' '}
                   <span className="[@media(max-aspect-ratio:5/4)]:block">
                     <span className={mask}>
                       <span data-hero-word className="inline-block">
                         {person.lastName}
                       </span>
                     </span>
-                    {/* In place of a ®: the next band grows out of it (Intro.tsx); drawn here only without motion */}
                     <span
                       data-ghost
-                      className="ghost-shape motion-reduce:bg-ink relative -top-[0.38em] ml-[0.05em] inline-block aspect-[231/289] h-[0.34em]"
+                      className={clsx(ghost, 'inline-block [@media(max-aspect-ratio:5/4)]:hidden')}
                     />
                   </span>
                 </span>

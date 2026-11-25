@@ -1,10 +1,11 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type CSSProperties } from 'react';
 import { gsap } from '../lib/gsap';
 import { skills, stage, ui } from '../data/content';
 import { prefersReducedMotion } from '../lib/motion';
 import useReveal from '../hooks/useReveal';
 import orangeLogo from '../assets/logos/orange.svg';
-import LogoStack from '../components/LogoStack';
+import Keycap from '../components/Keycap';
+import useNear from '../hooks/useNear';
 import clsx from '../lib/clsx';
 import type { Skill } from '../data/content';
 
@@ -23,6 +24,8 @@ const EDGES = [
 export default function Stage() {
   const root = useRef<HTMLElement>(null);
   const square = useRef<HTMLDivElement>(null);
+  const missions = useRef<HTMLUListElement>(null);
+  const near = useNear(missions);
   useReveal(root);
 
   // The Orange logo grows as the section scrolls in; each mission card's top bar sweeps in
@@ -64,7 +67,7 @@ export default function Stage() {
       tabIndex={-1}
       aria-labelledby="stage-title"
       data-theme="dark"
-      className="bg-stage py-section relative text-white outline-none"
+      className="bg-stage pb-section relative pt-12 text-white outline-none"
     >
       <div className="frame">
         <h2 id="stage-title" className="display title-xl">
@@ -118,7 +121,7 @@ export default function Stage() {
           {ui.missions}
         </h3>
         {/* One card per mission. The reveal animates the li (GSAP pins its `scale`); the hover zoom is on the card inside */}
-        <ul className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <ul ref={missions} className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {stage.missions.map((m, i) => (
             <li key={i} data-mission data-reveal={i} className="flex">
               <div className="group ease-out-expo relative flex w-full flex-col bg-white/[0.05] p-6 transition-[scale] duration-300 hover:scale-[1.03] motion-reduce:hover:scale-100 md:p-8">
@@ -137,7 +140,21 @@ export default function Stage() {
                     )}
                   />
                 ))}
-                <LogoStack items={m.tools.filter((t) => SKILL[t]).map((t) => SKILL[t])} dark />
+                {/* Its tools as keys of the keyboard (Mes outils), turned a little; hovering the card presses them */}
+                <div aria-hidden className="perspective-[40rem]">
+                  <div
+                    style={{ '--k': '2.75rem' } as CSSProperties}
+                    className="flex origin-bottom rotate-x-[28deg] flex-wrap gap-[calc(var(--k)*0.18)] transform-3d"
+                  >
+                    {m.tools
+                      .filter((t) => SKILL[t])
+                      .map((t) => (
+                        <span key={t} className="relative size-(--k) transform-3d">
+                          <Keycap logo={SKILL[t].logo} walls={near} />
+                        </span>
+                      ))}
+                  </div>
+                </div>
                 <p className="text-lead mt-8 font-medium text-balance">{m.title}</p>
                 <p className="text-body mt-3 text-pretty text-white/80">{m.detail}</p>
                 <div className="mt-auto flex flex-wrap items-end justify-between gap-x-4 gap-y-2 pt-8">

@@ -3,8 +3,19 @@ import { contact, person, ui } from '../data/content';
 import useReveal from '../hooks/useReveal';
 import clsx from '../lib/clsx';
 
+// On a phone the address may take two lines: only ever before the @
+const [user, domain] = person.email.split('@');
 const rows = () => [
-  { label: person.email, href: `mailto:${person.email}`, note: ui.email },
+  {
+    label: (
+      <>
+        {user}
+        <wbr />@{domain}
+      </>
+    ),
+    href: `mailto:${person.email}`,
+    note: ui.email,
+  },
   { label: 'LinkedIn', href: person.linkedin, note: person.linkedinLabel, external: true },
   { label: 'GitHub', href: person.github, note: person.githubLabel, external: true },
 ];
@@ -43,7 +54,7 @@ export default function Contact() {
         <h2
           id="contact-title"
           data-reveal="0"
-          className="display text-[7vw] leading-none md:text-[clamp(2.75rem,6vw,5.5rem)]"
+          className="display text-[2.75rem] leading-none md:text-[clamp(2.75rem,6vw,5.5rem)]"
         >
           {contact.greeting}
         </h2>
@@ -66,7 +77,7 @@ export default function Contact() {
             >
               {/* The reveal animates the wrapper; the hover shift moves the text inside it */}
               <span data-reveal={i} className="block min-w-0">
-                <span className="display ease-out-expo block text-[7vw] leading-none whitespace-nowrap transition-transform duration-500 group-hover:translate-x-[2vw] motion-reduce:group-hover:translate-x-0 md:text-[clamp(2.75rem,6vw,5.5rem)]">
+                <span className="display ease-out-expo block text-[2.75rem] leading-none transition-transform duration-500 group-hover:translate-x-[2vw] motion-reduce:group-hover:translate-x-0 md:text-[clamp(2.75rem,6vw,5.5rem)]">
                   {row.label}
                 </span>
               </span>
@@ -86,7 +97,7 @@ export default function Contact() {
           >
             {/* Revealed with the rows above: shown alone, it appeared before them */}
             <span data-reveal={rows().length} className="block min-w-0">
-              <span className="display ease-out-expo block text-[7vw] leading-none transition-transform duration-500 group-hover:translate-x-[2vw] motion-reduce:group-hover:translate-x-0 md:text-[clamp(2.75rem,6vw,5.5rem)]">
+              <span className="display ease-out-expo block text-[2.75rem] leading-none transition-transform duration-500 group-hover:translate-x-[2vw] motion-reduce:group-hover:translate-x-0 md:text-[clamp(2.75rem,6vw,5.5rem)]">
                 {contact.place}
               </span>
             </span>

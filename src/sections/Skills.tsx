@@ -21,7 +21,7 @@ export default function Skills() {
       aria-labelledby="skills-title"
       className="bg-bg pb-24 outline-none md:pb-36"
     >
-      <div className="frame pt-20 md:pt-28">
+      <div className="frame pt-6 md:pt-8">
         <h2 id="skills-title" data-reveal="0" className="display title-xl">
           {skills.heading}
         </h2>

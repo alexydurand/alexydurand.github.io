@@ -159,7 +159,7 @@ const LEVEL = [
 ];
 const TILE: Record<string, string> = {
   '#': 'fill-white/25',
-  B: 'fill-hill-4',
+  B: 'fill-white/10',
   x: 'fill-dot-amber',
   X: 'fill-dot-red',
 };

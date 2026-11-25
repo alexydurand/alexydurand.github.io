@@ -6,8 +6,11 @@ import {
   type KeyboardEvent,
   type PointerEvent,
 } from 'react';
-import { projects, ui, type Project } from '../data/content';
+import { projects, skills, ui, type Project } from '../data/content';
+import useNear from '../hooks/useNear';
 import clsx from '../lib/clsx';
+import { keyGlyph } from '../lib/keys';
+import Keycap from './Keycap';
 import ProjectDetail from './ProjectDetail';
 import ProjectFragment from './ProjectFragment';
 
@@ -19,6 +22,18 @@ const offset = (i: number, active: number) => {
   return wrap(i - active + half) - half;
 };
 
+// Each tool's key: those of the keyboard (Mes outils), then those of the cards only
+const KEYS = new Map(
+  [...skills.groups.flatMap((g) => g.items), skills.vibe.tool, ...skills.extra].map((t) => [
+    t.name,
+    t.logo,
+  ]),
+);
+if (import.meta.env.DEV) {
+  for (const name of projects.flatMap((p) => p.stack))
+    console.assert(KEYS.has(name), `Pas de touche pour ${name} (skills.extra)`);
+}
+
 const ARROW =
   'grid size-11 cursor-pointer place-items-center rounded-full transition-colors hover:bg-ink/10';
 
@@ -27,6 +42,7 @@ export default function ProjectStack() {
   const [active, setActive] = useState(0);
   const [expanded, setExpanded] = useState<HTMLElement | null>(null);
   const stage = useRef<HTMLDivElement>(null);
+  const near = useNear(stage);
   const drag = useRef<{ x: number; step: number; moved: boolean } | null>(null);
   // Set by a drag, so that the click ending it opens nothing
   const dragged = useRef(false);
@@ -106,26 +122,52 @@ export default function ProjectStack() {
                 aria-hidden={off !== 0 || undefined}
                 style={{ '--off': off, zIndex: 10 - Math.abs(off) } as CSSProperties}
                 className={clsx(
-                  'stack-card bg-coal absolute inset-0 m-auto flex h-(--card-h) w-(--card-w) flex-col overflow-hidden rounded-2xl border-2 border-white/15 text-white',
+                  'stack-card bg-coal absolute inset-0 m-auto flex h-(--card-h) w-(--card-w) flex-col overflow-hidden rounded-2xl border-2 border-white/15 text-white lg:flex-row',
                   // Not invisible: the button keeps the focus, which the dialog gives back when it closes
                   off === 0 && expanded && 'opacity-0',
                 )}
               >
-                <div aria-hidden className="min-h-0 flex-1">
+                {/* The picture on the left (on top on a phone), its title and the keys of its tools beside it */}
+                <div aria-hidden className="min-h-0 flex-[0_0_52%] lg:flex-[0_0_62%]">
                   <ProjectFragment id={p.id} />
                 </div>
-                <div className="flex items-end justify-between gap-4 p-4 md:p-5">
-                  <div className="min-w-0">
-                    <h3 className="text-lead font-medium tracking-tight text-balance">{p.title}</h3>
-                    <p className="text-small text-aurora mt-1">{p.stack.join('\u00a0· ')}</p>
+                <div className="flex min-h-0 min-w-0 flex-1 flex-col p-4 md:p-5 lg:p-6">
+                  <p className="text-small text-white/70">{p.kind}</p>
+                  <h3 className="text-lead mt-1 font-medium tracking-tight text-balance">
+                    {p.title}
+                  </h3>
+                  <p className="sr-only">{p.stack.join(', ')}</p>
+                  <div aria-hidden className="mt-auto flex items-end justify-between gap-3 pt-3">
+                    <div className="min-w-0 perspective-[40rem]">
+                      {/* Keys on a grid, so that they line up: 5 a row on a phone, 3 beside the picture, a
+                          two-key name filling a hole further back if need be. --k lets them
+                          fit the text column, whatever the width of the card */}
+                      <div className="grid origin-bottom rotate-x-[28deg] grid-flow-row-dense grid-cols-[repeat(5,var(--k))] gap-[calc(var(--k)*0.18)] text-[calc(var(--k)*0.28)] [--k:min(2.75rem,calc((var(--card-w)_-_4.75rem)/5.72))] transform-3d lg:grid-cols-[repeat(3,var(--k))] lg:[--k:min(2.75rem,calc((var(--card-w)*0.38_-_5.25rem)/3.36))]">
+                        {p.stack.map((name) => {
+                          const logo = KEYS.get(name);
+                          return (
+                            <span
+                              key={name}
+                              // A name in place of a logo takes two keys' room
+                              className={clsx(
+                                'relative h-(--k) transform-3d',
+                                !keyGlyph(logo) && name.length > 3 && 'col-span-2',
+                              )}
+                            >
+                              <Keycap logo={logo} label={name} walls={near} />
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    <svg
+                      aria-hidden
+                      viewBox="0 0 24 24"
+                      className="size-6 shrink-0 fill-none stroke-current stroke-2"
+                    >
+                      <path d="M12 4v16M4 12h16" />
+                    </svg>
                   </div>
-                  <svg
-                    aria-hidden
-                    viewBox="0 0 24 24"
-                    className="size-6 shrink-0 fill-none stroke-current stroke-2"
-                  >
-                    <path d="M12 4v16M4 12h16" />
-                  </svg>
                 </div>
                 <button
                   type="button"

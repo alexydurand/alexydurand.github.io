@@ -10,8 +10,9 @@
   --color-surface: #efebe3;
   --color-surface-2: #e3ded3;
   --color-ink: #12110f;
-  /* Black that stays black in dark mode: dark bands and cards (intro, projects, contact) */
-  --color-coal: #12110f;
+  /* Black that stays black in dark mode: dark bands and cards (intro, projects, contact). The deep black of Stage,
+     the black of the whole site */
+  --color-coal: #0c0b0a;
   --color-muted: #6c675e;
   --color-accent: #12110f;
   --color-accent-deep: #34312c;
@@ -20,18 +21,11 @@
   --color-stage: #0c0b0a;
   --color-night: #060a14;
   --color-paper: #ffffff;
+  /* Dark squares of the chessboard (Loisirs), grey enough for the black pieces */
+  --color-board: #7e8b86;
   /* The third colour beside black and white, the green of the northern lights (home page, footer): on black
      only, for what must stand out (the first strip of languages, project tools, focus rings) */
   --color-aurora: #70e4b4;
-  /* The skills review (Bilan) at night: its sky (0), then its hills from the farthest, the lightest, down to the
-     nearest, nearly the black of Stage. White text on all of them */
-  --color-dusk-0: #161513;
-  --color-dusk-1: #33302c;
-  --color-dusk-2: #2c2a26;
-  --color-dusk-3: #262420;
-  --color-dusk-4: #201e1b;
-  --color-dusk-5: #1a1917;
-  --color-dusk-6: #151412;
   --color-code: #141b22;
   --color-code-bar: #0e1419;
   --color-code-ink: #d6e2e8;
@@ -80,22 +74,37 @@
   --color-key-powerautomate: #0066ff;
   --color-key-git: #f05032;
   --color-key-claude: #d97757;
+  --color-key-typescript: #3178c6;
+  /* Tools of the project cards only (skills.extra in content.ts). On the black of a card, a grey light enough for
+     its sides to show */
+  --color-key-sql: #55585f;
+  --color-key-pinia: #ffd859;
+  --color-key-mariadb: #1c6a85;
+  --color-key-wordpress: #21759b;
+  --color-key-supabase: #3ecf8e;
+  --color-key-githubactions: #2088ff;
+  --color-key-tesseract: #55585f;
+  --color-key-gdscript: #478cbf;
+  --color-key-tailwindcss: #06b6d4;
+  --color-key-threedotjs: #55585f;
+  --color-key-gsap: #0ae448;
 }
 
 /* The dark page. The fixed tokens (coal, paper, aurora, stage, night, orange, code-*) keep their colour */
 html.dark {
   color-scheme: dark;
-  --color-bg: #12110f;
+  --color-bg: #0c0b0a;
   --color-surface: #1c1a17;
   --color-surface-2: #2e2b27;
   --color-ink: #f1eee6;
   --color-muted: #a39c90;
   --color-accent: #f1eee6;
-  --color-accent-deep: #d6d0c4;
-  --color-accent-ink: #12110f;
+  /* Hover of the light buttons: the green of the northern lights, a beige barely showed it */
+  --color-accent-deep: var(--color-aurora);
+  --color-accent-ink: #0c0b0a;
 }
 
-/* Still light: mock-ups of light apps (projects), the skills review */
+/* Still light: mock-ups of light apps (projects) */
 html.dark .keep-light {
   --color-bg: #f8f6f1;
   --color-surface: #efebe3;
@@ -240,35 +249,6 @@ html.dark .keep-light {
     rgb(6 10 20 / 0.35) 38%,
     rgb(6 10 20 / 0) 62%
   ); /* taste-skill-ignore: scrim under text on a picture */
-}
-
-/* Skills review (Bilan): each hill stops just under the name of the one before, and the landscape builds up.
-   Only where an open hill fits on screen: stuck, whatever is taller than the screen could never be read.
-   Its sky darkens towards the black hill that comes down from the projects, as its last hill does below. */
-.bilan {
-  --ridge-h: clamp(2.5rem, 5.5vw, 4.5rem);
-  background-image: linear-gradient(
-    color-mix(in oklab, var(--color-dusk-0), var(--color-coal) 55%),
-    var(--color-dusk-0) 7rem
-  ); /* taste-skill-ignore: Alexy asked for the same soft edge as at the bottom */
-}
-
-/* The foot of each hill already leans towards the colour of the next, so that their edge stays soft */
-.bilan-ridge {
-  position: relative;
-  /* The colour alone too: the header reads it to take the colour of the hill */
-  background-color: var(--from);
-  background-image: linear-gradient(
-    var(--from) calc(100% - 7rem),
-    color-mix(in oklab, var(--from), var(--to) 55%)
-  ); /* taste-skill-ignore: Alexy asked for a softer gradient between the hills */
-}
-
-@media (min-width: 64rem) and (min-height: 48rem) and (prefers-reduced-motion: no-preference) {
-  .bilan-ridge {
-    position: sticky;
-    top: calc(5rem + var(--i) * 5rem);
-  }
 }
 
 /* The ghost of the home page square (Ghost.tsx): its shape cuts the moving gradient, it floats and blinks */

@@ -13,7 +13,7 @@ export default function Projects() {
       ref={root}
       tabIndex={-1}
       aria-labelledby="projets-title"
-      className="bg-bg pb-section outline-none"
+      className="bg-bg pb-12 outline-none md:pb-16"
     >
       <div className="frame">
         <div className="flex flex-col items-start gap-2 md:flex-row md:items-end md:justify-between md:gap-6">

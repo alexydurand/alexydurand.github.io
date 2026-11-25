@@ -30,7 +30,7 @@ export const nav = [
 /* ---------- Compétences ---------- */
 
 // logo = file name in src/assets/logos (without .svg)
-export type Skill = { name: string; logo: string; learning?: boolean };
+export type Skill = { name: string; logo: string };
 
 export const skills = {
   heading: 'Mes outils',
@@ -45,6 +45,7 @@ export const skills = {
     'Git',
     'PHP',
     'JavaScript',
+    'TypeScript',
     'React',
     'Vue',
     'Node.js',
@@ -60,7 +61,7 @@ export const skills = {
         { name: 'Oracle SQL', logo: 'sqldeveloper' },
         { name: 'Power BI', logo: 'powerbi' },
         { name: 'SharePoint', logo: 'sharepoint' },
-        { name: 'Neo4j', logo: 'neo4j', learning: true },
+        { name: 'Neo4j', logo: 'neo4j' },
       ],
       note: 'Conception de bases relationnelles, rapports et tableaux de bord.',
     },
@@ -70,6 +71,7 @@ export const skills = {
         { name: 'HTML', logo: 'html5' },
         { name: 'CSS', logo: 'css3' },
         { name: 'JavaScript', logo: 'javascript' },
+        { name: 'TypeScript', logo: 'typescript' },
         { name: 'PHP', logo: 'php' },
         { name: 'React', logo: 'react' },
         { name: 'Vue', logo: 'vue' },
@@ -106,6 +108,22 @@ export const skills = {
       ['Review et correction', 'relire chaque version et faire corriger jusqu’au résultat voulu'],
     ],
   },
+  // Keys of the project cards only (ProjectStack): their tools that are not on the keyboard. Without a logo
+  // in src/assets/keys or logos, the key shows the name
+  extra: [
+    { name: 'Oracle SQL Developer', logo: 'sqldeveloper' },
+    { name: 'SQL', logo: 'sql' },
+    { name: 'Pinia', logo: 'pinia' },
+    { name: 'MariaDB', logo: 'mariadb' },
+    { name: 'WordPress', logo: 'wordpress' },
+    { name: 'Supabase', logo: 'supabase' },
+    { name: 'GitHub Actions', logo: 'githubactions' },
+    { name: 'Tesseract.js', logo: 'tesseract' },
+    { name: 'GDScript', logo: 'gdscript' },
+    { name: 'Tailwind CSS', logo: 'tailwindcss' },
+    { name: 'Three.js', logo: 'threedotjs' },
+    { name: 'GSAP', logo: 'gsap' },
+  ] satisfies Skill[],
 };
 
 /* ---------- Projets ---------- */
@@ -113,6 +131,8 @@ export const skills = {
 export type Project = {
   id: 'killkeny' | 'pokevaleur' | 'bomberman' | 'tournoi' | 'bdd' | 'portfolio';
   title: string;
+  // On the card, above the title
+  kind: 'Projet personnel' | 'Projet universitaire';
   context: string;
   // Shown as a badge next to the context
   status?: string;
@@ -140,6 +160,7 @@ export const projects: Project[] = [
   {
     id: 'killkeny',
     title: 'Kill Keny : site et application',
+    kind: 'Projet universitaire',
     context: 'SAE de 3e année · IUT de Blagnac · équipe de 5',
     status: 'En cours',
     stack: ['Vue', 'Pinia', 'Node.js', 'Express', 'MariaDB', 'WordPress', 'Git'],
@@ -172,6 +193,7 @@ export const projects: Project[] = [
   {
     id: 'pokevaleur',
     title: 'PokéValeur : ma collection Pokémon en euros',
+    kind: 'Projet personnel',
     context: 'Projet personnel · 2026',
     status: 'V1 en ligne',
     stack: ['React', 'TypeScript', 'Supabase', 'GitHub Actions', 'Tesseract.js', 'Claude Code'],
@@ -209,6 +231,7 @@ export const projects: Project[] = [
   {
     id: 'bomberman',
     title: 'Bomberman 3D sous Godot',
+    kind: 'Projet universitaire',
     context: 'TP de 3e année · IUT de Blagnac · équipe de 4',
     stack: ['Godot', 'GDScript', 'Git'],
     summary:
@@ -237,6 +260,7 @@ export const projects: Project[] = [
   {
     id: 'tournoi',
     title: 'Gestion de tournois e-sport',
+    kind: 'Projet universitaire',
     context: 'Projet universitaire · IUT de Blagnac',
     stack: ['Java'],
     summary:
@@ -260,6 +284,7 @@ export const projects: Project[] = [
   {
     id: 'bdd',
     title: 'Base de données relationnelle',
+    kind: 'Projet universitaire',
     context: 'Projet universitaire · IUT de Blagnac',
     stack: ['Oracle SQL Developer', 'SQL'],
     summary: 'Une base de données conçue à partir d’un cahier des charges, puis interrogée en SQL.',
@@ -282,6 +307,7 @@ export const projects: Project[] = [
   {
     id: 'portfolio',
     title: 'Ce portfolio, en vibe coding',
+    kind: 'Projet personnel',
     context: 'Projet personnel · 2026',
     stack: ['Claude Code', 'React', 'TypeScript', 'Tailwind CSS', 'Three.js', 'GSAP'],
     summary: 'Le site que vous parcourez : je l’ai construit avec Claude Code.',
@@ -615,7 +641,7 @@ export const legal = {
     'Pièces d’échecs par Cburnett, Wikimedia Commons (CC BY-SA 3.0).',
   ],
   logos:
-    'Logos : Devicon (licence MIT) ; logos blancs des touches de Mes outils : Simple Icons (CC0) ; Power BI, Power Apps, Power Automate, SharePoint, Counter-Strike 2, League of Legends et Valorant via Wikimedia Commons (domaine public) ; Rocket League par Psyonix via Wikimedia Commons (CC BY-SA 4.0). Ce sont des marques de leurs propriétaires, utilisées seulement pour désigner les outils et les jeux.',
+    'Logos : Devicon (licence MIT) ; logos blancs des touches (Mes outils, projets) : Simple Icons (CC0) ; Power BI, Power Apps, Power Automate, SharePoint, Counter-Strike 2, League of Legends et Valorant via Wikimedia Commons (domaine public) ; Rocket League par Psyonix via Wikimedia Commons (CC BY-SA 4.0). Ce sont des marques de leurs propriétaires, utilisées seulement pour désigner les outils et les jeux.',
   font: 'Police : Hanken Grotesk (SIL Open Font License), hébergée avec le site.',
   privacy:
     'Ce site ne dépose aucun cookie, n’utilise aucun outil de mesure d’audience et ne contient aucun formulaire : je ne collecte aucune donnée personnelle. Seuls vos choix de thème (clair ou sombre) et de langue restent dans votre navigateur (stockage local), sans être envoyés nulle part. Comme tout hébergeur, GitHub peut enregistrer des données techniques de connexion, dont l’adresse IP, pour la sécurité du service.',
@@ -646,7 +672,6 @@ export const ui = {
   prevProject: 'Projet précédent',
   nextProject: 'Projet suivant',
   closeProject: 'Fermer le détail du projet',
-  learning: 'en cours d’apprentissage',
   toProjects: 'Ces outils, je les ai mis en pratique dans mes projets',
   orangeLogo: 'Logo Orange',
   missions: 'Mes missions',

@@ -5,7 +5,7 @@ import clsx from '../lib/clsx';
 const W = 960;
 // A packed hall in front of the giant screen: rows of heads, back to front (y of the shoulders, head radius)
 const ROWS = [
-  { y: 300, r: 7, n: 33, fill: 'fill-hill-6' },
+  { y: 300, r: 7, n: 33, fill: 'fill-surface-2' },
   { y: 326, r: 9, n: 26, fill: 'fill-coal' },
   { y: 360, r: 12, n: 20, fill: 'fill-night' },
 ];
@@ -53,7 +53,7 @@ export default function Arena({
             !playing && '[&_*]:[animation-play-state:paused]',
           )}
         >
-          <rect width={W} height="400" className="fill-hill-6" />
+          <rect width={W} height="400" className="fill-surface-2" />
           {/* The screen lights the floor in front of it */}
           <path d={`M230 250 H730 L${W} 400 H0 Z`} className="fill-white/[0.07]" />
           <rect x="230" y="24" width="500" height="281" className="fill-paper" />
