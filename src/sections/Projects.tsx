@@ -25,7 +25,7 @@ export default function Projects() {
             href={person.github}
             target="_blank"
             rel="noreferrer"
-            className="text-body shrink-0 py-2 underline decoration-1 underline-offset-4 hover:decoration-2 md:mb-[0.8em]"
+            className="text-body shrink-0 py-2.5 underline decoration-1 underline-offset-4 hover:decoration-2 md:mb-[0.8em]"
           >
             {ui.github}
           </a>

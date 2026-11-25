@@ -147,7 +147,7 @@ export default function Stage() {
                       href={m.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-body decoration-orange font-medium underline decoration-2 underline-offset-4 hover:decoration-white"
+                      className="text-body decoration-orange inline-flex min-h-11 items-center font-medium underline decoration-2 underline-offset-4 hover:decoration-white"
                     >
                       {ui.seeSite}
                     </a>

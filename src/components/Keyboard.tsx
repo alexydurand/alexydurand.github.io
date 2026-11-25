@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { skills, ui } from '../data/content';
 import { clack } from '../lib/clack';
 import clsx from '../lib/clsx';
@@ -32,12 +32,13 @@ const TOOLS: Tool[] = [
 const LONGEST = Math.max(...TOOLS.map((t) => t.name.length));
 const COLS = 5;
 // A key's walls, bottom to top: each layer a little smaller and lighter, for sloped, rounded sides
-const WALLS = 14;
-const STEP = 0.026;
-const TAPER = 0.011;
+// Few layers: each one is a 3D layer the compositor redraws on every frame
+const WALLS = 6;
+const STEP = 0.06;
+const TAPER = 0.025;
 
 // One key cap standing on the board: its walls, then its dished top with the tool's logo in white
-function cap(logo?: string) {
+function cap(logo: string | undefined, walls: boolean) {
   const glyph =
     logo &&
     (GLYPHS[`../assets/keys/${SIMPLE[logo] ?? logo}.svg`] ?? LOGOS[`../assets/logos/${logo}.svg`]);
@@ -45,16 +46,17 @@ function cap(logo?: string) {
   const at = (i: number) => `translateZ(calc(var(--k) * ${i * STEP})) scale(${1 - i * TAPER})`;
   return (
     <span className="ease-out-expo absolute inset-0 transition-transform duration-150 transform-3d group-hover:-translate-z-[calc(var(--k)*0.17)] group-focus-visible:-translate-z-[calc(var(--k)*0.17)] group-active:-translate-z-[calc(var(--k)*0.21)] group-active:duration-75">
-      {Array.from({ length: WALLS }, (_, i) => (
-        <span
-          key={i}
-          style={{
-            transform: at(i),
-            background: `color-mix(in oklab, var(--key), black ${48 - i * 2.2}%)`,
-          }}
-          className="absolute inset-0 rounded-[26%]"
-        />
-      ))}
+      {walls &&
+        Array.from({ length: WALLS }, (_, i) => (
+          <span
+            key={i}
+            style={{
+              transform: at(i),
+              background: `color-mix(in oklab, var(--key), black ${48 - i * 5}%)`,
+            }}
+            className="absolute inset-0 rounded-[26%]"
+          />
+        ))}
       <span
         style={{
           transform: at(WALLS),
@@ -83,6 +85,18 @@ function cap(logo?: string) {
  */
 export default function Keyboard() {
   const [active, setActive] = useState<Tool | null>(null);
+  // The walls only near the screen: even out of sight, their 3D layers cost a fifth of the processor
+  const board = useRef<HTMLDivElement>(null);
+  const [near, setNear] = useState(false);
+  useEffect(() => {
+    const el = board.current;
+    if (!el) return;
+    const seen = new IntersectionObserver(([e]) => setNear(e.isIntersecting), {
+      rootMargin: '50% 0px',
+    });
+    seen.observe(el);
+    return () => seen.disconnect();
+  }, []);
   const blanks = (COLS - (TOOLS.length % COLS)) % COLS;
 
   return (
@@ -113,11 +127,13 @@ export default function Keyboard() {
         <div
           style={
             {
-              '--k': 'clamp(3rem, 1.25rem + 4.2vw, 5rem)',
+              // Smaller on the narrowest phones (320 px), where the turned board would overflow
+              '--k': 'clamp(min(3rem, 13vw), 1.25rem + 4.2vw, 5rem)',
               gridTemplateColumns: `repeat(${COLS}, var(--k))`,
               transform: 'rotateX(38deg) rotateZ(-24deg)',
             } as CSSProperties
           }
+          ref={board}
           className="bg-surface grid gap-[calc(var(--k)*0.1)] rounded-[calc(var(--k)*0.32)] p-[calc(var(--k)*0.2)] shadow-[0_2rem_4rem_rgb(0_0_0/0.6)] transform-3d"
         >
           {TOOLS.map((t) => (
@@ -134,7 +150,7 @@ export default function Keyboard() {
               style={{ '--key': `var(--color-key-${t.logo})` } as CSSProperties}
               className="group relative size-(--k) cursor-pointer transform-3d"
             >
-              {cap(t.logo)}
+              {cap(t.logo, near)}
             </button>
           ))}
           {Array.from({ length: blanks }, (_, i) => (
@@ -144,7 +160,7 @@ export default function Keyboard() {
               style={{ '--key': 'var(--color-key-express)' } as CSSProperties}
               className="relative size-(--k) transform-3d"
             >
-              {cap()}
+              {cap(undefined, near)}
             </span>
           ))}
         </div>

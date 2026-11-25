@@ -3,7 +3,6 @@
 export const person = {
   firstName: 'Alexy',
   lastName: 'Durand',
-  role: 'Étudiant en 3e année de BUT Informatique',
   email: 'alexy.drnd25@gmail.com',
   github: 'https://github.com/alexydurand',
   githubLabel: 'github.com/alexydurand',
@@ -444,7 +443,6 @@ export const stage = {
   heading: ['Mon stage', 'chez', 'Orange'],
   // Non-breaking hyphen: the line never breaks inside "Full-Stack"
   role: 'Développeur Full‑Stack & Power Platform',
-  place: 'Orange, Balma',
   year: '2026',
   intro:
     'Mon stage de 2e année s’est déroulé chez Orange, à Balma. J’y ai construit des outils internes avec la Power Platform de Microsoft et développé deux sites web.',

@@ -84,10 +84,17 @@ export default function Intro() {
     const block = document.querySelector<HTMLElement>('[data-hero-title]');
     if (!el || !box || !resident || !line || !slot || !block || reducedMotion) return;
     let done = false;
+    let last = '';
+    // Until then the hero's entrance (Hero.tsx) moves the ghost's place by itself
+    const settled = performance.now() + 2500;
     const tick = () => {
       const p = progress.current;
       if (p >= 1 && done) return;
       done = p >= 1;
+      // At rest nothing moves: skip the layout reads below, they ran on every frame
+      const key = `${p} ${window.scrollY} ${window.innerWidth} ${window.innerHeight}`;
+      if (key === last && performance.now() > settled) return;
+      last = key;
       const s = slot.getBoundingClientRect();
       const b = el.getBoundingClientRect();
       const below = block.getBoundingClientRect().bottom + s.height * 0.25;

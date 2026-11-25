@@ -19,7 +19,6 @@
   --color-orange: #e77d2f;
   --color-stage: #0c0b0a;
   --color-night: #060a14;
-  --color-night-2: #121826;
   --color-paper: #ffffff;
   /* The third colour beside black and white, the green of the northern lights (home page, footer): on black
      only, for what must stand out (the first strip of languages, project tools, focus rings) */
@@ -270,22 +269,6 @@ html.dark .keep-light {
     position: sticky;
     top: calc(5rem + var(--i) * 5rem);
   }
-}
-
-/* Timeline: "today" breathes on the current step */
-@keyframes today-pulse {
-  0% {
-    opacity: 0.55;
-    transform: scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(2.8);
-  }
-}
-
-.today-pulse {
-  animation: today-pulse 1.8s ease-out infinite;
 }
 
 /* The ghost of the home page square (Ghost.tsx): its shape cuts the moving gradient, it floats and blinks */
