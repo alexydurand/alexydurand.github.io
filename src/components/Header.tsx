@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import clsx from '../lib/clsx';
-import { lang, nav, person, setLang, ui } from '../data/content';
+import { nav, person, ui } from '../data/content';
 import { lockScroll, scrollToHash } from '../lib/scroll';
-import frFlag from '../assets/flags/fr.svg';
-import gbFlag from '../assets/flags/gb.svg';
 
 /** True when a line of this element's own text passes through the point. */
 function textAt(el: Element, x: number, y: number) {
@@ -203,35 +201,22 @@ export default function Header() {
                   </a>
                 </li>
               ))}
+              {/* The CV, one more word of the bar */}
               <li>
                 <a
                   href={person.cv}
                   download
-                  className="bg-coal text-body hover:bg-surface-2 focus-visible:bg-surface-2 ml-3 block rounded-lg px-5 py-3 text-white ring-1 ring-white/20 transition-colors ring-inset"
+                  className="group text-body relative block px-3 py-3"
                 >
-                  CV
+                  <span data-word>CV</span>
+                  <span
+                    aria-hidden
+                    className="ease-out-expo absolute inset-x-3 bottom-2 h-0.5 origin-right scale-x-0 bg-current transition-transform duration-300 group-hover:origin-left group-hover:scale-x-100"
+                  />
                 </a>
               </li>
             </ul>
           </nav>
-
-          {/* The flag of the language being read; a click switches to the other one */}
-          <button
-            type="button"
-            onClick={() => setLang(lang === 'fr' ? 'en' : 'fr')}
-            lang={ui.otherLang.lang}
-            aria-label={ui.otherLang.label}
-            title={ui.otherLang.label}
-            className="group grid size-11 cursor-pointer place-items-center rounded-full transition-colors hover:bg-current/10"
-          >
-            <img
-              src={lang === 'fr' ? frFlag : gbFlag}
-              alt=""
-              width={24}
-              height={24}
-              className="ease-out-expo size-6 rounded-full ring-1 ring-current/25 transition-transform duration-300 group-hover:scale-110 motion-reduce:transition-none"
-            />
-          </button>
 
           <button
             ref={toggle}
@@ -259,7 +244,7 @@ export default function Header() {
                 <a
                   href={item.href}
                   onClick={(e) => go(e, item.href)}
-                  className="display active:text-sand block py-1.5 text-[min(11vw,6.5svh)]"
+                  className="display active:text-aurora block py-1.5 text-[min(11vw,6.5svh)]"
                 >
                   {item.label}
                 </a>

@@ -11,14 +11,11 @@ import { scrollToHash, scrollToStacked } from '../lib/scroll';
 const W = 1440;
 const H = 100;
 
-// Far to near, from a sky a little darker than the home page one down to its dark hills. All low on the left and at
-// the far right, where the name and arrow of the hill behind must stay visible once the hills are stacked.
-// The first one is the crest of the home page hills, measured: only the sky stands behind it.
-const LAYERS: { colors: string; arrow: string; theme: 'light' | 'dark'; ridge: Point[] }[] = [
+// Far to near at night, from the lightest grey down to nearly black (dusk-* in index.css). All low on the left and
+// at the far right, where the name and arrow of the hill behind must stay visible once the hills are stacked.
+const LAYERS: { colors: string; ridge: Point[] }[] = [
   {
-    colors: 'fill-dusk-1 text-ink',
-    arrow: 'bg-ink text-bg',
-    theme: 'light',
+    colors: 'fill-dusk-1 text-white',
     ridge: [
       [0, 69],
       [144, 86],
@@ -37,9 +34,7 @@ const LAYERS: { colors: string; arrow: string; theme: 'light' | 'dark'; ridge: P
     ],
   },
   {
-    colors: 'fill-dusk-2 text-ink',
-    arrow: 'bg-ink text-bg',
-    theme: 'light',
+    colors: 'fill-dusk-2 text-white',
     ridge: [
       [0, 86],
       [240, 92],
@@ -53,8 +48,6 @@ const LAYERS: { colors: string; arrow: string; theme: 'light' | 'dark'; ridge: P
   },
   {
     colors: 'fill-dusk-3 text-white',
-    arrow: 'bg-white text-coal',
-    theme: 'dark',
     ridge: [
       [0, 90],
       [300, 84],
@@ -68,8 +61,6 @@ const LAYERS: { colors: string; arrow: string; theme: 'light' | 'dark'; ridge: P
   },
   {
     colors: 'fill-dusk-4 text-white',
-    arrow: 'bg-white text-coal',
-    theme: 'dark',
     ridge: [
       [0, 84],
       [220, 90],
@@ -83,8 +74,6 @@ const LAYERS: { colors: string; arrow: string; theme: 'light' | 'dark'; ridge: P
   },
   {
     colors: 'fill-dusk-5 text-white',
-    arrow: 'bg-white text-coal',
-    theme: 'dark',
     ridge: [
       [0, 92],
       [340, 84],
@@ -98,8 +87,6 @@ const LAYERS: { colors: string; arrow: string; theme: 'light' | 'dark'; ridge: P
   },
   {
     colors: 'fill-dusk-6 text-white',
-    arrow: 'bg-white text-coal',
-    theme: 'dark',
     ridge: [
       [0, 86],
       [260, 92],
@@ -207,8 +194,8 @@ export default function Bilan() {
       ref={root}
       tabIndex={-1}
       aria-labelledby="bilan-title"
-      data-theme="light"
-      className="bilan keep-light bg-dusk-0 text-ink outline-none"
+      data-theme="dark"
+      className="bilan bg-dusk-0 text-ink outline-none"
     >
       <div
         ref={head}
@@ -245,7 +232,7 @@ export default function Bilan() {
               key={i}
               id={`bilan-${skill.name}`}
               tabIndex={-1}
-              data-theme={LAYERS[i].theme}
+              data-theme="dark"
               style={
                 {
                   '--i': i,
@@ -275,7 +262,7 @@ export default function Bilan() {
                       aria-hidden
                       className={clsx(
                         'ease-out-expo grid size-11 shrink-0 place-items-center rounded-full transition-transform duration-500 group-hover:scale-110 motion-reduce:transition-none',
-                        LAYERS[i].arrow,
+                        'text-coal bg-white',
                         isOpen && 'rotate-180',
                       )}
                     >

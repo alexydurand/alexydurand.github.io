@@ -106,7 +106,7 @@ export default function ProjectStack() {
                 aria-hidden={off !== 0 || undefined}
                 style={{ '--off': off, zIndex: 10 - Math.abs(off) } as CSSProperties}
                 className={clsx(
-                  'stack-card border-bg bg-coal dark:bg-surface absolute inset-0 m-auto flex h-(--card-h) w-(--card-w) flex-col overflow-hidden rounded-2xl border-2 text-white',
+                  'stack-card bg-coal absolute inset-0 m-auto flex h-(--card-h) w-(--card-w) flex-col overflow-hidden rounded-2xl border-2 border-white/15 text-white',
                   // Not invisible: the button keeps the focus, which the dialog gives back when it closes
                   off === 0 && expanded && 'opacity-0',
                 )}
@@ -117,7 +117,7 @@ export default function ProjectStack() {
                 <div className="flex items-end justify-between gap-4 p-4 md:p-5">
                   <div className="min-w-0">
                     <h3 className="text-lead font-medium tracking-tight text-balance">{p.title}</h3>
-                    <p className="text-small text-sand mt-1">{p.stack.join('\u00a0· ')}</p>
+                    <p className="text-small text-aurora mt-1">{p.stack.join('\u00a0· ')}</p>
                   </div>
                   <svg
                     aria-hidden
@@ -137,7 +137,7 @@ export default function ProjectStack() {
                     if (off === 0) setExpanded(e.currentTarget.parentElement);
                     else go(i);
                   }}
-                  className="focus-visible:ring-sand absolute inset-0 cursor-pointer rounded-2xl outline-none focus-visible:ring-4 focus-visible:ring-inset"
+                  className="focus-visible:ring-aurora absolute inset-0 cursor-pointer rounded-2xl outline-none focus-visible:ring-4 focus-visible:ring-inset"
                 />
               </article>
             );

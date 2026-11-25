@@ -1,4 +1,4 @@
-/** Tout le texte du site en français, tiré du CV d'Alexy (novembre 2026). Version anglaise : content.en.ts. */
+/** Tout le texte du site en français, tiré du CV d'Alexy (novembre 2026). */
 
 export const person = {
   firstName: 'Alexy',
@@ -92,6 +92,8 @@ export const skills = {
       note: 'Programmation objet, jeu 3D sous Godot, applications métier low-code, versionnage avec Git.',
     },
   ] satisfies { title: string; lead?: boolean; items: Skill[]; note: string }[],
+  // Above the keyboard until a key is hovered or pressed
+  hint: 'Appuie sur une touche',
   vibe: {
     title: 'Vibe coding',
     tool: { name: 'Claude Code', logo: 'claude' },
@@ -105,8 +107,6 @@ export const skills = {
       ['Review et correction', 'relire chaque version et faire corriger jusqu’au résultat voulu'],
     ],
   },
-  soft: ['Apprentissage rapide', 'Travail en équipe', 'Curiosité pour les nouvelles technologies'],
-  languages: [{ name: 'Anglais', level: 'B2' }],
 };
 
 /* ---------- Projets ---------- */
@@ -617,7 +617,7 @@ export const legal = {
     'Pièces d’échecs par Cburnett, Wikimedia Commons (CC BY-SA 3.0).',
   ],
   logos:
-    'Logos : Devicon (licence MIT) ; Power BI, Power Apps, Power Automate, SharePoint, Counter-Strike 2, League of Legends et Valorant via Wikimedia Commons (domaine public) ; Rocket League par Psyonix via Wikimedia Commons (CC BY-SA 4.0). Ce sont des marques de leurs propriétaires, utilisées seulement pour désigner les outils et les jeux.',
+    'Logos : Devicon (licence MIT) ; logos blancs des touches de Mes outils : Simple Icons (CC0) ; Power BI, Power Apps, Power Automate, SharePoint, Counter-Strike 2, League of Legends et Valorant via Wikimedia Commons (domaine public) ; Rocket League par Psyonix via Wikimedia Commons (CC BY-SA 4.0). Ce sont des marques de leurs propriétaires, utilisées seulement pour désigner les outils et les jeux.',
   font: 'Police : Hanken Grotesk (SIL Open Font License), hébergée avec le site.',
   privacy:
     'Ce site ne dépose aucun cookie, n’utilise aucun outil de mesure d’audience et ne contient aucun formulaire : je ne collecte aucune donnée personnelle. Seuls vos choix de thème (clair ou sombre) et de langue restent dans votre navigateur (stockage local), sans être envoyés nulle part. Comme tout hébergeur, GitHub peut enregistrer des données techniques de connexion, dont l’adresse IP, pour la sécurité du service.',
@@ -639,12 +639,8 @@ export const ui = {
   menu: 'Menu',
   close: 'Fermer',
   downloadCv: 'Télécharger mon CV',
-  // The other language, as the flag button says it to screen readers
-  otherLang: { label: 'Read this site in English', lang: 'en' },
   backToTop: 'Revenir en haut de la page',
   intro: 'Présentation',
-  portrait: 'Portrait d’Alexy Durand',
-  hills: 'Des collines sombres sous un ciel beige',
   projects: 'Mes projets',
   github: 'Mon GitHub',
   seeProject: 'Voir le détail :',
@@ -653,10 +649,7 @@ export const ui = {
   nextProject: 'Projet suivant',
   closeProject: 'Fermer le détail du projet',
   learning: 'en cours d’apprentissage',
-  with: 'avec',
-  soft: 'Savoir-être',
-  languages: 'Langues',
-  toProjects: 'Ces compétences, je les ai mises en pratique dans mes projets',
+  toProjects: 'Ces outils, je les ai mis en pratique dans mes projets',
   orangeLogo: 'Logo Orange',
   missions: 'Mes missions',
   seeSite: 'Voir le site',

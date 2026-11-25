@@ -12,18 +12,10 @@ import Skills from './sections/Skills';
 import HongKong from './sections/HongKong';
 import Contact from './sections/Contact';
 import Footer from './sections/Footer';
-import { useEffect, useState } from 'react';
 import { ui } from './data/content';
 
 export default function App() {
   useSmoothScroll();
-  // A new language (content.ts): render everything again with its text, in place
-  const [, setLangTick] = useState(0);
-  useEffect(() => {
-    const onLang = () => setLangTick((t) => t + 1);
-    window.addEventListener('lang-change', onLang);
-    return () => window.removeEventListener('lang-change', onLang);
-  }, []);
   return (
     <>
       <a

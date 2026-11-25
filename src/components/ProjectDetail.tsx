@@ -195,7 +195,7 @@ export default function ProjectDetail({
             <p className="flex flex-wrap items-center gap-x-[0.7em] gap-y-1 pr-10 text-[max(0.8em,13px)] text-white/70">
               {p.context}
               {p.status && (
-                <span className="bg-sand text-coal rounded-full px-[0.8em] py-[0.15em] font-medium">
+                <span className="bg-aurora text-coal rounded-full px-[0.8em] py-[0.15em] font-medium">
                   {p.status}
                 </span>
               )}
@@ -210,12 +210,12 @@ export default function ProjectDetail({
             <ul className="mt-[0.9em] space-y-[0.4em] leading-[1.45] text-white/85">
               {p.did.map((d) => (
                 <li key={d} className="flex gap-[0.7em]">
-                  <span aria-hidden className="bg-sand mt-[0.6em] size-[0.35em] shrink-0" />
+                  <span aria-hidden className="bg-aurora mt-[0.6em] size-[0.35em] shrink-0" />
                   {d}
                 </li>
               ))}
             </ul>
-            <p className="text-sand mt-[0.9em] font-medium">{p.stack.join(' · ')}</p>
+            <p className="text-aurora mt-[0.9em] font-medium">{p.stack.join(' · ')}</p>
             <button
               ref={opener}
               type="button"
@@ -231,7 +231,7 @@ export default function ProjectDetail({
           inert={skillsOpen}
           aria-label={ui.closeProject}
           onClick={close}
-          className="bg-coal focus-visible:ring-sand absolute hover:bg-white/15 top-2 right-2 grid size-11 cursor-pointer place-items-center rounded-full transition-colors outline-none focus-visible:ring-2"
+          className="bg-coal focus-visible:ring-aurora absolute hover:bg-white/15 top-2 right-2 grid size-11 cursor-pointer place-items-center rounded-full transition-colors outline-none focus-visible:ring-2"
         >
           <svg aria-hidden viewBox="0 0 24 24" className="size-5 fill-none stroke-current stroke-2">
             <path d="M5 5l14 14M19 5L5 19" />
@@ -273,7 +273,7 @@ export default function ProjectDetail({
                       <a
                         href={`#bilan-${c.skill}`}
                         onClick={(e) => toSkill(e, c.skill)}
-                        className="text-sand underline decoration-1 underline-offset-4 hover:decoration-2"
+                        className="text-aurora underline decoration-1 underline-offset-4 hover:decoration-2"
                       >
                         {c.skill}
                       </a>

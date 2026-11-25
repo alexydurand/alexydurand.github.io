@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useRef, type MouseEvent } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { gsap } from '../lib/gsap';
-import { hero, person, skills, ui } from '../data/content';
+import { hero, skills, ui } from '../data/content';
 import { easeInOut, range } from '../lib/motion';
-import { scrollToHash } from '../lib/scroll';
 import Ghost from '../components/Ghost';
 import useScrollProgress from '../hooks/useScrollProgress';
 import useMediaQuery from '../hooks/useMediaQuery';
@@ -145,13 +144,9 @@ export default function Intro() {
     return () => ctx.revert();
   }, [reducedMotion]);
 
-  const toContact = (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    scrollToHash('#contact');
-  };
-
   return (
-    <section aria-label={ui.intro} className="relative">
+    <section aria-label={ui.intro} className="pointer-events-none relative">
+      {/* Laid over the hero: lets clicks through to its buttons, the band itself is hit only where its clip shows it */}
       <div ref={wrapper} className={reducedMotion ? undefined : '-mt-[100svh] h-[200svh]'}>
         {/* Pinned like the band but outside it: the band's clip must not cut the ghost */}
         {!reducedMotion && (
@@ -172,37 +167,21 @@ export default function Intro() {
           ref={band}
           data-theme="dark"
           style={reducedMotion ? undefined : { clipPath: 'inset(50%)' }}
-          className="bg-coal sticky top-0 flex min-h-svh flex-col justify-center gap-16 overflow-hidden py-24 text-white md:gap-24"
+          className="bg-coal pointer-events-auto sticky top-0 flex min-h-svh flex-col justify-center gap-16 overflow-hidden py-24 text-white md:gap-24"
         >
           <div
             ref={content}
             style={reducedMotion ? undefined : { opacity: 0 }}
-            className="frame grid gap-8 md:grid-cols-12"
+            className="frame grid md:grid-cols-12"
           >
             <p className="text-[clamp(1.5rem,1rem+1.6vw,2.75rem)] leading-snug text-pretty md:col-span-9">
               {hero.sentence}
             </p>
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 md:col-span-12">
-              <a
-                href={person.cv}
-                download
-                className="bg-accent text-body text-accent-ink hover:bg-accent-deep inline-flex min-h-12 items-center px-6 font-medium whitespace-nowrap transition-colors duration-200 active:translate-y-px"
-              >
-                {hero.action}
-              </a>
-              <a
-                href="#contact"
-                onClick={toContact}
-                className="text-body py-3 underline decoration-1 underline-offset-4 hover:decoration-2"
-              >
-                {hero.secondary}
-              </a>
-            </div>
           </div>
 
-          {/* Languages and tools, data first */}
+          {/* Languages and tools, data first: that line in the green of the northern lights, the next in white */}
           <div className="space-y-1">
-            <Strip items={skills.stripData} className="text-sand" stripRef={dataStrip} />
+            <Strip items={skills.stripData} className="text-aurora" stripRef={dataStrip} />
             <Strip items={skills.stripDev} className="text-white" stripRef={devStrip} />
           </div>
         </div>

@@ -79,7 +79,7 @@ export default function Arena({
               key={x}
               d={`M${x} 0 L${x - 50} 400 H${x + 50} Z`}
               style={{ transformOrigin: `${x}px 0px`, animationDelay: `${i * -2.4}s` }}
-              className="fill-sand/10 animate-[beam_4.8s_ease-in-out_infinite_alternate] motion-reduce:animate-none"
+              className="fill-aurora/10 animate-[beam_4.8s_ease-in-out_infinite_alternate] motion-reduce:animate-none"
             />
           ))}
           {/* The crowd, redrawn for each game so that its wave starts again, from left to right */}
@@ -108,7 +108,7 @@ export default function Arena({
               cy={p.y - p.r * 3.6}
               r="2.2"
               style={{ animationDelay: `${(i * 0.37) % 1.6}s` }}
-              className="fill-sand animate-[twinkle_1.6s_ease-in-out_infinite_alternate] motion-reduce:animate-none"
+              className="fill-aurora animate-[twinkle_1.6s_ease-in-out_infinite_alternate] motion-reduce:animate-none"
             />
           ))}
         </svg>
