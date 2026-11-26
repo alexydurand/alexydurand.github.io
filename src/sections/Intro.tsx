@@ -92,8 +92,9 @@ export default function Intro() {
       const p = progress.current;
       if (p >= 1 && done) return;
       done = p >= 1;
-      // At rest nothing moves: skip the layout reads below, they ran on every frame
-      const key = `${p} ${window.scrollY} ${window.innerWidth} ${window.innerHeight}`;
+      // At rest nothing moves: skip the layout reads below, they ran on every frame. The ghost's place moves
+      // by itself during the hero's entrance and the ghost's intro (Hero.tsx)
+      const key = `${p} ${window.scrollY} ${window.innerWidth} ${window.innerHeight} ${slots.map((s) => s.style.transform + s.style.opacity).join()}`;
       if (key === last && performance.now() > settled) return;
       last = key;
       const slot = slots.find((s) => s.offsetWidth) ?? slots[0];

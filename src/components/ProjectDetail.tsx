@@ -226,17 +226,6 @@ export default function ProjectDetail({
             </button>
           </div>
         </div>
-        <button
-          type="button"
-          inert={skillsOpen}
-          aria-label={ui.closeProject}
-          onClick={close}
-          className="bg-coal focus-visible:ring-aurora absolute top-2 right-2 grid size-11 cursor-pointer place-items-center rounded-full transition-colors outline-none hover:bg-white/15 focus-visible:ring-2"
-        >
-          <svg aria-hidden viewBox="0 0 24 24" className="size-5 fill-none stroke-current stroke-2">
-            <path d="M5 5l14 14M19 5L5 19" />
-          </svg>
-        </button>
         {skillsOpen && (
           <div
             ref={skills}
@@ -285,6 +274,17 @@ export default function ProjectDetail({
             </div>
           </div>
         )}
+        {/* After the skills card, so that it stays on top: from there too it closes everything */}
+        <button
+          type="button"
+          aria-label={ui.closeProject}
+          onClick={close}
+          className="bg-coal focus-visible:ring-aurora absolute top-2 right-2 grid size-11 cursor-pointer place-items-center rounded-full transition-colors outline-none hover:bg-white/15 focus-visible:ring-2"
+        >
+          <svg aria-hidden viewBox="0 0 24 24" className="size-5 fill-none stroke-current stroke-2">
+            <path d="M5 5l14 14M19 5L5 19" />
+          </svg>
+        </button>
       </div>
     </dialog>
   );
