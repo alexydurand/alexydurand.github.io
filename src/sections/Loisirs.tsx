@@ -22,7 +22,7 @@ export default function Loisirs() {
   const [open, setOpen] = useState<Record<string, boolean>>({});
   const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   useReveal(root);
-  // The keys' walls only near the screen: out of sight they still cost
+  // The keys' walls only near the screen: out of sight they still cost. An open row stops playing there too
   const near = useNear(root);
 
   return (
@@ -31,7 +31,11 @@ export default function Loisirs() {
       ref={root}
       tabIndex={-1}
       aria-labelledby="loisirs-title"
-      className="bg-bg pt-8 outline-none md:pt-12"
+      className={clsx(
+        'bg-bg pt-8 outline-none md:pt-12',
+        // The records spin in CSS
+        !near && '[&_*]:[animation-play-state:paused]',
+      )}
     >
       <div className="frame">
         <h2 id="loisirs-title" data-reveal="0" className="display title-xl">
@@ -131,7 +135,7 @@ export default function Loisirs() {
                                   name: g.name,
                                   src: LOGOS[`../assets/logos/${g.logo}.svg`],
                                 }))}
-                                playing={isOpen}
+                                playing={isOpen && near}
                                 still={reducedMotion}
                               />
                             </div>
@@ -158,7 +162,7 @@ export default function Loisirs() {
                           {h.id === 'f1' && (
                             <div className="md:col-span-7 md:flex md:justify-end">
                               <figure className="w-full max-w-xl">
-                                <Circuit playing={isOpen} still={reducedMotion} />
+                                <Circuit playing={isOpen && near} still={reducedMotion} />
                                 <figcaption className="text-body text-muted mt-3 text-center">
                                   {h.caption}
                                 </figcaption>
@@ -171,7 +175,7 @@ export default function Loisirs() {
                               {/* The pieces of Morphy's mate fill the space between the text and the board */}
                               {isOpen && <ChessPieces className="hidden h-96 flex-1 lg:block" />}
                               <div className="w-full max-w-80 shrink-0 md:max-w-96">
-                                <ChessBoard playing={isOpen} still={reducedMotion} />
+                                <ChessBoard playing={isOpen && near} still={reducedMotion} />
                               </div>
                             </div>
                           )}

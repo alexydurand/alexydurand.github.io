@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import useScrollProgress from '../hooks/useScrollProgress';
 import useMediaQuery from '../hooks/useMediaQuery';
+import useNear from '../hooks/useNear';
+import clsx from '../lib/clsx';
 import { easeInOut, range } from '../lib/motion';
 import { ui } from '../data/content';
 import hongKong from '../assets/cities/hong-kong.webp';
@@ -137,6 +139,13 @@ export default function Voyages() {
   const [box, setBox] = useState<[number, number]>([0, 0]);
   const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const mobile = useMediaQuery('(max-width: 767px)');
+  // The plane and the dotted route never stop by themselves, even far off screen: only near the collage
+  const near = useNear(stage);
+
+  useEffect(() => {
+    if (near) plane.current?.unpauseAnimations();
+    else plane.current?.pauseAnimations();
+  }, [near, box]);
 
   // The route is drawn in pixels so the plane keeps its shape: follow the stage size
   useEffect(() => {
@@ -183,7 +192,14 @@ export default function Voyages() {
     // Its title and sentence are the last row of Loisirs, just above
     <section aria-label={ui.travel} className="relative z-10">
       <div ref={wrapper} style={reducedMotion ? undefined : { height: `${VOYAGES_SVH}svh` }}>
-        <div ref={stage} data-theme="dark" className="bg-bg sticky top-0 h-svh overflow-hidden">
+        <div
+          ref={stage}
+          data-theme="dark"
+          className={clsx(
+            'bg-bg sticky top-0 h-svh overflow-hidden',
+            !near && '[&_*]:[animation-play-state:paused]',
+          )}
+        >
           {box[0] > 0 && (
             <svg
               ref={route}

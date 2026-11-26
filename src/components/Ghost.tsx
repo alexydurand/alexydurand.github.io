@@ -33,7 +33,9 @@ export default function Ghost({ progress }: { progress: RefObject<number> }) {
       if (glow !== shown) {
         shown = glow;
         box.style.opacity = String(glow);
-        box.style.visibility = glow > 0 ? '' : 'hidden';
+        // Not just invisible: its endless float and blink would keep running, and every frame they made the
+        // browser re-sort all the 3D layers of the page
+        box.style.display = glow > 0 ? '' : 'none';
       }
       if (glow > 0) gradient?.draw(time);
     };

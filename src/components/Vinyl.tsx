@@ -1,9 +1,13 @@
-import { useId } from 'react';
+import { useId, useState } from 'react';
 import clsx from '../lib/clsx';
 
 /** A record that slides out of its sleeve when `out`, and keeps spinning. Sized by its container. */
 export default function Vinyl({ cover, out, delay = 0 }: { cover: string; out: boolean; delay?: number }) {
   const clip = useId();
+  // An SVG image has no lazy loading: the label waits until the record first comes out, as the sleeve waits
+  // for its row to open
+  const [label, setLabel] = useState(out);
+  if (out && !label) setLabel(true);
   return (
     <div aria-hidden className="relative aspect-[1.6/1] w-full">
       <div
@@ -26,15 +30,17 @@ export default function Vinyl({ cover, out, delay = 0 }: { cover: string; out: b
           <clipPath id={clip}>
             <circle cx="100" cy="100" r="34" />
           </clipPath>
-          <image
-            href={cover}
-            x="66"
-            y="66"
-            width="68"
-            height="68"
-            clipPath={`url(#${clip})`}
-            preserveAspectRatio="xMidYMid slice"
-          />
+          {label && (
+            <image
+              href={cover}
+              x="66"
+              y="66"
+              width="68"
+              height="68"
+              clipPath={`url(#${clip})`}
+              preserveAspectRatio="xMidYMid slice"
+            />
+          )}
           <circle cx="100" cy="100" r="4" className="fill-bg" />
         </svg>
         {/* Light on the grooves stays still while the record turns */}
