@@ -57,7 +57,7 @@ export default function Arena({
           {/* The screen lights the floor in front of it */}
           <path d={`M230 250 H730 L${W} 400 H0 Z`} className="fill-white/[0.07]" />
           <rect x="230" y="24" width="500" height="281" className="fill-paper" />
-          {/* All four at once, already loaded: only the one on screen shows */}
+          {/* All of them at once, already loaded: only the one on screen shows */}
           {games.map((g, i) => (
             <image
               key={g.name}

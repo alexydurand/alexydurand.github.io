@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, type CSSProperties } from 'react';
 import { loisirs } from '../data/content';
 import useReveal from '../hooks/useReveal';
 import Vinyl from '../components/Vinyl';
@@ -6,6 +6,8 @@ import ChessBoard from '../components/ChessBoard';
 import ChessPieces from '../components/ChessPieces';
 import Circuit from '../components/Circuit';
 import Arena from '../components/Arena';
+import Keycap from '../components/Keycap';
+import useNear from '../hooks/useNear';
 import useMediaQuery from '../hooks/useMediaQuery';
 import clsx from '../lib/clsx';
 
@@ -20,6 +22,8 @@ export default function Loisirs() {
   const [open, setOpen] = useState<Record<string, boolean>>({});
   const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   useReveal(root);
+  // The keys' walls only near the screen: out of sight they still cost
+  const near = useNear(root);
 
   return (
     <section
@@ -27,7 +31,7 @@ export default function Loisirs() {
       ref={root}
       tabIndex={-1}
       aria-labelledby="loisirs-title"
-      className="bg-bg pt-[calc(var(--spacing-section)*0.5)] outline-none"
+      className="bg-bg pt-8 outline-none md:pt-12"
     >
       <div className="frame">
         <h2 id="loisirs-title" data-reveal="0" className="display title-xl">
@@ -64,23 +68,31 @@ export default function Loisirs() {
                         <span className="display text-accent ease-out-expo text-[clamp(2.75rem,7vw,6.5rem)] leading-none transition-transform duration-500 group-hover:translate-x-[2vw] motion-reduce:group-hover:translate-x-0">
                           {h.title}
                         </span>
+                        {/* A light key of the keyboard (Mes outils), turned a little: hovering the row presses it */}
                         <span
                           aria-hidden
-                          className={clsx(
-                            'bg-accent text-accent-ink ease-out-expo mb-2 grid size-12 shrink-0 place-items-center rounded-full transition-transform duration-500 group-hover:scale-110 motion-reduce:transition-none md:size-14',
-                            isOpen && 'rotate-180',
-                          )}
+                          style={{ '--key': 'var(--color-ink)' } as CSSProperties}
+                          className="pointer-events-none relative mb-2 size-(--k) shrink-0 [transform:perspective(40rem)_rotateX(28deg)] transform-3d [--k:3rem] md:[--k:3.5rem]"
                         >
-                          <svg
-                            aria-hidden
-                            viewBox="0 0 24 24"
-                            className="size-6"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth={2}
-                          >
-                            <path d="M12 5v14M5 12l7 7 7-7" />
-                          </svg>
+                          <Keycap
+                            light
+                            walls={near}
+                            label={
+                              <svg
+                                aria-hidden
+                                viewBox="0 0 24 24"
+                                className={clsx(
+                                  'ease-out-expo size-6 transition-transform duration-500 motion-reduce:transition-none',
+                                  isOpen && 'rotate-180',
+                                )}
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth={2}
+                              >
+                                <path d="M12 5v14M5 12l7 7 7-7" />
+                              </svg>
+                            }
+                          />
                         </span>
                       </button>
                     </h3>

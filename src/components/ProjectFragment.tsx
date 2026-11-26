@@ -1,8 +1,9 @@
 import type { Project } from '../data/content';
+import pokevaleur from '../assets/projects/pokevaleur.webp';
 
 /**
- * Each project drawn as a cropped piece of its own interface (HTML/CSS, no screenshots).
- * Concert, prices, level, teams, rows and stories are sample content.
+ * Each project drawn as a cropped piece of its own interface (HTML/CSS), PokéValeur shown by a real screenshot.
+ * Concert, level, teams, rows and stories are sample content.
  */
 export default function ProjectFragment({ id }: { id: Project['id'] }) {
   switch (id) {
@@ -91,59 +92,20 @@ function BandManager() {
   );
 }
 
-const ITEMS = [
-  ['Dracaufeu ex · 199/165', '84,20 €', 'Fiable', 'bg-dot-green'],
-  ['Display scellé · FR', '212,00 €', 'Fiable', 'bg-dot-green'],
-  ['Mewtwo · PSA 9', '145,00 €', 'À vérifier', 'bg-dot-amber'],
-  ['Coffret dresseur d’élite · JP', '58,40 €', 'Fiable', 'bg-dot-green'],
-  ['Pikachu · reverse', '3,10 €', 'Ancien', 'bg-dot-red'],
-];
-
-// The dashboard of the collection app (phone layout): value, 30-day curve, items with their price badge
+// The real app on my iPhone: its home screen, with the values hidden
 function Collection() {
   return (
-    <Window title="PokéValeur · Tableau de bord" dark>
-      <div className="flex h-full flex-col">
-        <div className="px-4 pt-4">
-          <p className="text-[11.5px] opacity-60">Valeur de la collection</p>
-          <p className="tabular mt-1 text-[20px] font-medium">1&nbsp;284,50&nbsp;€</p>
-          <p className="tabular text-dot-green text-[11.5px]">
-            +212,30&nbsp;€ (+19,8&nbsp;%) · 24&nbsp;h +0,6&nbsp;%
-          </p>
-        </div>
-        <svg viewBox="0 0 100 30" preserveAspectRatio="none" className="mx-4 mt-2 h-10 shrink-0">
-          <polyline
-            points="0,26 9,24 18,25 27,20 36,21 45,17 54,18 63,12 72,13 81,9 90,7 100,3"
-            fill="none"
-            strokeWidth={2}
-            vectorEffect="non-scaling-stroke"
-            className="stroke-code-key"
-          />
-        </svg>
-        <ul className="mt-3 min-h-0 flex-1 space-y-2 overflow-hidden px-3 sm:px-4">
-          {ITEMS.map(([name, price, badge, dot]) => (
-            <li
-              key={name}
-              className="bg-code-bar flex items-center justify-between gap-3 px-3 py-2"
-            >
-              <span className="truncate">{name}</span>
-              <span className="flex shrink-0 items-center gap-1.5 text-[11.5px]">
-                <span className={`size-1.5 rounded-full ${dot}`} />
-                <span className="opacity-75">{badge}</span>
-                <span className="tabular ml-1.5 text-[13px]">{price}</span>
-              </span>
-            </li>
-          ))}
-        </ul>
-        <div className="bg-code-bar mt-3 grid shrink-0 grid-cols-4 text-center text-[11.5px]">
-          {['Accueil', 'Collection', 'Scanner', 'Réglages'].map((t, i) => (
-            <span key={t} className={`py-2.5 ${i === 0 ? 'text-code-key' : 'opacity-60'}`}>
-              {t}
-            </span>
-          ))}
-        </div>
-      </div>
-    </Window>
+    <div className="bg-code flex h-full items-center justify-center p-3 sm:p-4">
+      <img
+        src={pokevaleur}
+        alt=""
+        width={590}
+        height={1200}
+        loading="lazy"
+        decoding="async"
+        className="h-full max-w-full rounded-xl object-contain"
+      />
+    </div>
   );
 }
 

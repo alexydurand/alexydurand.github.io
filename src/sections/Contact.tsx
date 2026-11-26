@@ -88,7 +88,8 @@ export default function Contact() {
             </a>
           </li>
         ))}
-        <li className="bg-surface">
+        {/* Black like LinkedIn: after GitHub's grey row the colours keep alternating */}
+        <li className="bg-bg">
           <a
             href="https://www.openstreetmap.org/search?query=Blagnac"
             target="_blank"

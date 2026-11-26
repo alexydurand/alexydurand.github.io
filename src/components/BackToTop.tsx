@@ -6,8 +6,7 @@ import Keycap from './Keycap';
 
 /**
  * A light key of the keyboard (Mes outils), turned a little, that appears once the visitor has scrolled past the
- * first screen and sinks under the pointer. Not on phones, where it covered the arrows of the rows and of the
- * projects; the menu and the footer lead back up there.
+ * first screen and sinks under the pointer. Smaller on phones, where it can pass over the arrows of the rows.
  */
 export default function BackToTop() {
   const [visible, setVisible] = useState(false);
@@ -25,9 +24,9 @@ export default function BackToTop() {
       onClick={() => scrollToHash('#top')}
       aria-label={ui.backToTop}
       tabIndex={visible ? 0 : -1}
-      style={{ '--k': '3.75rem', '--key': 'var(--color-ink)' } as CSSProperties}
+      style={{ '--key': 'var(--color-ink)' } as CSSProperties}
       className={clsx(
-        'group ease-out-expo pointer-events-none fixed right-[var(--spacing-gutter)] bottom-[var(--spacing-gutter)] z-40 size-(--k) [transform:perspective(40rem)_rotateX(28deg)] cursor-pointer transition-[opacity,translate,visibility] duration-300 transform-3d max-md:hidden', // taste-skill-ignore: floating button
+        'group ease-out-expo pointer-events-none fixed right-[var(--spacing-gutter)] bottom-[var(--spacing-gutter)] z-40 size-(--k) [transform:perspective(40rem)_rotateX(28deg)] cursor-pointer transition-[opacity,translate,visibility] duration-300 transform-3d [--k:3rem] md:[--k:3.75rem]', // taste-skill-ignore: floating button
         // Hidden, its key must not catch clicks either: invisible, not just transparent
         visible ? 'visible translate-y-0 opacity-100' : 'invisible translate-y-4 opacity-0',
       )}

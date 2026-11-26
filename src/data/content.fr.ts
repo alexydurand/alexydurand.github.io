@@ -523,12 +523,13 @@ export const loisirs: { heading: string; hobbies: Hobby[] } = {
     {
       id: 'jeux',
       title: 'Esports',
-      text: 'Je regarde principalement les grands événements de quatre jeux, pour le niveau des meilleures équipes et l’ambiance des salles pleines.',
+      text: 'Je regarde principalement les grands événements de cinq jeux, pour le niveau des meilleures équipes et l’ambiance des salles pleines.',
       games: [
         { name: 'League of Legends', logo: 'lol' },
         { name: 'Counter-Strike 2', logo: 'cs2' },
         { name: 'Valorant', logo: 'valorant' },
         { name: 'Rocket League', logo: 'rocketleague' },
+        { name: 'GTA V', logo: 'gta' },
       ],
     },
     {
@@ -641,7 +642,7 @@ export const legal = {
     'Pièces d’échecs par Cburnett, Wikimedia Commons (CC BY-SA 3.0).',
   ],
   logos:
-    'Logos : Devicon (licence MIT) ; logos blancs des touches (Mes outils, projets) : Simple Icons (CC0) ; Power BI, Power Apps, Power Automate, SharePoint, Counter-Strike 2, League of Legends et Valorant via Wikimedia Commons (domaine public) ; Rocket League par Psyonix via Wikimedia Commons (CC BY-SA 4.0). Ce sont des marques de leurs propriétaires, utilisées seulement pour désigner les outils et les jeux.',
+    'Logos : Devicon (licence MIT) ; logos blancs des touches (Mes outils, projets) : Simple Icons (CC0) ; Power BI, Power Apps, Power Automate, SharePoint, Counter-Strike 2, League of Legends, Valorant et Grand Theft Auto via Wikimedia Commons (domaine public) ; Rocket League par Psyonix via Wikimedia Commons (CC BY-SA 4.0). Ce sont des marques de leurs propriétaires, utilisées seulement pour désigner les outils et les jeux.',
   font: 'Police : Hanken Grotesk (SIL Open Font License), hébergée avec le site.',
   privacy:
     'Ce site ne dépose aucun cookie, n’utilise aucun outil de mesure d’audience et ne contient aucun formulaire : je ne collecte aucune donnée personnelle. Seuls vos choix de thème (clair ou sombre) et de langue restent dans votre navigateur (stockage local), sans être envoyés nulle part. Comme tout hébergeur, GitHub peut enregistrer des données techniques de connexion, dont l’adresse IP, pour la sécurité du service.',

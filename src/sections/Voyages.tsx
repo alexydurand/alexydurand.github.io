@@ -74,7 +74,7 @@ const SLOTS: Slot[] = [
 const HK = 0;
 
 // A flight route wandering through the empty margins of the collage (vw, svh from the centre), behind
-// the pictures, ending on Hong Kong. Desktop only: on phones the pictures fill the screen.
+// the pictures, ending on Hong Kong.
 const ROUTE: [number, number][] = [
   [-56, 44],
   [-41, 32],
@@ -94,10 +94,26 @@ const ROUTE: [number, number][] = [
   [-14, 14],
   [0, 1],
 ];
+// On phones the pictures fill the screen: the route snakes through the gaps between their rows instead
+const ROUTE_MOBILE: [number, number][] = [
+  [-56, 46],
+  [-20, 44],
+  [30, 44],
+  [48, 28],
+  [25, 16.5],
+  [-15, 16.5],
+  [-48, 2],
+  [-40, -43],
+  [0, -45],
+  [40, -43],
+  [48, -25],
+  [25, -17],
+  [16, -1],
+];
 
 /** Smooth path through the points (Catmull-Rom), in pixels of a W × H box. */
-function routePath(W: number, H: number) {
-  const pts = ROUTE.map(([x, y]) => [W / 2 + (x * W) / 100, H / 2 + (y * H) / 100]);
+function routePath(route: [number, number][], W: number, H: number) {
+  const pts = route.map(([x, y]) => [W / 2 + (x * W) / 100, H / 2 + (y * H) / 100]);
   let d = `M${pts[0]}`;
   for (let i = 0; i < pts.length - 1; i++) {
     const [p0, p1, p2, p3] = [pts[i - 1] ?? pts[i], pts[i], pts[i + 1], pts[i + 2] ?? pts[i + 1]];
@@ -168,7 +184,7 @@ export default function Voyages() {
     <section aria-label={ui.travel} className="relative z-10">
       <div ref={wrapper} style={reducedMotion ? undefined : { height: `${VOYAGES_SVH}svh` }}>
         <div ref={stage} data-theme="dark" className="bg-bg sticky top-0 h-svh overflow-hidden">
-          {!mobile && box[0] > 0 && (
+          {box[0] > 0 && (
             <svg
               ref={route}
               aria-hidden
@@ -177,7 +193,7 @@ export default function Voyages() {
             >
               <path
                 id="voyages-route"
-                d={routePath(box[0], box[1])}
+                d={routePath(mobile ? ROUTE_MOBILE : ROUTE, box[0], box[1])}
                 fill="none"
                 strokeWidth="2"
                 strokeLinecap="round"
@@ -221,7 +237,7 @@ export default function Voyages() {
             })}
           </div>
           {/* The plane flies over the pictures, along the route drawn under them */}
-          {!mobile && !reducedMotion && box[0] > 0 && (
+          {!reducedMotion && box[0] > 0 && (
             <svg
               ref={plane}
               aria-hidden

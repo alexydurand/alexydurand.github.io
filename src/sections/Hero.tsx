@@ -9,9 +9,8 @@ import clsx from '../lib/clsx';
 // Each word rises out of a line just under its letters (room for the descender of the y)
 const mask = 'inline-block [clip-path:inset(-0.3em_-0.1em_-0.25em)]';
 // The ghost in place of a ®: after the last name on one line, after the first name on two (tall screens), where
-// it stands above the end of the last name. The next band grows out of the one shown (Intro.tsx)
-const ghost =
-  'ghost-shape motion-reduce:bg-ink relative -top-[0.38em] ml-[0.05em] aspect-[231/289] h-[0.34em]';
+// it stands a little bigger above the final d of the last name. The next band grows out of the one shown (Intro.tsx)
+const ghost = 'ghost-shape motion-reduce:bg-ink relative ml-[0.05em] aspect-[231/289]';
 
 export default function Hero() {
   const root = useRef<HTMLElement>(null);
@@ -83,7 +82,11 @@ export default function Hero() {
                   </span>
                   <span
                     data-ghost
-                    className={clsx(ghost, 'hidden [@media(max-aspect-ratio:5/4)]:inline-block')}
+                    className={clsx(
+                      ghost,
+                      // Shifted by `left`, not a margin: the first line must stay narrower than the last name
+                      '-top-[0.32em] left-[0.25em] hidden h-[0.44em] [@media(max-aspect-ratio:5/4)]:inline-block',
+                    )}
                   />{' '}
                   <span className="[@media(max-aspect-ratio:5/4)]:block">
                     <span className={mask}>
@@ -93,7 +96,10 @@ export default function Hero() {
                     </span>
                     <span
                       data-ghost
-                      className={clsx(ghost, 'inline-block [@media(max-aspect-ratio:5/4)]:hidden')}
+                      className={clsx(
+                        ghost,
+                        '-top-[0.38em] inline-block h-[0.34em] [@media(max-aspect-ratio:5/4)]:hidden',
+                      )}
                     />
                   </span>
                 </span>

@@ -67,7 +67,7 @@ export default function Stage() {
       tabIndex={-1}
       aria-labelledby="stage-title"
       data-theme="dark"
-      className="bg-stage pb-section relative pt-12 text-white outline-none"
+      className="bg-stage relative pt-12 pb-12 text-white outline-none md:pb-16"
     >
       <div className="frame">
         <h2 id="stage-title" className="display title-xl">
