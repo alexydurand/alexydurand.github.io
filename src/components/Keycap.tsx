@@ -40,11 +40,15 @@ export default function Keycap({
       <span
         aria-hidden
         style={logo ? ({ '--key': `var(--color-key-${logo})` } as CSSProperties) : undefined}
+        // Pressed by squashing the walls toward the board (scale Z from z = 0), never through it: walls sunk under
+        // the board came back only once the animation was over, the key rose in two steps. The top goes down
+        // 0.17 of a key (0.21 while clicked) out of its 0.36. Down quick (expo), back up smooth (quart): a
+        // transition takes the timing of the state it goes to
         className={clsx(
-          'ease-out-expo pointer-events-none absolute inset-0 transition-transform duration-150 transform-3d',
+          'ease-out-quart pointer-events-none absolute inset-0 transition-transform duration-300 transform-3d',
           pressed
-            ? '-translate-z-[calc(var(--k)*0.17)]'
-            : 'group-hover:-translate-z-[calc(var(--k)*0.17)] group-focus-visible:-translate-z-[calc(var(--k)*0.17)] group-active:-translate-z-[calc(var(--k)*0.21)] group-active:duration-75',
+            ? 'ease-out-expo scale-z-[0.53] duration-150'
+            : 'group-hover:ease-out-expo group-focus-visible:ease-out-expo group-hover:scale-z-[0.53] group-hover:duration-150 group-focus-visible:scale-z-[0.53] group-focus-visible:duration-150 group-active:scale-z-[0.42] group-active:duration-75',
         )}
       >
         {walls &&

@@ -141,8 +141,9 @@ export default function ProjectStack() {
                     <div className="min-w-0 perspective-[40rem]">
                       {/* Keys on a grid, so that they line up: 5 a row on a phone, 3 beside the picture, a
                           two-key name filling a hole further back if need be. --k lets them
-                          fit the text column, whatever the width of the card */}
-                      <div className="grid origin-bottom rotate-x-[28deg] grid-flow-row-dense grid-cols-[repeat(5,var(--k))] gap-[calc(var(--k)*0.18)] text-[calc(var(--k)*0.28)] [--k:min(2.75rem,calc((var(--card-w)_-_4.75rem)/5.72))] transform-3d lg:grid-cols-[repeat(3,var(--k))] lg:[--k:min(2.75rem,calc((var(--card-w)*0.38_-_5.25rem)/3.36))]">
+                          fit the text column, whatever the width of the card. On a board turned like
+                          Mes outils' keyboard, so that their sides show, and less lit */}
+                      <div className="bg-surface grid origin-bottom rotate-x-[34deg] -rotate-z-8 grid-flow-row-dense grid-cols-[repeat(5,var(--k))] gap-[calc(var(--k)*0.18)] rounded-[calc(var(--k)*0.32)] p-[calc(var(--k)*0.2)] text-[calc(var(--k)*0.28)] shadow-[0_1rem_2rem_rgb(0_0_0/0.6)] [--k:min(2.75rem,calc((var(--card-w)_-_4.75rem)/6.12))] [--shine:0.14] transform-3d lg:grid-cols-[repeat(3,var(--k))] lg:[--k:min(2.75rem,calc((var(--card-w)*0.38_-_5.25rem)/3.76))]">
                         {p.stack.map((name) => {
                           const logo = KEYS.get(name);
                           return (

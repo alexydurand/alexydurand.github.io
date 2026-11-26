@@ -16,6 +16,15 @@ import clsx from '../lib/clsx';
 import { scrollToHash } from '../lib/scroll';
 
 const SKILLS = bilan.skills;
+// The colour a key takes once pressed (dark otherwise), from Mes outils' keyboard, and whether it needs dark letters
+const COLORS: [string, boolean][] = [
+  ['typescript', false],
+  ['powerbi', true],
+  ['sharepoint', false],
+  ['java', true],
+  ['powerapps', false],
+  ['sqldeveloper', false],
+];
 const MOVE: Record<string, number> = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 };
 
 // A project opens right here, out of its link (ProjectStack listens); the stage is a section further down
@@ -151,12 +160,18 @@ export default function Bilan() {
                 onClick={() => setActive(i)}
                 style={
                   {
-                    '--key': i === active ? 'var(--color-aurora)' : 'var(--color-surface-2)',
+                    '--key':
+                      i === active ? `var(--color-key-${COLORS[i][0]})` : 'var(--color-surface-2)',
                   } as CSSProperties
                 }
                 className="group pointer-events-none relative h-(--k) w-[calc(var(--k)*4.6)] cursor-pointer transform-3d"
               >
-                <Keycap label={s.name} light={i === active} walls={near} pressed={i === active} />
+                <Keycap
+                  label={s.name}
+                  light={i === active && COLORS[i][1]}
+                  walls={near}
+                  pressed={i === active}
+                />
               </button>
             ))}
           </div>

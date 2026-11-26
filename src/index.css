@@ -26,6 +26,10 @@
   /* The third colour beside black and white, the green of the northern lights (home page, footer): on black
      only, for what must stand out (the first strip of languages, project tools, focus rings) */
   --color-aurora: #70e4b4;
+  /* The other colours of the lights, for the first strip only (.aurora-ink): light enough to read on black */
+  --color-aurora-teal: #62d6d8;
+  --color-aurora-violet: #a993ff;
+  --color-aurora-pink: #ee9ad8;
   --color-code: #141b22;
   --color-code-bar: #0e1419;
   --color-code-ink: #d6e2e8;
@@ -49,7 +53,18 @@
   --spacing-section: clamp(6rem, 3rem + 10vw, 13rem);
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  /* A key coming back up: expo jumped most of the way in one frame then crept, it rose in two steps */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+
+  /* The colours of the northern lights sliding through the first strip of languages (Intro.tsx): one period
+     of .aurora-ink */
+  --animate-aurora-drift: aurora-drift 26s linear infinite;
+  @keyframes aurora-drift {
+    to {
+      transform: translate3d(-33.3333%, 0, 0);
+    }
+  }
 }
 
 /* Keyboard keys of Mes outils (Keyboard.tsx), each tool in its brand's colour (Simple Icons, Devicon). Static:
@@ -189,6 +204,22 @@ html.dark .keep-light {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Laid over white letters on black with mix-blend-mode darken: the letters take its colours, the black stays
+   black. Three periods wide, repeating, so that sliding by one (aurora-drift) loops */
+.aurora-ink {
+  background: linear-gradient(
+      90deg,
+      var(--color-aurora),
+      var(--color-aurora-teal),
+      var(--color-aurora-violet),
+      var(--color-aurora-pink),
+      var(--color-aurora-violet),
+      var(--color-aurora-teal),
+      var(--color-aurora)
+    )
+    0 0 / 33.3333% 100% repeat-x;
 }
 
 @keyframes menu-rise {

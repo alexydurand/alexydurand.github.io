@@ -5,25 +5,30 @@ import { easeInOut, range } from '../lib/motion';
 import Ghost from '../components/Ghost';
 import useScrollProgress from '../hooks/useScrollProgress';
 import useMediaQuery from '../hooks/useMediaQuery';
+import useNear from '../hooks/useNear';
 import clsx from '../lib/clsx';
 
 function Strip({
   items,
-  className,
   stripRef,
+  aurora,
 }: {
   items: string[];
-  className: string;
   stripRef: React.Ref<HTMLDivElement>;
+  aurora?: boolean;
 }) {
+  // The colours slide only near the screen: a running animation, even out of sight, costs every frame
+  const box = useRef<HTMLDivElement>(null);
+  const near = useNear(box);
   return (
-    <div aria-hidden className="overflow-hidden whitespace-nowrap">
+    <div
+      ref={box}
+      aria-hidden
+      className={clsx('overflow-hidden whitespace-nowrap', aurora && 'bg-coal relative isolate')}
+    >
       <div
         ref={stripRef}
-        className={clsx(
-          'display inline-block text-[clamp(2.25rem,5.2vw,5rem)] leading-[1.05]',
-          className,
-        )}
+        className="display inline-block text-[clamp(2.25rem,5.2vw,5rem)] leading-[1.05] text-white"
       >
         {[...items, ...items, ...items].map((s, i) => (
           <span key={i} className="mr-[0.6em]">
@@ -31,6 +36,15 @@ function Strip({
           </span>
         ))}
       </div>
+      {/* The northern lights' colours in the letters, as on the home page: the darker of the two, so the white letters take the colour and the black stays black */}
+      {aurora && (
+        <div
+          className={clsx(
+            'aurora-ink absolute inset-y-0 left-0 w-[300%] mix-blend-darken',
+            near && 'motion-safe:animate-aurora-drift',
+          )}
+        />
+      )}
     </div>
   );
 }
@@ -190,10 +204,10 @@ export default function Intro() {
             </p>
           </div>
 
-          {/* Languages and tools, data first: that line in the green of the northern lights, the next in white */}
+          {/* Languages and tools, data first: that line in the colours of the northern lights, the next in white */}
           <div className="space-y-1">
-            <Strip items={skills.stripData} className="text-aurora" stripRef={dataStrip} />
-            <Strip items={skills.stripDev} className="text-white" stripRef={devStrip} />
+            <Strip items={skills.stripData} stripRef={dataStrip} aurora />
+            <Strip items={skills.stripDev} stripRef={devStrip} />
           </div>
         </div>
       </div>
