@@ -148,21 +148,25 @@ export default function Intro() {
     return () => gsap.ticker.remove(tick);
   }, [reducedMotion]);
 
-  // The two strips slide in opposite directions with the scroll
+  // The two strips slide in opposite directions with the scroll, at the same speed: the second one, three times as
+  // long, goes the first one's distance in pixels, not the same share of its width
   useEffect(() => {
     const el = wrapper.current;
-    if (!el || reducedMotion) return;
+    const data = dataStrip.current;
+    if (!el || !data || reducedMotion) return;
     const ctx = gsap.context(() => {
-      const st = { trigger: el, start: 'top top', end: 'bottom top', scrub: true };
-      gsap.fromTo(
-        dataStrip.current,
-        { xPercent: -2 },
-        { xPercent: -30, ease: 'none', scrollTrigger: st },
-      );
+      const st = {
+        trigger: el,
+        start: 'top top',
+        end: 'bottom top',
+        scrub: true,
+        invalidateOnRefresh: true,
+      };
+      gsap.fromTo(data, { xPercent: -2 }, { xPercent: -30, ease: 'none', scrollTrigger: st });
       gsap.fromTo(
         devStrip.current,
-        { xPercent: -30 },
-        { xPercent: -2, ease: 'none', scrollTrigger: st },
+        { xPercent: -2, x: () => -0.28 * data.offsetWidth },
+        { xPercent: -2, x: 0, ease: 'none', scrollTrigger: st },
       );
     }, el);
     return () => ctx.revert();
@@ -187,12 +191,14 @@ export default function Intro() {
             </svg>
           </div>
         )}
-        {/* Low on a phone, centred above: either way little room under the strips, Mes outils follows close */}
+        {/* Low on a phone, centred above: either way little room under the strips, Mes outils follows close.
+            As tall as the screen once a phone's address bar has shrunk (lvh): shorter, it left the fixed roses
+            (Hero.tsx) showing under it; the padding keeps the strips above the bar when it is out */}
         <div
           ref={band}
           data-theme="dark"
           style={reducedMotion ? undefined : { clipPath: 'inset(50%)' }}
-          className="bg-coal pointer-events-auto sticky top-0 flex min-h-svh flex-col justify-end gap-16 overflow-hidden pt-24 pb-28 text-white md:justify-center md:gap-24 md:pb-0"
+          className="bg-coal pointer-events-auto sticky top-0 flex min-h-lvh flex-col justify-end gap-16 overflow-hidden pt-24 pb-[calc(7rem+100lvh-100svh)] text-white md:justify-center md:gap-24 md:pb-0"
         >
           <div
             ref={content}

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, type MouseEvent } from 'react';
+import { useCallback, useLayoutEffect, useRef, type MouseEvent } from 'react';
 import { gsap } from '../lib/gsap';
 import { hero, person } from '../data/content';
 import { prefersReducedMotion } from '../lib/motion';
@@ -17,8 +17,9 @@ export default function Hero() {
   const root = useRef<HTMLElement>(null);
   const rise = useRef<HTMLDivElement>(null);
   const roseBox = useRef<HTMLDivElement>(null);
-  // How far the roses' arrival has played, 0 to 1 (Rose.tsx reads it every frame)
+  // How far the roses' arrival has played, 0 to 1 (Rose.tsx reads it every frame), and where their bud grows
   const grow = useRef(1);
+  const bud = useRef<{ x: number; y: number }>(null);
 
   // Before the first paint, so that nothing shows in its final place for a frame
   useLayoutEffect(() => {
@@ -55,10 +56,12 @@ export default function Hero() {
         Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1000))]).then(() => {
           if (cancelled) return;
           ctx.add(() => {
+            // The bud in the middle of the screen; it grows in place, then the whole glides in one move
             const r = box.getBoundingClientRect();
+            const at = bud.current ?? { x: r.width / 2, y: r.height / 2 };
             gsap.set(box, {
-              x: innerWidth / 2 - (r.left + r.width / 2),
-              y: innerHeight / 2 - (r.top + r.height / 2),
+              x: innerWidth / 2 - (r.left + at.x),
+              y: innerHeight / 2 - (r.top + at.y),
             });
             tl.to(grow, { current: 1, duration: BLOOM, ease: 'none' }, 0)
               .to(box, { x: 0, y: 0, duration: 1.2, ease: 'power3.inOut' }, BLOOM - 0.4)
@@ -92,6 +95,10 @@ export default function Hero() {
     };
   }, []);
 
+  const onBud = useCallback((at: { x: number; y: number } | null) => {
+    bud.current = at;
+  }, []);
+
   const toContact = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     scrollToHash('#contact');
@@ -116,7 +123,7 @@ export default function Hero() {
           className="fixed top-20 right-0 h-[calc(100lvh-5rem+35svh)] w-[60%] motion-reduce:absolute [@media(max-aspect-ratio:5/4)]:w-full"
         >
           <div ref={roseBox} className="size-full">
-            <Rose grow={grow} />
+            <Rose grow={grow} onBud={onBud} />
           </div>
         </div>
         <div className="absolute inset-0 overflow-hidden">

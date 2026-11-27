@@ -36,11 +36,24 @@ export const EMPTY = 255;
 
 // World units, the pink flower's foot at 0 (it is about 1.8 wide). The stem, long enough to leave any canvas even
 // shortened by the perspective (it leans away at its foot); where the branch leaves it (down the stem), and where the
-// red flower sits on it, at this size: low, out of the screen until the page scrolls
+// red flower sits on it, at this size: low, out of the screen until the page scrolls. The red one on the left, or on
+// the right when the model is built with `side` -1 (phones)
 const STEM = 14;
 const FORK = 2.1;
 const RED_AT = [-0.6, -1.8, 0.15];
 const RED_SIZE = 0.85;
+// How far the stem bows away from the red flower, then back past its line lower down
+const BOW = 0.3;
+// The leaves down the stem: how far down, which way (1 away from the red flower), how far above the horizontal they
+// point, their length and half width. Away from it while it is beside the stem, then from one side to the other
+const LEAVES = [
+  [0.75, 1, 0.55, 0.62, 0.19],
+  [1.5, 1, 0.45, 0.5, 0.16],
+  [2.6, -1, 0.5, 0.56, 0.17],
+  [3.3, 1, 0.4, 0.56, 0.17],
+  [4.1, -1, 0.45, 0.52, 0.16],
+  [4.9, 1, 0.45, 0.5, 0.15],
+];
 // Height of the bud's centre, which the camera follows until the stem grows
 const HEAD_Y = 0.25;
 // Camera distance, for a light perspective; how far above it looks down (radians), and how far an open flower
@@ -119,6 +132,12 @@ interface Patch {
 }
 
 /** A fixed number from 0 to 1 for each cell, scattered */
+/** The cell (column, row) where the bud grows: the pink flower's heart, kept in place while it grows (render()) */
+const budCell = (g: RoseGrid) => [
+  g.cols / 2 - g.centerX * g.unitX,
+  g.rows / 2 + (g.centerY - HEAD_Y) * g.unitY,
+];
+
 const scatter = (c: number) => {
   const x = Math.sin(c * 12.9898) * 43758.5453;
   return x - Math.floor(x);
@@ -128,7 +147,7 @@ const scatter = (c: number) => {
  * The roses as points, `density` of them per world unit along a surface: about two per cell of the grid, so that a
  * cell rarely stays empty
  */
-export function createRoseModel(density: number) {
+export function createRoseModel(density: number, side = 1) {
   let at = 0;
   const patch = (nu: number, nv: number): Patch => {
     const p = { at, nu, nv };
@@ -146,10 +165,10 @@ export function createRoseModel(density: number) {
       ),
     );
   }
-  // Still: the stem, the branch, two leaves
+  // Still: the stem, the branch, the leaves
   const stem = patch(Math.round(STEM * 110), 10);
   const branch = patch(Math.round(density * 1.6), 10);
-  const leaves = [0, 1].map(() => patch(Math.round(density * 0.8), Math.round(density * 0.45)));
+  const leaves = LEAVES.map(() => patch(Math.round(density * 0.8), Math.round(density * 0.45)));
   // Turning with each flower: five sepals under it, its heart
   const sepals = Array.from({ length: 5 }, () => patch(Math.round(density * 0.45), 6));
   const heart = patch(12, 12);
@@ -315,12 +334,17 @@ export function createRoseModel(density: number) {
   }
 
   /** Where the stem is, `d` world units down from the pink flower */
-  const spine = (d: number) => [0.06 * Math.sin(1.6 * d), -d, 0.03 * Math.sin(2.3 * d)];
-  // The branch, from the stem to the red flower: up and to the left
+  const spine = (d: number) => [
+    side * (BOW * Math.sin(1.1 * d) + 0.04 * Math.sin(2.6 * d)),
+    -d,
+    0.03 * Math.sin(2.3 * d),
+  ];
+  // The branch, from the stem to the red flower: up and towards it
+  const redAt = [side * RED_AT[0], RED_AT[1], RED_AT[2]];
   const fork = spine(FORK);
-  const elbow = [fork[0] - 0.15, fork[1] + 0.4, 0.08];
+  const elbow = [fork[0] - side * 0.15, fork[1] + 0.4, 0.08];
   const twig = (t: number) =>
-    [0, 1, 2].map((i) => (1 - t) ** 2 * fork[i] + 2 * (1 - t) * t * elbow[i] + t * t * RED_AT[i]);
+    [0, 1, 2].map((i) => (1 - t) ** 2 * fork[i] + 2 * (1 - t) * t * elbow[i] + t * t * redAt[i]);
 
   /**
    * The green parts: `grown` 0 to 1 is how far the stem has grown, `out` how far the branch has, `bloom` how far
@@ -340,8 +364,17 @@ export function createRoseModel(density: number) {
       () => 0.024,
     );
     const unfold = easeInOut(range(grown, 0.35, 1));
-    leaf(leaves[0], spine(0.75), 0.3, 0.55, 0.62 * unfold, 0.19 * unfold);
-    leaf(leaves[1], spine(FORK + 0.6), 0.2, 0.4, 0.56 * unfold, 0.17 * unfold);
+    LEAVES.forEach(([d, away, pitch, length, width], i) =>
+      // Pointing a little towards the viewer, on the side away from the red flower or towards it
+      leaf(
+        leaves[i],
+        spine(d),
+        side * away > 0 ? 0.3 : Math.PI - 0.3,
+        pitch,
+        length * unfold,
+        width * unfold,
+      ),
+    );
     sepals.forEach((p, i) =>
       // Hugging the bud, then folding down under the open flower
       leaf(p, [0, 0.02, 0], (i * 2 * Math.PI) / 5 + 0.4, 1.15 - 1.75 * bloom, 0.34, 0.06),
@@ -387,13 +420,14 @@ export function createRoseModel(density: number) {
     if (grow <= 0) return;
     const cx = cols / 2;
     const cy = rows / 2;
-    // The word in the middle, typed, then fading while the bud shows round it
+    // The word where the bud will be, typed, then fading while the bud shows round it
     const word = () => {
       const typed = Math.ceil(range(grow, 0.02, 0.1) * 5);
       const level = Math.round((TONES - 1) * (1 - range(grow, 0.18, 0.32)));
-      const row = Math.floor(cy) * cols;
+      const [hx, hy] = budCell(grid);
+      const row = Math.floor(hy) * cols;
       for (let i = 0; i < typed && level > 0; i++) {
-        const c = row + Math.floor(cx - 2.5) + i;
+        const c = row + Math.floor(hx - 2.5) + i;
         glyph[c] = i;
         tone[c] = PETAL * TONES + level;
       }
@@ -409,10 +443,12 @@ export function createRoseModel(density: number) {
     // From a bud about as wide as the word to the whole rose filling the grid
     const tiny = 5 / (0.6 * unitX);
     const scale = tiny ** (1 - easeInOut(range(grow, 0.15, 0.82)));
-    // The camera, a little above, follows the flower, then frames the whole. Each flower turns on its own axis,
-    // which leans towards the viewer as it opens: its face shows, as in the video; the stem stays upright
-    const tx = scale * grid.centerX * grown;
-    const ty = scale * (HEAD_Y + (grid.centerY - HEAD_Y) * grown);
+    // The camera, a little above, frames the whole from the start: the bud grows where the flower ends up (budCell),
+    // and only the canvas moves it from the middle of the screen (Hero.tsx) — the camera moving as well sent it up
+    // out of the screen and back. Each flower turns on its own axis, which leans towards the viewer as it opens: its
+    // face shows, as in the video; the stem stays upright
+    const tx = grid.centerX;
+    const ty = grid.centerY - HEAD_Y * (1 - scale);
     const lean = TILT + LEAN * bloom;
     // Whitish while small, pink as it grows
     const white = 0.75 * (1 - range(grow, 0.28, 0.55));
@@ -485,8 +521,8 @@ export function createRoseModel(density: number) {
     // The red one on its branch, turning its own way
     if (red > 0) {
       const spin = -1.15 * angle + 2;
-      project(0, stem.at, lean, spin, scale * red, RED_AT, RED);
-      project(sepals[0].at, count, lean, spin, scale * red, RED_AT, RED);
+      project(0, stem.at, lean, spin, scale * red, redAt, RED);
+      project(sepals[0].at, count, lean, spin, scale * red, redAt, RED);
     }
     // The stem, the branch once it grows, the leaves once they unfold
     project(stem.at, branch.at, TILT, 0, scale);
@@ -615,7 +651,8 @@ export function createAsciiRose(canvas: HTMLCanvasElement) {
   /**
    * Lays the grid out at the canvas's size: the pink flower 60% of the screen's height wide (no more than 80% of the
    * canvas), centred across, its top just under the canvas's; the red one and the stem run out below. On a tall
-   * screen (Hero.tsx sets the name under the flowers then) 56% of the width: the red one stays above the name
+   * screen (Hero.tsx sets the name under the flowers then) 56% of the width, its middle at 40% of it, and the red one
+   * on the right: the name on the left hides less of it
    */
   function resize() {
     const w = canvas.clientWidth;
@@ -640,14 +677,14 @@ export function createAsciiRose(canvas: HTMLCanvasElement) {
     const span = tall ? 0.56 * w : Math.min(0.6 * innerHeight, 0.8 * w);
     const unit = (span * dpr) / (box.right - box.left);
     // 1.5 points per cell, at most 80 per unit: more filled no hole and cost too much on a phone (~3 ms an image)
-    model = createRoseModel(Math.min(80, (1.5 * unit) / Math.min(gw, gh)));
+    model = createRoseModel(Math.min(80, (1.5 * unit) / Math.min(gw, gh)), tall ? -1 : 1);
     const pad = 0.02 * height;
     grid = createRoseGrid(
       cols,
       rows,
       unit / gw,
       unit / gh,
-      (box.left + box.right) / 2,
+      (box.left + box.right) / 2 + (tall ? (0.1 * width) / unit : 0),
       box.top - (height / 2 - pad) / unit,
     );
 
@@ -698,5 +735,15 @@ export function createAsciiRose(canvas: HTMLCanvasElement) {
     ctx.restore();
   }
 
-  return { resize, draw };
+  /** Where the bud grows, in CSS pixels from the canvas's top left: Hero.tsx starts it in the middle of the screen */
+  function bud() {
+    if (!grid) return null;
+    const [col, row] = budCell(grid);
+    return {
+      x: (col * gw * canvas.clientWidth) / canvas.width,
+      y: (row * gh * canvas.clientHeight) / canvas.height,
+    };
+  }
+
+  return { resize, draw, bud };
 }

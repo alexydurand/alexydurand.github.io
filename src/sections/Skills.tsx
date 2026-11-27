@@ -19,7 +19,9 @@ export default function Skills() {
       ref={root}
       tabIndex={-1}
       aria-labelledby="skills-title"
-      className="bg-bg pb-24 outline-none md:pb-36"
+      // Positioned, so that it paints over the hero's fixed roses (Hero.tsx): on an iPhone they are still there, for
+      // a moment, once the band above has gone up, and their stem showed through this section's top
+      className="bg-bg relative pb-24 outline-none md:pb-36"
     >
       <div className="frame pt-6 md:pt-8">
         <h2 id="skills-title" data-reveal="0" className="display title-xl">

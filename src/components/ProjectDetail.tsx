@@ -130,9 +130,25 @@ export default function ProjectDetail({
     return () => window.removeEventListener('resize', refit);
   }, [from]);
 
-  const close = async () => {
+  // A finger on the dialog scrolled the page underneath on an iPhone, despite lockScroll: only a box of it that has
+  // something to scroll may take the move (they stop at their ends: overscroll-contain)
+  useEffect(() => {
+    const el = dialog.current;
+    if (!el) return;
+    const onMove = (e: TouchEvent) => {
+      const box = e.target instanceof Element && e.target.closest('[data-lenis-prevent]');
+      if (!box || box.scrollHeight <= box.clientHeight) e.preventDefault();
+    };
+    el.addEventListener('touchmove', onMove, { passive: false });
+    return () => el.removeEventListener('touchmove', onMove);
+  }, []);
+
+  // Closed by the keyboard: the card's button, which takes the focus back, may show its ring then (onClose)
+  const byKeyboard = useRef(false);
+  const close = async (fromKeyboard = false) => {
     if (!from || !dialog.current || !panel.current || !text.current || closing.current) return;
     closing.current = true;
+    byKeyboard.current = fromKeyboard;
     await morph(dialog.current, panel.current, text.current, from, true);
     dialog.current.close();
   };
@@ -148,6 +164,9 @@ export default function ProjectDetail({
 
   const onClose = (e: SyntheticEvent<HTMLDialogElement>) => {
     closing.current = false;
+    // After a tap, the card's button took the focus back with its ring, which an iPhone kept showing on the card
+    const back = document.activeElement;
+    if (!byKeyboard.current && back instanceof HTMLElement && from?.contains(back)) back.blur();
     e.currentTarget.getAnimations({ subtree: true }).forEach((a) => a.cancel());
     setSkillsOpen(false);
     lockScroll(false);
@@ -162,7 +181,7 @@ export default function ProjectDetail({
       onCancel={(e) => {
         e.preventDefault();
         if (skillsOpen) closeSkills(true);
-        else close();
+        else close(true);
       }}
       onClose={onClose}
       onClick={(e) => {
@@ -278,7 +297,8 @@ export default function ProjectDetail({
         <button
           type="button"
           aria-label={ui.closeProject}
-          onClick={close}
+          // A click from the keyboard has no pointer, so detail is 0
+          onClick={(e) => close(e.detail === 0)}
           className="bg-coal focus-visible:ring-aurora absolute top-2 right-2 grid size-11 cursor-pointer place-items-center rounded-full transition-colors outline-none hover:bg-white/15 focus-visible:ring-2"
         >
           <svg aria-hidden viewBox="0 0 24 24" className="size-5 fill-none stroke-current stroke-2">

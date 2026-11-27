@@ -7,6 +7,7 @@ import {
   type PointerEvent,
 } from 'react';
 import { projects, ui, type Project } from '../data/content';
+import useMediaQuery from '../hooks/useMediaQuery';
 import useNear from '../hooks/useNear';
 import clsx from '../lib/clsx';
 import ProjectDetail from './ProjectDetail';
@@ -30,6 +31,9 @@ export default function ProjectStack() {
   const [expanded, setExpanded] = useState<HTMLElement | null>(null);
   const stage = useRef<HTMLDivElement>(null);
   const near = useNear(stage);
+  // On a touch screen only the middle card's keys have walls: a phone struggled with the 3D layers of all six
+  // while a card slid, and the side ones barely show
+  const touch = useMediaQuery('(hover: none)');
   const drag = useRef<{ x: number; step: number; moved: boolean } | null>(null);
   // Set by a drag, so that the click ending it opens nothing
   const dragged = useRef(false);
@@ -70,7 +74,9 @@ export default function ProjectStack() {
       e.currentTarget.setPointerCapture(e.pointerId);
       e.currentTarget.dataset.dragging = '';
     }
-    e.currentTarget.style.setProperty('--drag', String(dx / d.step));
+    // On each card: the variable is not inherited (index.css)
+    for (const card of e.currentTarget.children)
+      (card as HTMLElement).style.setProperty('--drag', String(dx / d.step));
   };
 
   const endDrag = (e: PointerEvent<HTMLDivElement>, apply: boolean) => {
@@ -78,7 +84,8 @@ export default function ProjectStack() {
     drag.current = null;
     if (!d?.moved) return;
     delete e.currentTarget.dataset.dragging;
-    e.currentTarget.style.removeProperty('--drag');
+    for (const card of e.currentTarget.children)
+      (card as HTMLElement).style.removeProperty('--drag');
     if (!apply) return;
     const dx = e.clientX - d.x;
     // A short flick counts as one card
@@ -114,11 +121,9 @@ export default function ProjectStack() {
                 key={p.id}
                 aria-hidden={off !== 0 || undefined}
                 style={{ '--off': off, zIndex: 10 - Math.abs(off) } as CSSProperties}
-                className={clsx(
-                  'stack-card bg-coal absolute inset-0 m-auto flex h-(--card-h) w-(--card-w) flex-col overflow-hidden rounded-2xl border-2 border-white/15 text-white lg:flex-row',
-                  // Not invisible: the button keeps the focus, which the dialog gives back when it closes
-                  off === 0 && expanded && 'opacity-0',
-                )}
+                // Left showing while its details are open: the panel covers it all the way (ProjectDetail). Hidden,
+                // it stayed blank for a while on an iPhone once they had closed
+                className="stack-card bg-coal absolute inset-0 m-auto flex h-(--card-h) w-(--card-w) flex-col overflow-hidden rounded-2xl border-2 border-white/15 text-white lg:flex-row"
               >
                 {/* The picture on the left (on top on a phone), its title and the keys of its tools beside it */}
                 <div aria-hidden className="min-h-0 flex-[0_0_52%] lg:flex-[0_0_62%]">
@@ -132,7 +137,7 @@ export default function ProjectStack() {
                   <p className="sr-only">{p.stack.join(', ')}</p>
                   <ProjectKeys
                     stack={p.stack}
-                    walls={near}
+                    walls={near && (!touch || off === 0)}
                     onOpen={(e) => open(i, e.currentTarget.closest('article'))}
                   />
                 </div>

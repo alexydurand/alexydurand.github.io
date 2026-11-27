@@ -256,13 +256,46 @@ html.dark .keep-light {
   }
 }
 
+/* Not inherited: a card's place changes at every move of a drag, and an inherited variable made the browser recompute
+   the style of everything inside every card (keys included), the bulk of the lag of a drag on a phone */
+@property --off {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+@property --drag {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+@property --p {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+@property --dist {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+@property --near {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+@property --lift {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
 .stack-card {
-  --p: calc(var(--off) + var(--drag, 0));
+  --p: calc(var(--off) + var(--drag));
   --dist: max(var(--p), calc(var(--p) * -1));
   --near: min(var(--dist), 1);
   transform: translate3d(
       calc(var(--p) * var(--card-w) * 0.5),
-      calc(var(--dist) * 0.75rem + var(--lift, 0rem)),
+      calc(var(--dist) * 0.75rem + var(--lift)),
       calc(var(--dist) * -8rem)
     )
     rotateZ(calc(var(--p) * 11deg)) rotateX(calc(var(--near) * 10deg))

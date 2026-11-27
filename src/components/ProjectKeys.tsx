@@ -19,7 +19,8 @@ if (import.meta.env.DEV) {
 /**
  * A project card's tools as keys on a small board turned like Mes outils' keyboard. As there, the key reached by
  * the pointer sinks and stays down until another one takes its place, and its name shows above the board. Laid
- * over the card's button, so a click here opens the card too (onOpen).
+ * over the card's button, so a click here opens the card too (onOpen). On a touch screen they ignore the finger, which
+ * opens the card: a tap both showed a name and opened the card.
  */
 export default function ProjectKeys({
   stack,
@@ -46,7 +47,7 @@ export default function ProjectKeys({
         {picked && (
           <p
             key={picked}
-            className="display text-[clamp(1.75rem,1rem+1.6vw,2.75rem)] leading-none text-balance motion-safe:animate-[menu-rise_0.4s_var(--ease-out-expo)]"
+            className="text-body text-muted leading-none text-balance motion-safe:animate-[menu-rise_0.4s_var(--ease-out-expo)]"
           >
             {picked}
           </p>
@@ -55,7 +56,7 @@ export default function ProjectKeys({
       <div
         aria-hidden
         onClick={onOpen}
-        className="relative z-10 flex cursor-pointer items-end justify-between gap-3 pt-3"
+        className="relative z-10 flex cursor-pointer items-end justify-between gap-3 pt-3 [@media(hover:none)]:pointer-events-none [@media(hover:none)]:**:pointer-events-none!"
       >
         <div className="min-w-0 perspective-[40rem]">
           {/* Keys on a grid, so that they line up: 5 a row on a phone, 3 beside the picture, a two-key name
