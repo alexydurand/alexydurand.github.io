@@ -203,7 +203,8 @@ export default function ProjectDetail({
           <div
             ref={picture}
             aria-hidden
-            className="relative min-h-28 flex-[1_1_13rem] lg:min-h-[min(30rem,75svh)] lg:flex-[1_1_50%]"
+            // Not on a phone: a thin strip of it above the text looked cut off
+            className="relative min-h-28 flex-[1_1_13rem] max-md:hidden lg:min-h-[min(30rem,75svh)] lg:flex-[1_1_50%]"
           >
             <div className="absolute inset-0">
               <ProjectFragment id={p.id} />

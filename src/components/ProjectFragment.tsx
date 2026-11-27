@@ -1,9 +1,12 @@
 import type { Project } from '../data/content';
-import pokevaleur from '../assets/projects/pokevaleur.webp';
+import bomberman from '../assets/projects/bomberman.webp';
+import pokevaleurDesktop from '../assets/projects/pokevaleur-desktop.webp';
+import pokevaleurPhone from '../assets/projects/pokevaleur-phone.webp';
+import pokevaleurTablet from '../assets/projects/pokevaleur-tablet.webp';
 
 /**
- * Each project drawn as a cropped piece of its own interface (HTML/CSS), PokéValeur shown by a real screenshot.
- * Concert, level, teams, rows and stories are sample content.
+ * Each project drawn as a cropped piece of its own interface (HTML/CSS), PokéValeur and Bomberman shown by real
+ * screenshots. Concert, teams, rows and stories are sample content.
  */
 export default function ProjectFragment({ id }: { id: Project['id'] }) {
   switch (id) {
@@ -92,84 +95,37 @@ function BandManager() {
   );
 }
 
-// The real app on my iPhone: its home screen, with the values hidden
+// The real app, in its computer, tablet or phone layout as the card is: each shot has the shape of its card
 function Collection() {
   return (
-    <div className="bg-code flex h-full items-center justify-center p-3 sm:p-4">
+    <picture className="block size-full">
+      <source media="(min-width: 64rem)" srcSet={pokevaleurDesktop} width={1100} height={1171} />
+      <source media="(min-width: 48rem)" srcSet={pokevaleurTablet} width={960} height={516} />
       <img
-        src={pokevaleur}
+        src={pokevaleurPhone}
         alt=""
-        width={590}
-        height={1200}
+        width={900}
+        height={709}
         loading="lazy"
         decoding="async"
-        className="h-full max-w-full rounded-xl object-contain"
+        className="size-full object-cover object-top"
       />
-    </div>
+    </picture>
   );
 }
 
-// The level from above: # wall, B brick, x blast around its bomb X, P player, E enemy, * bonus
-const LEVEL = [
-  '#############',
-  '#P..BB...B.E#',
-  '#.#.#B#x#B#.#',
-  '#..B.xxXxx.B#',
-  '#.#B#.#x#.#B#',
-  '#B..E...*.B.#',
-  '#############',
-];
-const TILE: Record<string, string> = {
-  '#': 'fill-white/25',
-  B: 'fill-white/10',
-  x: 'fill-dot-amber',
-  X: 'fill-dot-red',
-};
-const PIECE: Record<string, string> = {
-  P: 'fill-code-key',
-  E: 'fill-dot-red',
-  '*': 'fill-dot-green',
-};
-const HEART =
-  'M12 21s-7.5-4.6-10-9.3C.4 8.4 2.1 4.5 6 4.5c2.4 0 4.2 1.4 6 3.6 1.8-2.2 3.6-3.6 6-3.6 3.9 0 5.6 3.9 4 7.2-2.5 4.7-10 9.3-10 9.3z';
-
-// The part of the game Alexy built sits on top: hearts and the enemies left
+// The real level in the Godot editor, the only picture left of it: each card crops it to its own shape
 function GodotLevel() {
   return (
-    <Window title="Godot · main.tscn" dark>
-      <div className="flex h-full flex-col gap-3 p-3 sm:p-4">
-        <div className="flex items-center justify-between gap-3">
-          <span className="flex gap-1">
-            {[true, true, false].map((full, i) => (
-              <svg
-                key={i}
-                viewBox="0 0 24 24"
-                className={`size-5 ${full ? 'fill-dot-red' : 'fill-white/15'}`}
-              >
-                <path d={HEART} />
-              </svg>
-            ))}
-          </span>
-          <span className="opacity-75">Ennemis restants : 2</span>
-        </div>
-        <svg viewBox="0 0 13 7" className="min-h-0 w-full flex-1">
-          {LEVEL.flatMap((row, y) =>
-            [...row].map((c, x) => (
-              <g key={`${x}-${y}`}>
-                <rect
-                  x={x + 0.03}
-                  y={y + 0.03}
-                  width={0.94}
-                  height={0.94}
-                  className={TILE[c] ?? 'fill-code-bar'}
-                />
-                {PIECE[c] && <circle cx={x + 0.5} cy={y + 0.5} r={0.3} className={PIECE[c]} />}
-              </g>
-            )),
-          )}
-        </svg>
-      </div>
-    </Window>
+    <img
+      src={bomberman}
+      alt=""
+      width={1202}
+      height={537}
+      loading="lazy"
+      decoding="async"
+      className="size-full object-cover"
+    />
   );
 }
 
