@@ -18,7 +18,8 @@ const at = (i: number): CSSProperties => ({
  * One key cap standing on a board turned in 3D: its walls, then its dished top with the tool's logo (or a label).
  * The parent gives its size and --k (the side of a square key), sets `pointer-events-none` and the `group`
  * class: only the top at rest catches the pointer, so a key sinking under it stays hovered (it flickered).
- * `pressed` keeps it down; else it sinks while hovered, focused or pressed.
+ * Without `pressed` it sinks while its group is hovered, focused or pressed; with it, `pressed` alone says (false: it
+ * never moves).
  */
 export default function Keycap({
   logo,
@@ -47,8 +48,9 @@ export default function Keycap({
         className={clsx(
           'ease-out-quart pointer-events-none absolute inset-0 transition-transform duration-300 transform-3d',
           pressed
-            ? 'ease-out-expo scale-z-[0.53] duration-150'
-            : 'group-hover:ease-out-expo group-focus-visible:ease-out-expo group-hover:scale-z-[0.53] group-hover:duration-150 group-focus-visible:scale-z-[0.53] group-focus-visible:duration-150 group-active:scale-z-[0.42] group-active:duration-75',
+            ? 'ease-out-expo scale-z-[0.53] duration-150 group-active:scale-z-[0.42] group-active:duration-75'
+            : pressed === undefined &&
+                'group-hover:ease-out-expo group-focus-visible:ease-out-expo group-hover:scale-z-[0.53] group-hover:duration-150 group-focus-visible:scale-z-[0.53] group-focus-visible:duration-150 group-active:scale-z-[0.42] group-active:duration-75',
         )}
       >
         {walls &&

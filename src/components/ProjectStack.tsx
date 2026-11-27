@@ -6,13 +6,12 @@ import {
   type KeyboardEvent,
   type PointerEvent,
 } from 'react';
-import { projects, skills, ui, type Project } from '../data/content';
+import { projects, ui, type Project } from '../data/content';
 import useNear from '../hooks/useNear';
 import clsx from '../lib/clsx';
-import { keyGlyph } from '../lib/keys';
-import Keycap from './Keycap';
 import ProjectDetail from './ProjectDetail';
 import ProjectFragment from './ProjectFragment';
+import ProjectKeys from './ProjectKeys';
 
 const COUNT = projects.length;
 const wrap = (i: number) => ((i % COUNT) + COUNT) % COUNT;
@@ -21,18 +20,6 @@ const offset = (i: number, active: number) => {
   const half = Math.floor(COUNT / 2);
   return wrap(i - active + half) - half;
 };
-
-// Each tool's key: those of the keyboard (Mes outils), then those of the cards only
-const KEYS = new Map(
-  [...skills.groups.flatMap((g) => g.items), skills.vibe.tool, ...skills.extra].map((t) => [
-    t.name,
-    t.logo,
-  ]),
-);
-if (import.meta.env.DEV) {
-  for (const name of projects.flatMap((p) => p.stack))
-    console.assert(KEYS.has(name), `Pas de touche pour ${name} (skills.extra)`);
-}
 
 const ARROW =
   'grid size-11 cursor-pointer place-items-center rounded-full transition-colors hover:bg-ink/10';
@@ -48,6 +35,12 @@ export default function ProjectStack() {
   const dragged = useRef(false);
 
   const go = (i: number) => setActive(wrap(i));
+  // A click on a card (not the end of a drag): the middle one opens, a side one comes to the middle
+  const open = (i: number, card: HTMLElement | null) => {
+    if (dragged.current) return;
+    if (offset(i, active) === 0) setExpanded(card);
+    else go(i);
+  };
 
   // The skills review opens a project out of its own link, without coming back up here
   useEffect(() => {
@@ -137,49 +130,18 @@ export default function ProjectStack() {
                     {p.title}
                   </h3>
                   <p className="sr-only">{p.stack.join(', ')}</p>
-                  <div aria-hidden className="mt-auto flex items-end justify-between gap-3 pt-3">
-                    <div className="min-w-0 perspective-[40rem]">
-                      {/* Keys on a grid, so that they line up: 5 a row on a phone, 3 beside the picture, a
-                          two-key name filling a hole further back if need be. --k lets them
-                          fit the text column, whatever the width of the card. On a board turned like
-                          Mes outils' keyboard, so that their sides show, and less lit */}
-                      <div className="bg-surface grid origin-bottom rotate-x-[34deg] -rotate-z-8 grid-flow-row-dense grid-cols-[repeat(5,var(--k))] gap-[calc(var(--k)*0.18)] rounded-[calc(var(--k)*0.32)] p-[calc(var(--k)*0.2)] text-[calc(var(--k)*0.28)] shadow-[0_1rem_2rem_rgb(0_0_0/0.6)] [--k:min(2.75rem,calc((var(--card-w)_-_4.75rem)/6.12))] [--shine:0.14] transform-3d lg:grid-cols-[repeat(3,var(--k))] lg:[--k:min(2.75rem,calc((var(--card-w)*0.38_-_5.25rem)/3.76))]">
-                        {p.stack.map((name) => {
-                          const logo = KEYS.get(name);
-                          return (
-                            <span
-                              key={name}
-                              // A name in place of a logo takes two keys' room
-                              className={clsx(
-                                'relative h-(--k) transform-3d',
-                                !keyGlyph(logo) && name.length > 3 && 'col-span-2',
-                              )}
-                            >
-                              <Keycap logo={logo} label={name} walls={near} />
-                            </span>
-                          );
-                        })}
-                      </div>
-                    </div>
-                    <svg
-                      aria-hidden
-                      viewBox="0 0 24 24"
-                      className="size-6 shrink-0 fill-none stroke-current stroke-2"
-                    >
-                      <path d="M12 4v16M4 12h16" />
-                    </svg>
-                  </div>
+                  <ProjectKeys
+                    stack={p.stack}
+                    walls={near}
+                    onOpen={(e) => open(i, e.currentTarget.closest('article'))}
+                  />
                 </div>
                 <button
                   type="button"
                   tabIndex={off === 0 ? 0 : -1}
                   aria-haspopup={off === 0 ? 'dialog' : undefined}
                   aria-label={`${ui.seeProject} ${p.title}`}
-                  onClick={(e) => {
-                    if (dragged.current) return;
-                    if (off === 0) setExpanded(e.currentTarget.parentElement);
-                    else go(i);
-                  }}
+                  onClick={(e) => open(i, e.currentTarget.parentElement)}
                   className="focus-visible:ring-aurora absolute inset-0 cursor-pointer rounded-2xl outline-none focus-visible:ring-4 focus-visible:ring-inset"
                 />
               </article>

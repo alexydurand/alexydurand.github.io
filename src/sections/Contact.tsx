@@ -1,5 +1,7 @@
-import { useRef } from 'react';
+import { useRef, type CSSProperties } from 'react';
 import { contact, person, ui } from '../data/content';
+import Keycap from '../components/Keycap';
+import useNear from '../hooks/useNear';
 import useReveal from '../hooks/useReveal';
 import clsx from '../lib/clsx';
 
@@ -38,6 +40,8 @@ function Arrow({ className }: { className?: string }) {
 export default function Contact() {
   const root = useRef<HTMLElement>(null);
   useReveal(root);
+  // The key's walls only near the screen, like every key
+  const near = useNear(root);
 
   return (
     <section
@@ -47,25 +51,33 @@ export default function Contact() {
       aria-labelledby="contact-title"
       className="bg-bg outline-none"
     >
-      <div
-        data-theme="dark"
-        className="frame bg-coal flex min-h-[150px] items-end justify-between gap-6 pt-10 pb-5 text-white max-md:min-h-[96px]"
-      >
-        <h2
-          id="contact-title"
-          data-reveal="0"
-          className="display text-[2.75rem] leading-none md:text-[clamp(2.75rem,6vw,5.5rem)]"
-        >
-          {contact.greeting}
-        </h2>
+      {/* A row like the ones below: hovering it shifts the words, presses the key and turns its arrow right */}
+      <h2 id="contact-title" data-theme="dark" className="bg-coal text-white">
         <a
           href={`mailto:${person.email}`}
-          aria-label={`${ui.writeTo} ${person.email}`}
-          className="group text-coal ease-out-expo mb-1 grid size-14 shrink-0 place-items-center rounded-full bg-white transition-transform duration-300 hover:scale-110 md:size-[clamp(3.5rem,5vw,5rem)]"
+          className="group frame flex min-h-[150px] items-end justify-between gap-6 pt-10 pb-5 max-md:min-h-[96px]"
         >
-          <Arrow className="ease-out-expo size-1/2 transition-transform duration-300 group-hover:rotate-45" />
+          <span data-reveal="0" className="block min-w-0">
+            <span className="display ease-out-expo block text-[2.75rem] leading-none transition-transform duration-500 group-hover:translate-x-[2vw] motion-reduce:group-hover:translate-x-0 md:text-[clamp(2.75rem,6vw,5.5rem)]">
+              {contact.greeting}
+            </span>
+          </span>
+          {/* A light key of the keyboard (Mes outils), turned a little, like those of Mes loisirs */}
+          <span
+            aria-hidden
+            style={{ '--key': 'var(--color-ink)' } as CSSProperties}
+            className="pointer-events-none relative mb-1 size-(--k) shrink-0 [transform:perspective(40rem)_rotateX(28deg)] [--k:3.5rem] transform-3d md:[--k:clamp(3.5rem,5vw,5rem)]"
+          >
+            <Keycap
+              light
+              walls={near}
+              label={
+                <Arrow className="ease-out-expo size-[46%] transition-transform duration-300 group-hover:rotate-45 motion-reduce:transition-none" />
+              }
+            />
+          </span>
         </a>
-      </div>
+      </h2>
 
       <ul>
         {rows().map((row, i) => (

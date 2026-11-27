@@ -29,7 +29,7 @@ export const nav = [
 
 /* ---------- Compétences ---------- */
 
-// logo = file name in src/assets/logos (without .svg)
+// logo = file name in src/assets/logos (without .svg). On the keyboard (Mes outils), note = what I did with it
 export type Skill = { name: string; logo: string };
 
 export const skills = {
@@ -58,55 +58,119 @@ export const skills = {
       title: 'Données',
       lead: true,
       items: [
-        { name: 'Oracle SQL', logo: 'sqldeveloper' },
-        { name: 'Power BI', logo: 'powerbi' },
-        { name: 'SharePoint', logo: 'sharepoint' },
-        { name: 'Neo4j', logo: 'neo4j' },
+        {
+          name: 'Oracle SQL',
+          logo: 'sqldeveloper',
+          note: 'Une base relationnelle tirée d’un cahier des charges : tables, contraintes et requêtes.',
+        },
+        {
+          name: 'Power BI',
+          logo: 'powerbi',
+          note: 'Chez Orange, un rapport complet pour analyser l’inventaire du parc de serveurs.',
+        },
+        {
+          name: 'SharePoint',
+          logo: 'sharepoint',
+          note: 'Chez Orange, la source de données de mes deux applications Power Apps.',
+        },
+        {
+          name: 'Neo4j',
+          logo: 'neo4j',
+          note: 'Les bases orientées graphe, que j’apprends en ce moment.',
+        },
       ],
-      note: 'Conception de bases relationnelles, rapports et tableaux de bord.',
     },
     {
       title: 'Web',
       items: [
-        { name: 'HTML', logo: 'html5' },
-        { name: 'CSS', logo: 'css3' },
-        { name: 'JavaScript', logo: 'javascript' },
-        { name: 'TypeScript', logo: 'typescript' },
-        { name: 'PHP', logo: 'php' },
-        { name: 'React', logo: 'react' },
-        { name: 'Vue', logo: 'vue' },
-        { name: 'Node.js', logo: 'nodejs' },
-        { name: 'Express', logo: 'express' },
+        {
+          name: 'HTML',
+          logo: 'html5',
+          note: 'Chez Orange, un site de sensibilisation cyber diffusé sur les canaux internes.',
+        },
+        {
+          name: 'CSS',
+          logo: 'css3',
+          note: 'La mise en forme du site cyber d’Orange, et des pages responsive dès mes premiers projets.',
+        },
+        {
+          name: 'JavaScript',
+          logo: 'javascript',
+          note: 'Les éléments interactifs du site cyber d’Orange.',
+        },
+        {
+          name: 'TypeScript',
+          logo: 'typescript',
+          note: 'Mes deux projets perso, PokéValeur et ce portfolio, sont écrits en TypeScript.',
+        },
+        {
+          name: 'PHP',
+          logo: 'php',
+          note: 'Un site dynamique relié à une base de données, en cours à l’IUT.',
+        },
+        {
+          name: 'React',
+          logo: 'react',
+          note: 'Le front du portfolio full-stack de mon stage, puis PokéValeur et ce site.',
+        },
+        {
+          name: 'Vue',
+          logo: 'vue',
+          note: 'Le front de l’application Kill Keny, avec Pinia pour son état.',
+        },
+        {
+          name: 'Node.js',
+          logo: 'nodejs',
+          note: 'Le back du portfolio full-stack de mon stage, puis celui de Kill Keny.',
+        },
+        {
+          name: 'Express',
+          logo: 'express',
+          note: 'Des API REST, dont la connexion de Kill Keny : bcrypt et JWT en cookie httpOnly.',
+        },
       ],
-      note: 'Sites responsive, API REST, front et back.',
     },
     {
       title: 'Développement',
       items: [
-        { name: 'Java', logo: 'java' },
-        { name: 'Python', logo: 'python' },
-        { name: 'Godot', logo: 'godot' },
-        { name: 'Power Apps', logo: 'powerapps' },
-        { name: 'Power Automate', logo: 'powerautomate' },
-        { name: 'Git', logo: 'git' },
+        {
+          name: 'Java',
+          logo: 'java',
+          note: 'Une application de gestion de tournois e-sport, avec son interface graphique.',
+        },
+        { name: 'Python', logo: 'python', note: 'Mes premiers algorithmes, en cours à l’IUT.' },
+        {
+          name: 'Godot',
+          logo: 'godot',
+          note: 'Un Bomberman 3D à quatre : j’y ai codé la boucle de jeu, des vies à la fin de partie.',
+        },
+        {
+          name: 'Power Apps',
+          logo: 'powerapps',
+          note: 'Deux applications métier construites pendant mon stage chez Orange.',
+        },
+        {
+          name: 'Power Automate',
+          logo: 'powerautomate',
+          note: 'Les flux automatisés derrière mes applications Power Apps chez Orange.',
+        },
+        {
+          name: 'Git',
+          logo: 'git',
+          note: 'Branches et pull requests à cinq sur Kill Keny, code partagé à quatre sur Bomberman.',
+        },
       ],
-      note: 'Programmation objet, jeu 3D sous Godot, applications métier low-code, versionnage avec Git.',
     },
-  ] satisfies { title: string; lead?: boolean; items: Skill[]; note: string }[],
+  ] satisfies { title: string; lead?: boolean; items: (Skill & { note: string })[] }[],
   // Above the keyboard until a key is hovered or pressed
   hint: 'Appuie sur une touche',
   vibe: {
     title: 'Vibe coding',
-    tool: { name: 'Claude Code', logo: 'claude' },
-    // Each point: the practice, then what it means
-    items: [
-      ['Prompting', 'décrire précisément le besoin, avec le contexte et des références visuelles'],
-      [
-        'Skills et plugins',
-        'outiller l’agent pour le design, l’accessibilité et la qualité du code',
-      ],
-      ['Review et correction', 'relire chaque version et faire corriger jusqu’au résultat voulu'],
-    ],
+    tool: {
+      name: 'Claude Code',
+      logo: 'claude',
+      note: 'Ce portfolio et PokéValeur, construits en vibe coding : prompts précis, skills et relecture de chaque version.',
+    },
   },
   // Keys of the project cards only (ProjectStack): their tools that are not on the keyboard. Without a logo
   // in src/assets/keys or logos, the key shows the name
@@ -677,7 +741,6 @@ export const ui = {
   orangeLogo: 'Logo Orange',
   missions: 'Mes missions',
   seeSite: 'Voir le site',
-  writeTo: 'Écrire à',
   email: 'E-mail',
   map: 'Carte',
   travel: 'Photos de voyage',

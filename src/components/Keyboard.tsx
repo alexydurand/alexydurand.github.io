@@ -6,12 +6,8 @@ import Keycap from './Keycap';
 type Tool = { name: string; logo: string; group: string; note: string };
 // Every tool, family after family, then the AI one
 const TOOLS: Tool[] = [
-  ...skills.groups.flatMap((g) => g.items.map((s) => ({ ...s, group: g.title, note: g.note }))),
-  {
-    ...skills.vibe.tool,
-    group: skills.vibe.title,
-    note: skills.vibe.items.map(([term]) => term).join(' · '),
-  },
+  ...skills.groups.flatMap((g) => g.items.map((s) => ({ ...s, group: g.title }))),
+  { ...skills.vibe.tool, group: skills.vibe.title },
 ];
 // Every name at the size of the longest one, so that it fits on one line
 const LONGEST = Math.max(...TOOLS.map((t) => t.name.length));
@@ -20,7 +16,7 @@ const COLS = 5;
 /**
  * The tools as a keyboard turned in 3D, after a Skills page seen on video: one key per tool in its brand's
  * colour (--color-key-*). On the left, the family and name of the key under the pointer (or focused, or
- * pressed). The key under the pointer sinks into the board.
+ * pressed), with what I did with it. That key sinks into the board and stays down until another one is reached.
  */
 export default function Keyboard() {
   const [active, setActive] = useState<Tool | null>(null);
@@ -74,7 +70,8 @@ export default function Keyboard() {
               onPointerDown={() => setActive(t)}
               className="group pointer-events-none relative size-(--k) cursor-pointer transform-3d"
             >
-              <Keycap logo={t.logo} walls={near} />
+              {/* The last key reached stays down, until another one takes its place */}
+              <Keycap logo={t.logo} walls={near} pressed={active === t} />
             </button>
           ))}
         </div>

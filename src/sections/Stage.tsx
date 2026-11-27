@@ -140,17 +140,17 @@ export default function Stage() {
                     )}
                   />
                 ))}
-                {/* Its tools as keys of the keyboard (Mes outils), turned a little; hovering the card presses them */}
+                {/* Its tools as keys on a small board turned like Mes outils' keyboard, less lit; they stay still */}
                 <div aria-hidden className="perspective-[40rem]">
                   <div
                     style={{ '--k': '2.75rem' } as CSSProperties}
-                    className="flex origin-bottom rotate-x-[28deg] flex-wrap gap-[calc(var(--k)*0.18)] transform-3d"
+                    className="bg-coal flex w-fit origin-bottom-left rotate-x-[34deg] -rotate-z-8 flex-wrap gap-[calc(var(--k)*0.18)] rounded-[calc(var(--k)*0.32)] p-[calc(var(--k)*0.2)] shadow-[0_1rem_2rem_rgb(0_0_0/0.6)] [--shine:0.14] transform-3d"
                   >
                     {m.tools
                       .filter((t) => SKILL[t])
                       .map((t) => (
                         <span key={t} className="relative size-(--k) transform-3d">
-                          <Keycap logo={SKILL[t].logo} walls={near} />
+                          <Keycap logo={SKILL[t].logo} walls={near} pressed={false} />
                         </span>
                       ))}
                   </div>
