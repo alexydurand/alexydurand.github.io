@@ -67,6 +67,14 @@
   }
 }
 
+/* The ASCII roses of the home page (lib/asciiRose.ts): the pink one, the red one, their heart; the stem in aurora.
+   Static: read only by the canvas */
+@theme static {
+  --color-rose: #e8679a;
+  --color-rose-red: #e0313f;
+  --color-rose-heart: #f5c542;
+}
+
 /* Keyboard keys of Mes outils (Keyboard.tsx), each tool in its brand's colour (Simple Icons, Devicon). Static:
    only read through --key, never by a class, Tailwind would leave them out otherwise */
 @theme static {

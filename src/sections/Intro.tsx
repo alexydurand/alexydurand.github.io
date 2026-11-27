@@ -94,7 +94,7 @@ export default function Intro() {
     const box = content.current;
     const resident = ghost.current;
     const line = outline.current;
-    // Two places for it (Hero.tsx), one shown at a time: after the last name, or after the first on two lines
+    // Its place after the last name (Hero.tsx)
     const slots = [...document.querySelectorAll<HTMLElement>('[data-ghost]')];
     const block = document.querySelector<HTMLElement>('[data-hero-title]');
     if (!el || !box || !resident || !line || !slots.length || !block || reducedMotion) return;
@@ -107,7 +107,7 @@ export default function Intro() {
       if (p >= 1 && done) return;
       done = p >= 1;
       // At rest nothing moves: skip the layout reads below, they ran on every frame. The ghost's place moves
-      // by itself during the hero's entrance and the ghost's intro (Hero.tsx)
+      // by itself during the hero's entrance (Hero.tsx)
       const key = `${p} ${window.scrollY} ${window.innerWidth} ${window.innerHeight} ${slots.map((s) => s.style.transform + s.style.opacity).join()}`;
       if (key === last && performance.now() > settled) return;
       last = key;

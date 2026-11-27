@@ -8,7 +8,7 @@ const MAX_PIXELS = 1_000_000;
 // Without motion, the sky as it is at this moment
 const STILL = 40;
 
-/** Northern lights behind the name on the home page (lib/aurora.ts), drawn only while on screen. */
+/** Northern lights of the footer (lib/aurora.ts), drawn only while on screen. */
 export default function Aurora() {
   const canvas = useRef<HTMLCanvasElement>(null);
 

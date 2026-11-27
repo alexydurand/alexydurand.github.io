@@ -1,114 +1,69 @@
 import { useLayoutEffect, useRef, type MouseEvent } from 'react';
 import { gsap } from '../lib/gsap';
 import { hero, person } from '../data/content';
-import { easeInOut, prefersReducedMotion, range } from '../lib/motion';
+import { prefersReducedMotion } from '../lib/motion';
 import { scrollToHash } from '../lib/scroll';
-import Aurora from '../components/Aurora';
-import clsx from '../lib/clsx';
+import Rose from '../components/Rose';
 
 // Each word rises out of a line just under its letters (room for the descender of the y)
 const mask = 'inline-block [clip-path:inset(-0.3em_-0.1em_-0.25em)]';
-// The ghost in place of a ®: after the last name on one line, after the first name on two (tall screens), where
-// it stands a little bigger above the final d of the last name. The next band grows out of the one shown (Intro.tsx)
-const ghost = 'ghost-shape motion-reduce:bg-ink relative ml-[0.05em] aspect-[231/289]';
 
-// When the name starts to rise after the ghost's intro (s): while the ghost comes back up to its place
-const INTRO_END = 1.6;
-const INTRO_SEEN = 'intro-fantome';
-let introSeen: boolean | undefined;
-/** The ghost's intro plays once per visit (per tab). Read once per page load: StrictMode runs effects twice. */
-function firstIntro() {
-  if (introSeen === undefined) {
-    try {
-      // Not either when the page comes back scrolled down: the hero is out of sight
-      introSeen = !!sessionStorage.getItem(INTRO_SEEN) || window.scrollY > 0;
-      sessionStorage.setItem(INTRO_SEEN, '1');
-    } catch {
-      introSeen = true;
-    }
-  }
-  return !introSeen;
-}
-
-/**
- * On the black screen the ghost pops up big in the middle, then flies one loop, half a figure of eight: down to
- * the left, back up, and on to its place after the name, shrinking as it lands while the name rises (from
- * INTRO_END on the timeline). Intro.tsx draws it where its place is.
- */
-function ghostIntro(tl: gsap.core.Timeline, slots: HTMLElement[]) {
-  const slot = slots.find((s) => s.offsetWidth) ?? slots[0];
-  // Scaled to 0 about its centre, which is still the centre of its place: x/y from there to the screen's centre
-  const r = slot.getBoundingClientRect();
-  const cx = innerWidth / 2 - (r.left + r.width / 2);
-  const cy = innerHeight / 2 - (r.top + r.height / 2);
-  const big = Math.min(innerWidth * 0.3, 150) / slot.offsetHeight;
-  const w = Math.min(innerWidth * 0.32, 320);
-  const setX = gsap.quickSetter(slot, 'x', 'px');
-  const setY = gsap.quickSetter(slot, 'y', 'px');
-  // Not 'scale', which a quick setter does not take
-  const setScaleX = gsap.quickSetter(slot, 'scaleX');
-  const setScaleY = gsap.quickSetter(slot, 'scaleY');
-  const loop = { u: 0 };
-  gsap.set(slot, { x: cx, y: cy });
-  tl.to(slots, { scale: big, opacity: 1, duration: 0.5, ease: 'back.out(2)' }, 0)
-    .to(
-      loop,
-      {
-        u: 1,
-        duration: 1.8,
-        ease: 'sine.inOut',
-        onUpdate: () => {
-          // The left half of the figure of eight (x = w sin a, y = w/2 sin 2a), its end drawn from the
-          // centre of the screen to the ghost's place over the last two thirds
-          const a = Math.PI * (1 + loop.u);
-          const k = easeInOut(range(loop.u, 0.3, 1));
-          setX(cx * (1 - k) + w * Math.sin(a));
-          setY(cy * (1 - k) + (w / 2) * Math.sin(2 * a));
-          if (k > 0) {
-            setScaleX(big + (1 - big) * k);
-            setScaleY(big + (1 - big) * k);
-          }
-        },
-      },
-      0.35,
-    )
-    // The other place too, out of sight, in case the layout switches
-    .set(slots, { scale: 1, opacity: 1 }, '>')
-    .play();
-}
+// How long the roses take to bloom in the middle of the screen (s), before they move aside
+const BLOOM = 2.4;
+// Share of the scroll the roses follow while the home page leaves (their box reaches 35svh below the screen)
+const RISE = 0.35;
 
 export default function Hero() {
   const root = useRef<HTMLElement>(null);
+  const rise = useRef<HTMLDivElement>(null);
+  const roseBox = useRef<HTMLDivElement>(null);
+  // How far the roses' arrival has played, 0 to 1 (Rose.tsx reads it every frame)
+  const grow = useRef(1);
 
   // Before the first paint, so that nothing shows in its final place for a frame
   useLayoutEffect(() => {
     const el = root.current;
-    if (!el || prefersReducedMotion()) return;
-    const intro = firstIntro();
-    const slots = gsap.utils.toArray<HTMLElement>('[data-ghost]', el);
+    const box = roseBox.current;
+    if (!el || !box || prefersReducedMotion()) return;
+    // On every load, unless the page comes back scrolled down: the hero is out of sight
+    const intro = window.scrollY === 0;
     let cancelled = false;
     let stopSkip = () => {};
     const ctx = gsap.context(() => {
-      // Arrival, after the Velde site: the name rises in the middle of the black screen and its ghost
-      // pops up in place of a ®; then the bar and the buttons appear. After the ghost's intro, if it plays
-      const at = intro ? INTRO_END : 0;
+      // Arrival, after the Velde site: the name rises out of its line and its ghost pops up in place of a ®;
+      // then the bar and the buttons appear. Once the roses have bloomed and move aside
+      const at = intro ? BLOOM : 0;
       const tl = gsap
         .timeline({ defaults: { ease: 'expo.out' }, paused: intro })
         .from('[data-hero-word]', { yPercent: 140, duration: 1, stagger: 0.08 }, at)
-        .from('[data-aurora]', { opacity: 0, duration: 3, ease: 'power1.inOut' }, at + 0.3)
+        .from(
+          '[data-ghost]',
+          { scale: 0, opacity: 0, duration: 0.7, ease: 'back.out(2.5)' },
+          at + 0.45,
+        )
         .from(
           [document.querySelector('header'), '[data-hero-actions]'],
-          { opacity: 0, duration: 0.9 },
-          at + 1.1,
+          { opacity: 0, duration: 0.8 },
+          at + 0.8,
         );
-      if (!intro)
-        tl.from(slots, { scale: 0, opacity: 0, duration: 0.7, ease: 'back.out(2.5)' }, 0.45);
+      if (!intro) tl.from(box, { opacity: 0, duration: 1.2, ease: 'power1.inOut' }, 0.2);
       else {
-        gsap.set(slots, { scale: 0, opacity: 0 });
-        // Once the font is there (a second at most), so that the place the ghost flies to does not move
+        // On the black screen the word "alexy" appears in the middle and blooms into the roses (Rose.tsx), which
+        // then glide to their place beside the name
+        grow.current = 0;
+        // Once the font is there (a second at most), so that their place does not move under them
         Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1000))]).then(() => {
           if (cancelled) return;
-          ctx.add(() => ghostIntro(tl, slots));
+          ctx.add(() => {
+            const r = box.getBoundingClientRect();
+            gsap.set(box, {
+              x: innerWidth / 2 - (r.left + r.width / 2),
+              y: innerHeight / 2 - (r.top + r.height / 2),
+            });
+            tl.to(grow, { current: 1, duration: BLOOM, ease: 'none' }, 0)
+              .to(box, { x: 0, y: 0, duration: 1.2, ease: 'power3.inOut' }, BLOOM - 0.4)
+              .play();
+          });
           // A click, a scroll or a key skips to the end
           const events = ['wheel', 'touchstart', 'keydown', 'pointerdown'];
           const skip = () => {
@@ -121,11 +76,13 @@ export default function Hero() {
         });
       }
 
-      // The name lags behind the scroll
-      gsap.to('[data-layer="title"]', {
-        yPercent: 40,
+      // The name lags behind the scroll; the roses, fixed, rise slower still (see below)
+      const scrollTrigger = { trigger: el, start: 'top top', end: 'bottom top', scrub: 0 };
+      gsap.to('[data-layer="title"]', { yPercent: 40, ease: 'none', scrollTrigger });
+      gsap.to(rise.current, {
+        y: () => -RISE * el.offsetHeight,
         ease: 'none',
-        scrollTrigger: { trigger: el, start: 'top top', end: 'bottom top', scrub: 0 },
+        scrollTrigger: { ...scrollTrigger, invalidateOnRefresh: true },
       });
     }, el);
     return () => {
@@ -149,49 +106,53 @@ export default function Hero() {
       className="bg-coal relative"
     >
       <div className="relative h-svh min-h-[560px]">
+        {/* The roses on the right, under the bar, the red one and the stem running out at the bottom; on a tall
+            screen across, the flowers above the name, the rest behind it. Fixed, rising only RISE of the scroll (their
+            canvas reaches as far below the screen) to show the red one, until the band grown from the ghost
+            (Intro.tsx), painted over them, covers them; Rose.tsx hides them once the home page has left. lvh: the
+            size does not change with a phone's address bar. Before the clipped box below, which paints over them */}
+        <div
+          ref={rise}
+          className="fixed top-20 right-0 h-[calc(100lvh-5rem+35svh)] w-[60%] motion-reduce:absolute [@media(max-aspect-ratio:5/4)]:w-full"
+        >
+          <div ref={roseBox} className="size-full">
+            <Rose grow={grow} />
+          </div>
+        </div>
         <div className="absolute inset-0 overflow-hidden">
-          <Aurora />
-          {/* In the middle of the screen, a little above for the eye; on a tall screen on two lines */}
-          <div data-layer="title" className="absolute inset-0 grid place-items-center pb-[8svh]">
+          {/* The name on the left; on a tall screen under the flowers. A little above the middle for the eye, clear
+              of the buttons below */}
+          <div
+            data-layer="title"
+            className="frame absolute inset-0 grid grid-cols-2 items-center pb-[8svh] md:pl-[calc(var(--spacing-gutter)+3vw)] [@media(max-aspect-ratio:5/4)]:grid-cols-1 [@media(max-aspect-ratio:5/4)]:grid-rows-[1fr_auto] [@media(max-aspect-ratio:5/4)]:gap-[3svh] [@media(max-aspect-ratio:5/4)]:pt-[14svh] [@media(max-aspect-ratio:5/4)]:pb-[26svh]"
+          >
             {/* --t: size of the name */}
             <div
               data-hero-title
-              className="frame text-ink text-center [--t:clamp(2.75rem,12.5vw,13rem)] [@media(max-aspect-ratio:5/4)]:[--t:min(28vw,12.5svh)]"
+              className="text-ink [--t:min(13vw,24svh)] [@media(max-aspect-ratio:5/4)]:row-start-2 [@media(max-aspect-ratio:5/4)]:[--t:min(24vw,11svh)]"
             >
-              {/* Centred as a block, its two lines (tall screens) aligned on the left */}
-              <h1
-                id="hero-title"
-                className="display inline-block text-left text-(length:--t) font-bold whitespace-nowrap"
-              >
+              <h1 id="hero-title" className="display text-(length:--t) font-bold whitespace-nowrap">
                 <span className="sr-only">
                   {person.firstName} {person.lastName}
                 </span>
                 <span aria-hidden>
-                  <span className={mask}>
-                    <span data-hero-word className="inline-block">
-                      {person.firstName}
+                  <span className="block">
+                    <span className={mask}>
+                      <span data-hero-word className="inline-block">
+                        {person.firstName}
+                      </span>
                     </span>
                   </span>
-                  <span
-                    data-ghost
-                    className={clsx(
-                      ghost,
-                      // Shifted by `left`, not a margin: the first line must stay narrower than the last name
-                      '-top-[0.32em] left-[0.25em] hidden h-[0.44em] [@media(max-aspect-ratio:5/4)]:inline-block',
-                    )}
-                  />{' '}
-                  <span className="[@media(max-aspect-ratio:5/4)]:block">
+                  <span className="block">
                     <span className={mask}>
                       <span data-hero-word className="inline-block">
                         {person.lastName}
                       </span>
                     </span>
+                    {/* The ghost in place of a ®: the next band grows out of it (Intro.tsx) */}
                     <span
                       data-ghost
-                      className={clsx(
-                        ghost,
-                        '-top-[0.38em] inline-block h-[0.34em] [@media(max-aspect-ratio:5/4)]:hidden',
-                      )}
+                      className="ghost-shape motion-reduce:bg-ink relative -top-[0.38em] ml-[0.05em] inline-block aspect-[231/289] h-[0.34em]"
                     />
                   </span>
                 </span>
