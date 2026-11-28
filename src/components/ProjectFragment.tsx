@@ -1,25 +1,20 @@
 import type { Project } from '../data/content';
 import bomberman from '../assets/projects/bomberman.webp';
-import pokevaleurDesktop from '../assets/projects/pokevaleur-desktop.webp';
-import pokevaleurPhone from '../assets/projects/pokevaleur-phone.webp';
-import pokevaleurTablet from '../assets/projects/pokevaleur-tablet.webp';
 
 /**
- * Each project drawn as a cropped piece of its own interface (HTML/CSS), PokéValeur and Bomberman shown by real
- * screenshots. Concert, teams, rows and stories are sample content.
+ * Each project shown by a real screenshot, or drawn as a cropped piece of its own interface (HTML/CSS) when there is
+ * none: teams and stories are sample content.
  */
 export default function ProjectFragment({ id }: { id: Project['id'] }) {
   switch (id) {
     case 'killkeny':
-      return <BandManager />;
     case 'pokevaleur':
-      return <Collection />;
+    case 'bdd':
+      return <Shot name={id} />;
     case 'bomberman':
       return <GodotLevel />;
     case 'tournoi':
       return <Tournament />;
-    case 'bdd':
-      return <Database />;
     case 'portfolio':
       return <Session />;
   }
@@ -54,58 +49,27 @@ function Window({
   );
 }
 
-// Lines below live inside data-ui fragments (a bracket and a real table), where borders are allowed.
+// The line below lives inside a data-ui fragment (a bracket), where borders are allowed.
 const DIVIDER = 'border-b border-ink/10'; // taste-skill-ignore
-const TABLE_RULE = 'border-t border-white/10'; // taste-skill-ignore
-const ROW_RULE = 'border-t border-white/5'; // taste-skill-ignore
 
-// The home screen of the band's app, as built so far: next concert, shortcuts, tab bar (phone layout)
-function BandManager() {
-  return (
-    <Window title="Band Manager · Accueil" dark>
-      <div className="flex h-full flex-col">
-        <div className="flex items-center justify-between gap-3 px-4 pt-4">
-          <p className="text-[15px] font-medium">Kill Keny</p>
-          <span className="flex items-center gap-1.5 text-[11.5px] opacity-75">
-            <span className="bg-dot-green size-1.5 rounded-full" />
-            API et base en ligne
-          </span>
-        </div>
-        <div className="bg-code-bar m-3 p-3 sm:m-4 sm:p-4">
-          <p className="text-[11.5px] opacity-60">Prochain concert</p>
-          <p className="mt-1 text-[17px] font-medium">Samedi · 21&nbsp;h</p>
-          <p className="opacity-75">Fête de village · Agen</p>
-        </div>
-        <div className="grid min-h-0 flex-1 grid-cols-2 content-start gap-2 overflow-hidden px-3 sm:px-4">
-          {['Agenda', 'Setlists', 'Contrats', 'Matériel'].map((t) => (
-            <p key={t} className="bg-code-bar px-3 py-2.5">
-              {t}
-            </p>
-          ))}
-        </div>
-        <div className="bg-code-bar mt-3 grid shrink-0 grid-cols-4 text-center text-[11.5px]">
-          {['Accueil', 'Agenda', 'Setlists', 'Groupe'].map((t, i) => (
-            <span key={t} className={`py-2.5 ${i === 0 ? 'text-code-key' : 'opacity-60'}`}>
-              {t}
-            </span>
-          ))}
-        </div>
-      </div>
-    </Window>
-  );
-}
+// The real screenshots, three per project: name-desktop, -tablet and -phone.webp
+const SHOTS = import.meta.glob<string>('../assets/projects/*.webp', {
+  eager: true,
+  import: 'default',
+});
+const shot = (file: string) => SHOTS[`../assets/projects/${file}.webp`];
 
-// The real app, in its computer, tablet or phone layout as the card is: each shot has the shape of its card
-function Collection() {
+// Each shot has the shape of the card on that screen (computer, tablet, phone), so nothing of it is cut off
+function Shot({ name }: { name: Project['id'] }) {
   return (
     <picture className="block size-full">
-      <source media="(min-width: 64rem)" srcSet={pokevaleurDesktop} width={1100} height={1171} />
-      <source media="(min-width: 48rem)" srcSet={pokevaleurTablet} width={960} height={516} />
+      <source media="(min-width: 64rem)" srcSet={shot(`${name}-desktop`)} />
+      <source media="(min-width: 48rem)" srcSet={shot(`${name}-tablet`)} />
       <img
-        src={pokevaleurPhone}
+        src={shot(`${name}-phone`)}
         alt=""
         width={900}
-        height={709}
+        height={708}
         loading="lazy"
         decoding="async"
         className="size-full object-cover object-top"
@@ -177,48 +141,6 @@ function Tournament() {
             <p className="text-accent mt-2 text-center font-medium">Vainqueur&nbsp;: Nova</p>
           </div>
         </div>
-      </div>
-    </Window>
-  );
-}
-
-function Database() {
-  return (
-    <Window title="Oracle SQL Developer · requete.sql" dark>
-      <div className="flex h-full flex-col">
-        <pre className="flex-1 overflow-hidden p-4 font-mono text-[12.5px] leading-relaxed">
-          <code>
-            <span className="text-code-key">SELECT</span> e.nom,{' '}
-            <span className="text-code-key">COUNT</span>(m.id){' '}
-            <span className="text-code-key">AS</span> matchs{'\n'}
-            <span className="text-code-key">FROM</span> equipe e{'\n'}
-            <span className="text-code-key">JOIN</span> participation m{' '}
-            <span className="text-code-key">ON</span> m.id_equipe = e.id{'\n'}
-            <span className="text-code-key">GROUP BY</span> e.nom{'\n'}
-            <span className="text-code-key">ORDER BY</span> matchs{' '}
-            <span className="text-code-key">DESC</span>;
-          </code>
-        </pre>
-        <table className={`w-full ${TABLE_RULE} text-left text-[12.5px]`}>
-          <thead className="bg-code-bar">
-            <tr>
-              <th className="px-4 py-1.5 font-medium">NOM</th>
-              <th className="px-4 py-1.5 font-medium">MATCHS</th>
-            </tr>
-          </thead>
-          <tbody className="tabular">
-            {[
-              ['Nova', 7],
-              ['Zéphyr', 6],
-              ['Atlas', 5],
-            ].map(([n, c]) => (
-              <tr key={n} className={ROW_RULE}>
-                <td className="px-4 py-1.5">{n}</td>
-                <td className="px-4 py-1.5">{c}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
       </div>
     </Window>
   );
